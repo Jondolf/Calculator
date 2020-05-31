@@ -2,10 +2,11 @@
   [ngStyle]="{
     width: button.styles.width ? button.styles.width : '100%',
     height: button.styles.height ? button.styles.height : '10vh',
+    margin: button.styles.margin ? button.styles.margin : '0',
     'background-color': backgroundColor,
     color: button.styles.fontColor
       ? button.styles.fontColor
-      : 'var(--color-tertiary-contrast)'
+      : 'var(--color-primary-contrast)'
   }"
 >
   <i *ngIf="button.icon.iconName" class="material-icons">{{

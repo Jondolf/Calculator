@@ -1,16 +1,40 @@
 <app-fullscreen-container>
-  <app-circle-button
-    [iconName]="'close'"
-    (click)="closeSettingsMenu.emit()"
-    style="color: white;"
-  ></app-circle-button>
-  <h2>Settings</h2>
-  <hr />
-  <div class="button-container">
-    <app-wide-button
-      *ngFor="let menuButton of settingsMenuButtons; let i = index"
-      [button]="settingsMenuButtons[i]"
-      (click)="changeTheme(themes[i])"
-    ></app-wide-button>
+  <div class="top">
+    <app-circle-button
+      [iconName]="'arrow_back'"
+      (click)="goBack()"
+      style="color: var(--color-primary-contrast);"
+    ></app-circle-button>
+
+    <h2>{{ currentSettingsView }}</h2>
+    <hr />
   </div>
+
+  <div *ngIf="currentSettingsView === 'Settings menu'">
+    <div class="button-container">
+      <app-wide-button
+        [button]="{
+          buttonName: 'Themes',
+          icon: {
+            iconName: 'palette'
+          },
+          styles: {}
+        }"
+        (click)="currentSettingsView = 'Themes'"
+      ></app-wide-button>
+      <app-wide-button
+        [button]="{
+          buttonName: 'About',
+          icon: {
+            iconName: 'info'
+          },
+          styles: {}
+        }"
+        (click)="currentSettingsView = 'About'"
+      ></app-wide-button>
+    </div>
+  </div>
+
+  <app-themes *ngIf="currentSettingsView === 'Themes'"></app-themes>
+  <app-about *ngIf="currentSettingsView === 'About'"></app-about>
 </app-fullscreen-container>

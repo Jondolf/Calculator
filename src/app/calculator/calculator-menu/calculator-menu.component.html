@@ -3,16 +3,19 @@
     <app-circle-button
       [iconName]="'close'"
       (click)="closeCalculatorMenu.emit()"
-      style="color: white;"
+      style="color: var(--color-primary-contrast);"
     ></app-circle-button>
     <h2>Calculators</h2>
   </div>
   <hr />
+
   <div class="button-container">
     <app-wide-button
       *ngFor="let menuButton of calculatorMenuButtons; let i = index"
       [button]="calculatorMenuButtons[i]"
-      (click)="changeCalculator.emit({ calculatorName: $event.calculatorName })"
+      (click)="changeCalculator.emit({ calculatorName: menuButton.buttonName })"
     ></app-wide-button>
   </div>
+
+  <p>More may come in the future.</p>
 </app-fullscreen-container>

@@ -1,0 +1,6 @@
+a {
+  color: var(--color-primary-contrast);
+  &:visited {
+    color: var(--color-primary-contrast);
+  }
+}
