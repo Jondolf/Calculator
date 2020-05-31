@@ -7,7 +7,4 @@ import { Component } from '@angular/core';
 })
 export class MoreCommandsMenuComponent {
   menuOpen = false;
-  log(e?: Event) {
-    console.log('Event', e);
-  }
 }

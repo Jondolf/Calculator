@@ -1,6 +1,6 @@
 <div
-  (swipedown)="menuOpen = true; log($event)"
-  (swipeup)="menuOpen = false; log($event)"
+  (swipedown)="menuOpen = true"
+  (swipeup)="menuOpen = false"
   [ngStyle]="{
     top: menuOpen ? '25vh' : '-45vh'
   }"
@@ -14,7 +14,7 @@
     <button class="command">)</button>
     <button class="command">%</button>
   </div>
-  <div (click)="menuOpen = !menuOpen; log()" class="swipe-container">
+  <div (click)="menuOpen = !menuOpen" class="swipe-container">
     <i
       [style.transform]="menuOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
       class="material-icons"
