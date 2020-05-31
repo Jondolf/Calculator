@@ -1,0 +1,37 @@
+:host > div {
+  position: absolute;
+  height: 75vh;
+  transition: 0.5s ease;
+  width: 100%;
+  background-color: var(--color-tertiary);
+  color: var(--color-tertiary-contrast);
+  .button-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    height: 70vh;
+    transition: 0.2s ease-out;
+    font-size: 32px;
+    font-weight: 800;
+    button {
+      background-color: transparent;
+      color: var(--color-tertiary-contrast);
+      transition: 0.2s ease-out;
+      font-size: 32px;
+      font-weight: 800;
+    }
+  }
+  .swipe-container {
+    height: 5vh;
+    border-top: 2px solid var(--color-tertiary-contrast);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    i {
+      transition: 0.5s ease;
+    }
+  }
+}

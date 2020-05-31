@@ -1,7 +1,9 @@
 <div class="calculator-input">
-  <p class="current-result">{{ currentResult }}</p>
   <p class="calculation">{{ calculation }}</p>
+  <p class="current-result">{{ currentResult }}</p>
 </div>
+
+<app-more-commands-menu></app-more-commands-menu>
 
 <div class="calculator-container">
   <button (click)="addSymbolToCalculation(1)" class="number one">

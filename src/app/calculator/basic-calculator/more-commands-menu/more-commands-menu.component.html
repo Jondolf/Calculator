@@ -1,0 +1,24 @@
+<div
+  (swipedown)="menuOpen = true; log($event)"
+  (swipeup)="menuOpen = false; log($event)"
+  [ngStyle]="{
+    top: menuOpen ? '25vh' : '-45vh'
+  }"
+>
+  <div class="button-container">
+    <button class="command">√</button>
+    <button class="command">^</button>
+    <button class="command">π</button>
+    <button class="command">e</button>
+    <button class="command">(</button>
+    <button class="command">)</button>
+    <button class="command">%</button>
+  </div>
+  <div (click)="menuOpen = !menuOpen; log()" class="swipe-container">
+    <i
+      [style.transform]="menuOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
+      class="material-icons"
+      >expand_more</i
+    >
+  </div>
+</div>
