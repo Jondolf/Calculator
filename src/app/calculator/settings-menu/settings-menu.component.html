@@ -1,0 +1,16 @@
+<app-fullscreen-container>
+  <app-circle-button
+    [iconName]="'close'"
+    (click)="closeSettingsMenu.emit()"
+    style="color: white;"
+  ></app-circle-button>
+  <h2>Settings</h2>
+  <hr />
+  <div class="button-container">
+    <app-wide-button
+      *ngFor="let menuButton of settingsMenuButtons; let i = index"
+      [button]="settingsMenuButtons[i]"
+      (click)="changeTheme(themes[i])"
+    ></app-wide-button>
+  </div>
+</app-fullscreen-container>

@@ -1,0 +1,20 @@
+<button
+  [ngStyle]="{
+    width: button.styles.width ? button.styles.width : '100%',
+    height: button.styles.height ? button.styles.height : '10vh',
+    'background-color': backgroundColor,
+    color: button.styles.fontColor
+      ? button.styles.fontColor
+      : 'var(--color-tertiary-contrast)'
+  }"
+>
+  <i *ngIf="button.icon.iconName" class="material-icons">{{
+    button.icon.iconName
+  }}</i>
+  <img
+    *ngIf="button.icon.iconImgSrc"
+    [src]="button.icon.iconImgSrc"
+    [alt]="button.icon.iconImgAlt"
+  />
+  <span>{{ button.buttonName }}</span>
+</button>

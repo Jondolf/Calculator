@@ -1,0 +1,74 @@
+<div class="calculator-input">
+  <p class="current-result">{{ currentResult }}</p>
+  <p class="calculation">{{ calculation }}</p>
+</div>
+
+<div class="calculator-container">
+  <button (click)="addSymbolToCalculation(1)" class="number one">
+    1
+  </button>
+  <button (click)="addSymbolToCalculation(2)" class="number two">
+    2
+  </button>
+  <button (click)="addSymbolToCalculation(3)" class="number three">
+    3
+  </button>
+  <button (click)="addSymbolToCalculation(4)" class="number four">
+    4
+  </button>
+  <button (click)="addSymbolToCalculation(5)" class="number five">
+    5
+  </button>
+  <button (click)="addSymbolToCalculation(6)" class="number six">
+    6
+  </button>
+  <button (click)="addSymbolToCalculation(7)" class="number seven">
+    7
+  </button>
+  <button (click)="addSymbolToCalculation(8)" class="number eight">
+    8
+  </button>
+  <button (click)="addSymbolToCalculation(9)" class="number nine">
+    9
+  </button>
+  <button (click)="addSymbolToCalculation(0)" class="number zero">
+    0
+  </button>
+  <button (click)="addSymbolToCalculation('.')" class="number dot">
+    .
+  </button>
+
+  <button (click)="calculation = '0'; currentResult = ''" class="command clear">
+    C
+  </button>
+  <button
+    (click)="addSymbolToCalculation('(')"
+    class="command opening-parentheses"
+  >
+    (
+  </button>
+  <button
+    (click)="addSymbolToCalculation(')')"
+    class="command closing-parentheses"
+  >
+    )
+  </button>
+  <button (click)="backspaceEventHandler()" class="command backspace">
+    <i class="material-icons">backspace</i>
+  </button>
+  <button (click)="addSymbolToCalculation('+')" class="command plus">
+    +
+  </button>
+  <button (click)="addSymbolToCalculation('-')" class="command minus">
+    -
+  </button>
+  <button (click)="addSymbolToCalculation('x')" class="command multiply">
+    x
+  </button>
+  <button (click)="addSymbolToCalculation('÷')" class="command divide">
+    ÷
+  </button>
+  <button (click)="addSymbolToCalculation('=')" class="command equals">
+    =
+  </button>
+</div>
