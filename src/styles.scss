@@ -1,0 +1,292 @@
+/* You can add global styles to this file, and also import other style files */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  height: 100%;
+  ::selection {
+    background-color: var(--color-secondary);
+  }
+}
+
+html,
+button,
+input {
+  font-family: "Nunito Sans", "Lucida Sans", "Lucida Sans Regular",
+    "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+button,
+input {
+  border: none;
+  outline: none;
+}
+
+:root {
+  .light.default-light {
+    --color-primary: #374cc2;
+    --color-primary-rgb: 55, 76, 194;
+    --color-primary-contrast: #ffffff;
+    --color-primary-contrast-rgb: 255, 255, 255;
+    --color-primary-shade: #3043ab;
+    --color-primary-tint: #4b5ec8;
+
+    --color-secondary: #77abff;
+    --color-secondary-rgb: 119, 171, 255;
+    --color-secondary-contrast: #ffffff;
+    --color-secondary-contrast-rgb: 255, 255, 255;
+    --color-secondary-shade: #6996e0;
+    --color-secondary-tint: #85b3ff;
+
+    --color-tertiary: #44ccff;
+    --color-tertiary-rgb: 68, 204, 255;
+    --color-tertiary-contrast: #000000;
+    --color-tertiary-contrast-rgb: 0, 0, 0;
+    --color-tertiary-shade: #3cb4e0;
+    --color-tertiary-tint: #57d1ff;
+
+    --color-success: #2dd36f;
+    --color-success-rgb: 45, 211, 111;
+    --color-success-contrast: #ffffff;
+    --color-success-contrast-rgb: 255, 255, 255;
+    --color-success-shade: #28ba62;
+    --color-success-tint: #42d77d;
+
+    --color-warning: #ffc409;
+    --color-warning-rgb: 255, 196, 9;
+    --color-warning-contrast: #000000;
+    --color-warning-contrast-rgb: 0, 0, 0;
+    --color-warning-shade: #e0ac08;
+    --color-warning-tint: #ffca22;
+
+    --color-danger: #eb445a;
+    --color-danger-rgb: 235, 68, 90;
+    --color-danger-contrast: #ffffff;
+    --color-danger-contrast-rgb: 255, 255, 255;
+    --color-danger-shade: #cf3c4f;
+    --color-danger-tint: #ed576b;
+
+    --color-dark: #222428;
+    --color-dark-rgb: 34, 36, 40;
+    --color-dark-contrast: #ffffff;
+    --color-dark-contrast-rgb: 255, 255, 255;
+    --color-dark-shade: #1e2023;
+    --color-dark-tint: #383a3e;
+
+    --color-medium: #92949c;
+    --color-medium-rgb: 146, 148, 156;
+    --color-medium-contrast: #ffffff;
+    --color-medium-contrast-rgb: 255, 255, 255;
+    --color-medium-shade: #808289;
+    --color-medium-tint: #9d9fa6;
+
+    --color-light: #e1e1e1;
+    --color-light-rgb: 245, 245, 245;
+    --color-light-contrast: #000000;
+    --color-light-contrast-rgb: 0, 0, 0;
+    --color-light-shade: #c3c3c3;
+    --color-light-shade-rgb: 195, 195, 195;
+    --color-light-tint: #ffffff;
+    --color-light-tint-rgb: 255, 255, 255;
+  }
+  .light.solarized-light {
+    --color-primary: #ca7f16;
+    --color-primary-rgb: 202, 127, 22;
+    --color-primary-contrast: #ffffff;
+    --color-primary-contrast-rgb: 255, 255, 255;
+    --color-primary-shade: #b47113;
+    --color-primary-tint: #d18d2e;
+
+    --color-secondary: #f6ce55;
+    --color-secondary-rgb: 246, 206, 85;
+    --color-secondary-contrast: #000000;
+    --color-secondary-contrast-rgb: 0, 0, 0;
+    --color-secondary-shade: hsl(46, 90%, 61%);
+    --color-secondary-tint: #e7d188;
+
+    --color-tertiary: #e4e0aa;
+    --color-tertiary-rgb: 228, 224, 170;
+    --color-tertiary-contrast: #ffffff;
+    --color-tertiary-contrast-rgb: 255, 255, 255;
+    --color-tertiary-shade: #d8d283;
+    --color-tertiary-tint: #fef8af;
+
+    --color-success: #2dd36f;
+    --color-success-rgb: 45, 211, 111;
+    --color-success-contrast: #ffffff;
+    --color-success-contrast-rgb: 255, 255, 255;
+    --color-success-shade: #28ba62;
+    --color-success-tint: #42d77d;
+
+    --color-warning: #ffc409;
+    --color-warning-rgb: 255, 196, 9;
+    --color-warning-contrast: #000000;
+    --color-warning-contrast-rgb: 0, 0, 0;
+    --color-warning-shade: #e0ac08;
+    --color-warning-tint: #ffca22;
+
+    --color-danger: #eb445a;
+    --color-danger-rgb: 235, 68, 90;
+    --color-danger-contrast: #ffffff;
+    --color-danger-contrast-rgb: 255, 255, 255;
+    --color-danger-shade: #cf3c4f;
+    --color-danger-tint: #ed576b;
+
+    --color-dark: #073642;
+    --color-dark-rgb: 7, 54, 66;
+    --color-dark-contrast: #000000;
+    --color-dark-contrast-rgb: 0, 0, 0;
+    --color-dark-shade: #002b36;
+    --color-dark-tint: #3a7678;
+
+    --color-medium: #92949c;
+    --color-medium-rgb: 146, 148, 156;
+    --color-medium-contrast: #ffffff;
+    --color-medium-contrast-rgb: 0, 0, 0;
+    --color-medium-shade: #808289;
+    --color-medium-tint: #9d9fa6;
+
+    --color-light: #eee8d5;
+    --color-light-rgb: 238, 232, 213;
+    --color-light-contrast: #000000;
+    --color-light-contrast-rgb: 0, 0, 0;
+    --color-light-shade: #ded3af;
+    --color-light-shade-rgb: 253, 246, 227;
+    --color-light-tint: #f3f6e3;
+    --color-light-tint-rgb: 253, 246, 227;
+  }
+
+  .dark.default-dark {
+    --color-primary: #374cc2;
+    --color-primary-rgb: 55, 76, 194;
+    --color-primary-contrast: #ffffff;
+    --color-primary-contrast-rgb: 255, 255, 255;
+    --color-primary-shade: #3043ab;
+    --color-primary-tint: #4b5ec8;
+
+    --color-secondary: #6194e7;
+    --color-secondary-rgb: 119, 171, 255;
+    --color-secondary-contrast: #ffffff;
+    --color-secondary-contrast-rgb: 255, 255, 255;
+    --color-secondary-shade: #5074af;
+    --color-secondary-tint: #719ce0;
+
+    --color-tertiary: #44ccff;
+    --color-tertiary-rgb: 68, 204, 255;
+    --color-tertiary-contrast: #000000;
+    --color-tertiary-contrast-rgb: 0, 0, 0;
+    --color-tertiary-shade: #3cb4e0;
+    --color-tertiary-tint: #57d1ff;
+
+    --color-success: #2dd36f;
+    --color-success-rgb: 45, 211, 111;
+    --color-success-contrast: #ffffff;
+    --color-success-contrast-rgb: 255, 255, 255;
+    --color-success-shade: #28ba62;
+    --color-success-tint: #42d77d;
+
+    --color-warning: #ffc409;
+    --color-warning-rgb: 255, 196, 9;
+    --color-warning-contrast: #000000;
+    --color-warning-contrast-rgb: 0, 0, 0;
+    --color-warning-shade: #e0ac08;
+    --color-warning-tint: #ffca22;
+
+    --color-danger: #eb445a;
+    --color-danger-rgb: 235, 68, 90;
+    --color-danger-contrast: #ffffff;
+    --color-danger-contrast-rgb: 255, 255, 255;
+    --color-danger-shade: #cf3c4f;
+    --color-danger-tint: #ed576b;
+
+    --color-dark: #f4f5f8;
+    --color-dark-rgb: 244, 245, 248;
+    --color-dark-contrast: #000000;
+    --color-dark-contrast-rgb: 0, 0, 0;
+    --color-dark-shade: #d7d8da;
+    --color-dark-tint: #f5f6f9;
+
+    --color-medium: #92949c;
+    --color-medium-rgb: 146, 148, 156;
+    --color-medium-contrast: #ffffff;
+    --color-medium-contrast-rgb: 0, 0, 0;
+    --color-medium-shade: #808289;
+    --color-medium-tint: #9d9fa6;
+
+    --color-light: #393e46;
+    --color-light-rgb: 57, 62, 70;
+    --color-light-contrast: #ffffff;
+    --color-light-contrast-rgb: 255, 255, 255;
+    --color-light-shade: #222831;
+    --color-light-shade-rgb: 34, 40, 49;
+    --color-light-tint: #3f4850;
+    --color-light-tint-rgb: 80, 90, 100;
+  }
+  .dark.solarized-dark {
+    --color-primary: #1c8297;
+    --color-primary-rgb: 28, 130, 151;
+    --color-primary-contrast: #ffffff;
+    --color-primary-contrast-rgb: 255, 255, 255;
+    --color-primary-shade: #166c7e;
+    --color-primary-tint: #26a2ba;
+
+    --color-secondary: #1f7a72;
+    --color-secondary-rgb: 31, 122, 114;
+    --color-secondary-contrast: #ffffff;
+    --color-secondary-contrast-rgb: 0, 0, 0;
+    --color-secondary-shade: #1a655f;
+    --color-secondary-tint: #328680;
+
+    --color-tertiary: #12a19c;
+    --color-tertiary-rgb: 18, 161, 156;
+    --color-tertiary-contrast: #ffffff;
+    --color-tertiary-contrast-rgb: 255, 255, 255;
+    --color-tertiary-shade: rgb(21, 188, 183);
+    --color-tertiary-tint: rgb(51, 163, 159);
+
+    --color-success: #2dd36f;
+    --color-success-rgb: 45, 211, 111;
+    --color-success-contrast: #ffffff;
+    --color-success-contrast-rgb: 255, 255, 255;
+    --color-success-shade: #28ba62;
+    --color-success-tint: #42d77d;
+
+    --color-warning: #ffc409;
+    --color-warning-rgb: 255, 196, 9;
+    --color-warning-contrast: #000000;
+    --color-warning-contrast-rgb: 0, 0, 0;
+    --color-warning-shade: #e0ac08;
+    --color-warning-tint: #ffca22;
+
+    --color-danger: #eb445a;
+    --color-danger-rgb: 235, 68, 90;
+    --color-danger-contrast: #ffffff;
+    --color-danger-contrast-rgb: 255, 255, 255;
+    --color-danger-shade: #cf3c4f;
+    --color-danger-tint: #ed576b;
+
+    --color-dark: #ede7d4;
+    --color-dark-rgb: 238, 232, 213;
+    --color-dark-contrast: #000000;
+    --color-dark-contrast-rgb: 0, 0, 0;
+    --color-dark-shade: #ded3af;
+    --color-dark-tint: #f3f6e3;
+
+    --color-medium: #92949c;
+    --color-medium-rgb: 146, 148, 156;
+    --color-medium-contrast: #ffffff;
+    --color-medium-contrast-rgb: 0, 0, 0;
+    --color-medium-shade: #808289;
+    --color-medium-tint: #9d9fa6;
+
+    --color-light: #073642;
+    --color-light-rgb: 7, 54, 66;
+    --color-light-contrast: #ffffff;
+    --color-light-contrast-rgb: 255, 255, 255;
+    --color-light-shade: #002b36;
+    --color-light-shade-rgb: 0, 43, 54;
+    --color-light-tint: #3a7678;
+    --color-light-tint-rgb: 88, 110, 117;
+  }
+}
