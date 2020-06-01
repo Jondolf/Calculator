@@ -25,29 +25,41 @@ export class BasicCalculatorService {
     return result;
   }
 
-  // /
-  countDivide(calculation: string): number {
-    const numberStrings: string[] = this.split(calculation, '/');
+  countPow(calculation: string): number {
+    const numberStrings: string[] = this.split(calculation, '^');
     const numbers = numberStrings.map((numberString: string) => {
-      if (numberStrings[0] === '(') {
-        const calc = numberString.substr(1, numberStrings.length - 2);
+      if (numberString[0] === '(') {
+        const calc = numberString.substr(1, numberString.length - 2);
         // Recursive
         return this.countPlus(calc);
+      }
+      if (numberString === 'π') {
+        return Math.PI;
+      }
+      if (numberString === 'e') {
+        return Math.exp(1);
       }
       return +numberString;
     });
     const intitialValue = numbers[0];
-    const result = numbers.slice(1).reduce((acc: number, num: number) => acc / num, intitialValue);
+    const result = numbers.slice(1).reduce((acc: number, num: number | string) => acc ** +num, intitialValue);
+    return result;
+  }
+
+  // /
+  countDivide(calculation: string): number {
+    const numberStrings: string[] = this.split(calculation, '/');
+    const numbers = numberStrings.map((numberString: string) => this.countPow(numberString));
+    const intitialValue = numbers[0];
+    const result = numbers.slice(1).reduce((acc: number, num: number) => acc / +num, intitialValue);
     return result;
   }
   // *, /
   countMultiply(calculation: string): number {
     const numberStrings: string[] = this.split(calculation, '*');
-    console.log('Count multiply split', calculation, numberStrings);
     const numbers = numberStrings.map((numberString: string) => this.countDivide(numberString));
     const intitialValue = 1.0;
     const result = numbers.reduce((acc: number, num: number) => acc * num, intitialValue);
-    console.log('Count multiply result', calculation, numbers, result);
     return result;
   }
   // -, *, /
@@ -61,11 +73,9 @@ export class BasicCalculatorService {
   // +, -, *, /
   countPlus(calculation: string): number {
     const numberStrings: string[] = this.split(calculation, '+');
-    console.log('Count plus split', calculation, numberStrings);
     const numbers: number[] = numberStrings.map((numberString: string) => this.countMinus(numberString));
     const intitialValue = 0.0;
     const result = numbers.reduce((acc: number, num: number) => acc + num, intitialValue);
-    console.log('Count plus result', calculation, result);
     return result;
   }
 
@@ -73,7 +83,7 @@ export class BasicCalculatorService {
     // With proper code math operators (*, /) instead of x and ÷
     const realCalculation = calculation.replace(/x/g, '*').replace(/÷/g, '/');
     const result = this.countPlus(realCalculation);
-    console.log(realCalculation, result);
+    // console.log('Result', realCalculation, result);
     return result;
   }
 }

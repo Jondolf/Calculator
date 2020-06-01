@@ -1,0 +1,53 @@
+<div
+  (swipedown)="menuOpen = true"
+  (swipeup)="menuOpen = false"
+  [ngStyle]="{
+    top: menuOpen ? '25vh' : '-45vh'
+  }"
+>
+  <div class="button-container">
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: '√' })"
+      class="command"
+    >
+      √
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: '^' })"
+      class="command"
+    >
+      ^
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: 'π' })"
+      class="command"
+    >
+      π
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: 'e' })"
+      class="command"
+    >
+      e
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: '(' })"
+      class="command"
+    >
+      (
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: ')' })"
+      class="command"
+    >
+      )
+    </button>
+  </div>
+  <div (click)="menuOpen = !menuOpen" class="swipe-container">
+    <i
+      [style.transform]="menuOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
+      class="material-icons"
+      >expand_more</i
+    >
+  </div>
+</div>

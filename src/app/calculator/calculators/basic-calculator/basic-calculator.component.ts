@@ -24,14 +24,20 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
   }
 
   filterSymbols(): void {
-    this.calculation = this.calculation.replace(/[^0-9 .+-x÷()=]/g, '');
+    this.calculation = this.calculation.replace(/[^0-9 .+-x÷()=^πe]/g, '');
   }
 
   addSymbolToCalculation(symbol: string | number): void {
     if (symbol === 'Enter') {
       return;
     }
-    if ((symbol !== '(' && symbol !== ')') && (isNaN(+symbol) && isNaN(+this.calculation[this.calculation.length - 1]))
+    if (this.calculation[this.calculation.length - 1] === ')' && (symbol === '+' || symbol === '-' || symbol === 'x' || symbol === '÷')) {
+      this.calculation += symbol.toString();
+      this.currentResult = `=${this.calculator.countCalculation(this.calculation).toString()}`;
+      this.filterSymbols();
+      return;
+    }
+    if ((symbol !== '(' && symbol !== ')' && symbol !== '^' && symbol !== 'π' && symbol !== 'e') && (isNaN(+symbol) && isNaN(+this.calculation[this.calculation.length - 1]))
       || (isNaN(+symbol) && this.calculation.length === 0)) {
       return;
     }
@@ -46,8 +52,9 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
       this.filterSymbols();
       return;
     }
-    if (this.calculation[0] !== '=' && this.calculation[0] === '=') {
-      this.calculation = '';
+    if (this.calculation[0] === '=') {
+      this.calculation = '0';
+      this.currentResult = '';
     }
     if (this.calculation === '0') {
       this.calculation = '';

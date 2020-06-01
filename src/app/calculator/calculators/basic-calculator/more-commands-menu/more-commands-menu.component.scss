@@ -15,9 +15,16 @@
     button {
       background-color: transparent;
       color: var(--color-tertiary-contrast);
+      border: 1px solid rgba(var(--color-primary-rgb), 0.25);
       transition: 0.2s ease-out;
       font-size: 32px;
       font-weight: 800;
+      &:hover {
+        background-color: rgba(var(--color-primary-rgb), 0.2);
+      }
+      &:active {
+        background-color: rgba(var(--color-primary-rgb), 0.4);
+      }
     }
   }
   .swipe-container {
