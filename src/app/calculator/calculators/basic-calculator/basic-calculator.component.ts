@@ -23,10 +23,6 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
     document.body.removeEventListener('keydown', this.handleEvent);
   }
 
-  filterSymbols(): void {
-    this.calculation = this.calculation.replace(/[^0-9 .+-x÷()=^πe]/g, '');
-  }
-
   addSymbolToCalculation(symbol: string | number): void {
     if (symbol === 'Enter') {
       return;
@@ -34,10 +30,10 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
     if (this.calculation[this.calculation.length - 1] === ')' && (symbol === '+' || symbol === '-' || symbol === 'x' || symbol === '÷')) {
       this.calculation += symbol.toString();
       this.currentResult = `=${this.calculator.countCalculation(this.calculation).toString()}`;
-      this.filterSymbols();
       return;
     }
-    if ((symbol !== '(' && symbol !== ')' && symbol !== '^' && symbol !== 'π' && symbol !== 'e') && (isNaN(+symbol) && isNaN(+this.calculation[this.calculation.length - 1]))
+    if ((symbol !== '(' && symbol !== ')' && symbol !== '^' && symbol !== '√' && symbol !== '%' && symbol !== 'π' && symbol !== 'e')
+      && (isNaN(+symbol) && isNaN(+this.calculation[this.calculation.length - 1]))
       || (isNaN(+symbol) && this.calculation.length === 0)) {
       return;
     }
@@ -49,7 +45,6 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
     if (symbol === '=') {
       this.calculation = `=${this.calculator.countCalculation(this.calculation).toString()}`;
       this.currentResult = '';
-      this.filterSymbols();
       return;
     }
     if (this.calculation[0] === '=') {
@@ -61,7 +56,6 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
     }
     this.calculation += symbol.toString();
     this.currentResult = `=${this.calculator.countCalculation(this.calculation).toString()}`;
-    this.filterSymbols();
   }
 
   removeLastChar(str: string): string {
@@ -106,7 +100,6 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
     if (this.calculation[0] !== '=' && (e.key === 'Enter' || e.key === '=')) {
       this.calculation = `=${this.calculator.countCalculation(this.calculation).toString()}`;
       this.currentResult = '';
-      this.filterSymbols();
     }
     // Remove
     if (e.key === 'Backspace') {

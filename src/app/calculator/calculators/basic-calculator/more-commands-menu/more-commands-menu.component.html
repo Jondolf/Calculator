@@ -19,6 +19,18 @@
       ^
     </button>
     <button
+      (click)="addSymbolToCalculation.emit({ symbol: '%' })"
+      class="command"
+    >
+      %
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: '!' })"
+      class="command"
+    >
+      n!
+    </button>
+    <button
       (click)="addSymbolToCalculation.emit({ symbol: 'π' })"
       class="command"
     >
@@ -41,6 +53,30 @@
       class="command"
     >
       )
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: 'mod' })"
+      class="command"
+    >
+      mod
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: 'sin' })"
+      class="command"
+    >
+      sin
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: 'cos' })"
+      class="cos"
+    >
+      cos
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: 'tan' })"
+      class="command"
+    >
+      tan
     </button>
   </div>
   <div (click)="menuOpen = !menuOpen" class="swipe-container">

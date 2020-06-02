@@ -25,8 +25,8 @@ export class BasicCalculatorService {
     return result;
   }
 
-  countPow(calculation: string): number {
-    const numberStrings: string[] = this.split(calculation, '^');
+  countModulo(calculation: string): number {
+    const numberStrings: string[] = this.split(calculation, 'm'); // m is mod here because % is it's own command
     const numbers = numberStrings.map((numberString: string) => {
       if (numberString[0] === '(') {
         const calc = numberString.substr(1, numberString.length - 2);
@@ -39,8 +39,34 @@ export class BasicCalculatorService {
       if (numberString === 'e') {
         return Math.exp(1);
       }
+      if (numberString[0] === '√' && numberString.length > 1) {
+        return Math.sqrt(this.countPlus(numberString.substring(1, numberString.length)));
+      }
+      if (numberString[0] === 's' /* sin */ && numberString.length > 1) {
+        return Math.sin(this.countPlus(numberString.substring(1, numberString.length)));
+      }
+      if (numberString[0] === 'c' /* cos */ && numberString.length > 1) {
+        return Math.cos(this.countPlus(numberString.substring(1, numberString.length)));
+      }
+      if (numberString[0] === 't' /* tan */ && numberString.length > 1) {
+        return Math.tan(this.countPlus(numberString.substring(1, numberString.length)));
+      }
+      if (numberString[numberString.length - 1] === '%' && numberString.length > 1) {
+        return this.countPlus(numberString.substring(0, numberString.length - 1)) / 100;
+      }
+      if (numberString[numberString.length - 1] === '!' && numberString.length > 1) {
+        return this.countFactorial(this.countPlus(numberString.substring(0, numberString.length - 1)));
+      }
       return +numberString;
     });
+    const intitialValue = numbers[0];
+    const result = numbers.slice(1).reduce((acc: number, num: number) => acc % +num, intitialValue);
+    return result;
+  }
+
+  countPow(calculation: string): number {
+    const numberStrings: string[] = this.split(calculation, '^');
+    const numbers = numberStrings.map((numberString: string) => this.countModulo(numberString));
     const intitialValue = numbers[0];
     const result = numbers.slice(1).reduce((acc: number, num: number | string) => acc ** +num, intitialValue);
     return result;
@@ -79,9 +105,21 @@ export class BasicCalculatorService {
     return result;
   }
 
+  countFactorial(num: number): number {
+    if (num > 200) {
+      return Infinity;
+    }
+    let result = 1;
+    for (let i = 2; i <= num; i++) {
+      result *= i;
+    }
+    return result;
+  }
+
   countCalculation(calculation: string): number {
     // With proper code math operators (*, /) instead of x and ÷
-    const realCalculation = calculation.replace(/x/g, '*').replace(/÷/g, '/');
+    const realCalculation = calculation.replace(/x/g, '*').replace(/÷/g, '/').replace(/mod/g, 'm')
+      .replace(/sin/g, 's').replace(/cos/g, 'c').replace(/tan/g, 't');
     const result = this.countPlus(realCalculation);
     // console.log('Result', realCalculation, result);
     return result;
