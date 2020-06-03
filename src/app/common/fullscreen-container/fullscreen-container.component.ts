@@ -16,7 +16,7 @@ export class FullscreenContainerComponent implements OnInit {
 
   getBackgroundColor() {
     const bgRgb = this.backgroundRgb ? this.backgroundRgb : 'var(--ion-color-primary-rgb)';
-    const bgAlpha = this.backgroundAlpha ? this.backgroundAlpha : '0.75';
+    const bgAlpha = this.backgroundAlpha ? this.backgroundAlpha : '0.8';
     return `rgba(${bgRgb}, ${bgAlpha})`;
   }
 }
