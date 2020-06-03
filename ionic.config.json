@@ -1,0 +1,7 @@
+{
+  "name": "ionic-ng-calculator",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

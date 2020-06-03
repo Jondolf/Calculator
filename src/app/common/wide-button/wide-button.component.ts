@@ -17,7 +17,7 @@ export class WideButtonComponent implements OnInit {
   }
 
   getBackgroundColor(): string {
-    const bgRgb = this.button.styles.backgroundRgb ? this.button.styles.backgroundRgb : 'var(--color-primary-rgb)';
+    const bgRgb = this.button.styles.backgroundRgb ? this.button.styles.backgroundRgb : 'var(--ion-color-primary-rgb)';
     const bgAlpha = this.button.styles.backgroundAlpha ? this.button.styles.backgroundAlpha : '0.75';
     return `rgba(${bgRgb}, ${bgAlpha})`;
   }

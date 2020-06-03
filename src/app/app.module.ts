@@ -1,7 +1,11 @@
-import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { NgModule, Injectable } from '@angular/core';
+import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
-import { FormsModule } from '@angular/forms';
+import { RouteReuseStrategy } from '@angular/router';
+
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { BasicCalculatorComponent } from './calculator/calculators/basic-calculator/basic-calculator.component';
@@ -30,8 +34,14 @@ export class HammerConfig extends HammerGestureConfig {
   declarations: [AppComponent, BasicCalculatorComponent, TopBarComponent, CalculatorMenuComponent,
     FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent, SettingsMenuComponent,
     ThemesComponent, AboutComponent, MoreCommandsMenuComponent],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, HammerModule],
-  providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: HammerConfig }],
-  bootstrap: [AppComponent],
+  entryComponents: [],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HammerModule],
+  providers: [
+    StatusBar,
+    SplashScreen,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: HAMMER_GESTURE_CONFIG, useClass: HammerConfig }
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

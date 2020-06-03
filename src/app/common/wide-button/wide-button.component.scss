@@ -9,10 +9,10 @@
   border-radius: 5px;
   color: white;
   &:hover {
-    background-color: rgba(var(--color-tertiary-rgb), 0.4);
+    background-color: rgba(var(--ion-color-tertiary-rgb), 0.4);
   }
   &:active {
-    background-color: rgba(var(--color-tertiary-rgb), 0.75);
+    background-color: rgba(var(--ion-color-tertiary-rgb), 0.75);
   }
 
   i,

@@ -7,13 +7,13 @@
   align-items: center;
   width: 40px;
   height: 40px;
-  color: var(--color-light-contrast);
+  color: var(--ion-color-light-contrast);
   cursor: pointer;
   &:hover {
-    background-color: rgba(var(--color-primary-rgb), 0.4);
+    background-color: rgba(var(--ion-color-primary-rgb), 0.4);
     border-radius: 50%;
   }
   &:active {
-    background-color: rgba(var(--color-primary-rgb), 0.75);
+    background-color: rgba(var(--ion-color-primary-rgb), 0.75);
   }
 }

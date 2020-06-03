@@ -1,16 +1,18 @@
-<app-calculator-menu
-  *ngIf="isCalculatorMenuOpen"
-  (changeCalculator)="currentCalculator = $event.calculatorName"
-  (closeCalculatorMenu)="isCalculatorMenuOpen = false"
-></app-calculator-menu>
-<app-settings-menu
-  *ngIf="isSettingsMenuOpen"
-  (closeSettingsMenu)="isSettingsMenuOpen = false"
-></app-settings-menu>
-<app-top-bar
-  (openCalculatorMenu)="isCalculatorMenuOpen = true"
-  (openSettingsMenu)="isSettingsMenuOpen = true"
-></app-top-bar>
-<app-basic-calculator
-  *ngIf="currentCalculator === 'Basic calculator'"
-></app-basic-calculator>
+<ion-app>
+  <app-calculator-menu
+    *ngIf="isCalculatorMenuOpen"
+    (changeCalculator)="currentCalculator = $event.calculatorName"
+    (closeCalculatorMenu)="isCalculatorMenuOpen = false"
+  ></app-calculator-menu>
+  <app-settings-menu
+    *ngIf="isSettingsMenuOpen"
+    (closeSettingsMenu)="isSettingsMenuOpen = false"
+  ></app-settings-menu>
+  <app-top-bar
+    (openCalculatorMenu)="isCalculatorMenuOpen = true"
+    (openSettingsMenu)="isSettingsMenuOpen = true"
+  ></app-top-bar>
+  <app-basic-calculator
+    *ngIf="currentCalculator === 'Basic calculator'"
+  ></app-basic-calculator>
+</ion-app>
