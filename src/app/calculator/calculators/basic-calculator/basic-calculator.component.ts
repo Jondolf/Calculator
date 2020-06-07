@@ -27,30 +27,42 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
     if (symbol === 'Enter') {
       return;
     }
-    if (this.calculation[this.calculation.length - 1] === ')' && (symbol === '+' || symbol === '-' || symbol === 'x' || symbol === '÷')) {
-      this.calculation += symbol.toString();
-      this.currentResult = `=${this.calculator.countCalculation(this.calculation).toString()}`;
+
+    const operators = '+-x÷^mod';
+    const numberSymbols = '0123456789πe';
+    const lastSymbolOfCalc = this.calculation[this.calculation.length - 1];
+
+    // Don't allow two operators in a row
+    if (operators.includes(symbol.toString()) && operators.includes(lastSymbolOfCalc.toString())) {
       return;
     }
-    if ((symbol !== '(' && symbol !== ')' && symbol !== '^' && symbol !== '√' && symbol !== '%' && symbol !== 'π' && symbol !== 'e')
-      && (isNaN(+symbol) && isNaN(+this.calculation[this.calculation.length - 1]))
-      || (isNaN(+symbol) && this.calculation.length === 0)) {
+    // Don't allow operator as first symbol
+    if (operators.includes(symbol.toString()) && this.calculation === '0') {
       return;
     }
-    if (symbol === '(' && !isNaN(+this.calculation[this.calculation.length - 1]) || this.calculation[this.calculation.length - 1] === ')') {
+    // Parentheses restrictions
+    if (symbol === '(' && (numberSymbols.includes(lastSymbolOfCalc.toString()) || lastSymbolOfCalc === ')')) {
       return;
-    } else if (symbol === ')' && isNaN(+this.calculation[this.calculation.length - 1])) {
+    } else if (symbol === ')' && operators.includes(lastSymbolOfCalc)) {
+      console.log('Return');
       return;
     }
-    if (symbol === '=') {
+    // Don't allow numbers right after closing parentheses
+    if (numberSymbols.includes(symbol.toString()) && lastSymbolOfCalc === ')') {
+      return;
+    }
+    // Calculate calculation and clear current result field if equals symbol is pressed
+    if (symbol.toString() === '=') {
       this.calculation = `=${this.calculator.countCalculation(this.calculation).toString()}`;
       this.currentResult = '';
       return;
     }
+    // Reset calculation to defaults if first symbol of calculation is equals but equals symbol isn't pressed
     if (this.calculation[0] === '=') {
       this.calculation = '0';
       this.currentResult = '';
     }
+    // Remove initial zero before first symbol is added
     if (this.calculation === '0') {
       this.calculation = '';
     }
