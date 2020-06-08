@@ -9,6 +9,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { BasicCalculatorComponent } from './calculator/calculators/basic-calculator/basic-calculator.component';
+import { LengthConverterComponent } from './calculator/calculators/length-converter/length-converter.component';
 import { TopBarComponent } from './calculator/top-bar/top-bar.component';
 import { CalculatorMenuComponent } from './calculator/calculator-menu/calculator-menu.component';
 import { FullscreenContainerComponent } from './common/fullscreen-container/fullscreen-container.component';
@@ -31,7 +32,7 @@ export class HammerConfig extends HammerGestureConfig {
 }
 
 @NgModule({
-  declarations: [AppComponent, BasicCalculatorComponent, TopBarComponent, CalculatorMenuComponent,
+  declarations: [AppComponent, BasicCalculatorComponent, LengthConverterComponent, TopBarComponent, CalculatorMenuComponent,
     FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent, SettingsMenuComponent,
     ThemesComponent, AboutComponent, MoreCommandsMenuComponent],
   entryComponents: [],

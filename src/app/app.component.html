@@ -1,4 +1,9 @@
 <ion-app>
+  <app-top-bar
+    (openCalculatorMenu)="isCalculatorMenuOpen = true"
+    (openSettingsMenu)="isSettingsMenuOpen = true"
+  ></app-top-bar>
+
   <app-calculator-menu
     *ngIf="isCalculatorMenuOpen"
     (changeCalculator)="currentCalculator = $event.calculatorName"
@@ -8,11 +13,12 @@
     *ngIf="isSettingsMenuOpen"
     (closeSettingsMenu)="isSettingsMenuOpen = false"
   ></app-settings-menu>
-  <app-top-bar
-    (openCalculatorMenu)="isCalculatorMenuOpen = true"
-    (openSettingsMenu)="isSettingsMenuOpen = true"
-  ></app-top-bar>
+
+  <!-- Calculators and converters -->
   <app-basic-calculator
     *ngIf="currentCalculator === 'Basic calculator'"
   ></app-basic-calculator>
+  <app-length-converter
+    *ngIf="currentCalculator === 'Length converter'"
+  ></app-length-converter>
 </ion-app>

@@ -17,8 +17,8 @@ export class CalculatorMenuComponent {
       styles: {}
     },
     {
-      buttonName: 'Test',
-      icon: { iconName: 'functions' },
+      buttonName: 'Length converter',
+      icon: { iconName: 'square_foot' },
       styles: {}
     },
   ];
