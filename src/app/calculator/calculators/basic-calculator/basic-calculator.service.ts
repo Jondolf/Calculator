@@ -30,6 +30,9 @@ export class BasicCalculatorService {
     if (currentChunk !== '') {
       result.push(currentChunk);
     }
+    if (operator === '-' && result[0] === '') {
+      result[0] = '0';
+    }
     return result;
   }
 
