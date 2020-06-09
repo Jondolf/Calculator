@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Button } from '../../models/button.interface';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-calculator-menu',
@@ -13,13 +14,29 @@ export class CalculatorMenuComponent {
   calculatorMenuButtons: Button[] = [
     {
       buttonName: 'Basic calculator',
-      icon: { iconName: 'functions' },
-      styles: {}
+      icon: {
+        iconName: 'calculator-outline'
+      }
     },
     {
       buttonName: 'Length converter',
-      icon: { iconName: 'square_foot' },
-      styles: {}
+      icon: { iconName: 'calculator' }
     },
   ];
+
+  constructor(private menu: MenuController) { }
+
+  openFirst(): void {
+    this.menu.enable(true, 'first');
+    this.menu.open('first');
+  }
+
+  openEnd(): void {
+    this.menu.open('end');
+  }
+
+  openCustom(): void {
+    this.menu.enable(true, 'custom');
+    this.menu.open('custom');
+  }
 }

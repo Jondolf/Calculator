@@ -1,21 +1,19 @@
-<app-fullscreen-container>
-  <div class="top">
-    <app-circle-button
-      [iconName]="'close'"
-      (click)="closeCalculatorMenu.emit()"
-      style="color: var(--ion-color-primary-contrast);"
-    ></app-circle-button>
-    <h2>Calculators</h2>
-  </div>
-  <hr />
-
-  <div class="button-container">
-    <app-wide-button
-      *ngFor="let menuButton of calculatorMenuButtons; let i = index"
-      [button]="calculatorMenuButtons[i]"
-      (click)="changeCalculator.emit({ calculatorName: menuButton.buttonName })"
-    ></app-wide-button>
-  </div>
-
-  <p>More may come in the future.</p>
-</app-fullscreen-container>
+<ion-menu side="start" menuId="first" contentId="content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Calculator</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item
+        button
+        *ngFor="let button of calculatorMenuButtons; let i = index"
+        (click)="changeCalculator.emit({ calculatorName: button.buttonName })"
+      >
+        <ion-icon [name]="button.icon.iconName"></ion-icon>
+        <ion-label>{{ button.buttonName }}</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { GlobalVarsService } from './global-vars.service';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -10,14 +11,15 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-  currentCalculator = 'Basic calculator';
-  isCalculatorMenuOpen: boolean;
+  @ViewChild('calculatormenu') calculatorMenu;
+
   isSettingsMenuOpen: boolean;
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    public globals: GlobalVarsService
   ) {
     this.initializeApp();
   }

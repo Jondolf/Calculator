@@ -1,24 +1,26 @@
 <ion-app>
-  <app-top-bar
-    (openCalculatorMenu)="isCalculatorMenuOpen = true"
-    (openSettingsMenu)="isSettingsMenuOpen = true"
-  ></app-top-bar>
+  <ion-content id="content">
+    <app-top-bar
+      (openCalculatorMenu)="calculatorMenu.openFirst()"
+      (openSettingsMenu)="isSettingsMenuOpen = true"
+    ></app-top-bar>
+
+    <app-settings-menu
+      *ngIf="isSettingsMenuOpen"
+      (closeSettingsMenu)="isSettingsMenuOpen = false"
+    ></app-settings-menu>
+
+    <!-- Calculators and converters -->
+    <app-basic-calculator
+      *ngIf="globals.currentCalculator === 'Basic calculator'"
+    ></app-basic-calculator>
+    <app-length-converter
+      *ngIf="globals.currentCalculator === 'Length converter'"
+    ></app-length-converter>
+  </ion-content>
 
   <app-calculator-menu
-    *ngIf="isCalculatorMenuOpen"
-    (changeCalculator)="currentCalculator = $event.calculatorName"
-    (closeCalculatorMenu)="isCalculatorMenuOpen = false"
+    #calculatormenu
+    (changeCalculator)="globals.changeCurrentCalculator($event.calculatorName)"
   ></app-calculator-menu>
-  <app-settings-menu
-    *ngIf="isSettingsMenuOpen"
-    (closeSettingsMenu)="isSettingsMenuOpen = false"
-  ></app-settings-menu>
-
-  <!-- Calculators and converters -->
-  <app-basic-calculator
-    *ngIf="currentCalculator === 'Basic calculator'"
-  ></app-basic-calculator>
-  <app-length-converter
-    *ngIf="currentCalculator === 'Length converter'"
-  ></app-length-converter>
 </ion-app>
