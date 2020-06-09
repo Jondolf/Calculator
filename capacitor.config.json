@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "ionic-ng-calculator",
+  "appId": "com.gamitopia.calculator",
+  "appName": "calculator",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
