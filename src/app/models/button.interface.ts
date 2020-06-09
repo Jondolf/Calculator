@@ -5,7 +5,7 @@ export interface Button {
     iconImgSrc?: string; // If the icon is an image
     iconImgAlt?: string; // If the icon is an image
   };
-  styles: {
+  styles?: {
     width?: string;
     height?: string;
     padding?: string;

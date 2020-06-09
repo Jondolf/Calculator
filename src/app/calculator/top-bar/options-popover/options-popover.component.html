@@ -1,0 +1,29 @@
+<ion-button
+  (click)="emitMessage('openSettingsMenu')"
+  color="light"
+  expand="full"
+  fill="clear"
+  class="ion-text-capitalize"
+>
+  Settings
+</ion-button>
+
+<ion-button
+  *ngIf="globals.currentCalculator === 'Basic calculator'"
+  (click)="emitMessage('openBasicCalculatorLayoutSettings')"
+  color="light"
+  expand="full"
+  fill="clear"
+  class="ion-text-capitalize"
+>
+  Basic calculator layout
+</ion-button>
+
+<ion-button
+  (click)="closePopover()"
+  color="light"
+  expand="full"
+  fill="clear"
+  class="ion-text-capitalize"
+  >Close
+</ion-button>

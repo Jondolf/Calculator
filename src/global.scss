@@ -15,7 +15,7 @@
 /* Basic CSS for apps built with Ionic */
 @import '~@ionic/angular/css/normalize.css';
 @import '~@ionic/angular/css/structure.css';
-@import '~@ionic/angular/css/typography.css';
+// @import '~@ionic/angular/css/typography.css';
 @import '~@ionic/angular/css/display.css';
 
 /* Optional CSS utils that can be commented out */
@@ -27,6 +27,7 @@
 
 body,
 html {
+  --ion-font-family: 'Nunito Sans', 'Lucida Sans', sans-serif;
   margin: 0;
   padding: 0;
   min-height: 100%;
@@ -39,12 +40,30 @@ html {
 html,
 button,
 input {
-  font-family: 'Nunito Sans', 'Lucida Sans', 'Lucida Sans Regular',
-    'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: 'Nunito Sans', 'Lucida Sans', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Nunito', 'Nunito Sans', 'Lucida Sans', sans-serif;
 }
 
 button,
 input {
   border: none;
   outline: none;
+}
+
+.options-popover .popover-content {
+  background-color: rgba(var(--ion-color-dark-rgb), 0.8);
+  padding: 0;
+  overflow: hidden;
+  .list {
+    padding: 0;
+    background-color: transparent;
+  }
 }

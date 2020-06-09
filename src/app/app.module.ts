@@ -22,6 +22,7 @@ import { MoreCommandsMenuComponent } from './calculator/calculators/basic-calcul
 
 import * as Hammer from 'hammerjs';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { OptionsPopoverComponent } from './calculator/top-bar/options-popover/options-popover.component';
 
 @Injectable()
 export class HammerConfig extends HammerGestureConfig {
@@ -32,8 +33,8 @@ export class HammerConfig extends HammerGestureConfig {
 }
 
 @NgModule({
-  declarations: [AppComponent, BasicCalculatorComponent, LengthConverterComponent, TopBarComponent, CalculatorMenuComponent,
-    FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent, SettingsMenuComponent,
+  declarations: [AppComponent, BasicCalculatorComponent, LengthConverterComponent, TopBarComponent, OptionsPopoverComponent,
+    CalculatorMenuComponent, FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent, SettingsMenuComponent,
     ThemesComponent, AboutComponent, MoreCommandsMenuComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HammerModule],

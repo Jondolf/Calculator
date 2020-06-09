@@ -10,11 +10,11 @@ export class FullscreenContainerComponent implements OnInit {
   @Input() backgroundAlpha: number | string;
   backgroundColor: string;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.backgroundColor = this.getBackgroundColor();
   }
 
-  getBackgroundColor() {
+  getBackgroundColor(): string {
     const bgRgb = this.backgroundRgb ? this.backgroundRgb : 'var(--ion-color-primary-rgb)';
     const bgAlpha = this.backgroundAlpha ? this.backgroundAlpha : '0.8';
     return `rgba(${bgRgb}, ${bgAlpha})`;

@@ -1,4 +1,6 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
+import { PopoverController } from '@ionic/angular';
+import { OptionsPopoverComponent } from './options-popover/options-popover.component';
 
 @Component({
   selector: 'app-top-bar',
@@ -8,4 +10,24 @@ import { Component, Output, EventEmitter } from '@angular/core';
 export class TopBarComponent {
   @Output() openCalculatorMenu = new EventEmitter();
   @Output() openSettingsMenu = new EventEmitter();
+
+  constructor(public popoverController: PopoverController) { }
+
+  async presentPopover(ev: Event) {
+    const popover = await this.popoverController.create({
+      component: OptionsPopoverComponent,
+      cssClass: 'options-popover',
+      event: ev,
+      translucent: true
+    });
+    popover.present();
+    return popover.onDidDismiss().then(
+      (data: any) => {
+        if (!data || !data.data) { return; }
+        const message = data.data.message;
+        if (message === 'openSettingsMenu') {
+          this.openSettingsMenu.emit();
+        }
+      });
+  }
 }
