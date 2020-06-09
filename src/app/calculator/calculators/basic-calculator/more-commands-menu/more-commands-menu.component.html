@@ -61,22 +61,40 @@
       mod
     </button>
     <button
-      (click)="addSymbolToCalculation.emit({ symbol: 'sin' })"
+      (click)="addSymbolToCalculation.emit({ symbol: 'sin(' })"
       class="command"
     >
       sin
     </button>
     <button
-      (click)="addSymbolToCalculation.emit({ symbol: 'cos' })"
+      (click)="addSymbolToCalculation.emit({ symbol: 'cos(' })"
       class="cos"
     >
       cos
     </button>
     <button
-      (click)="addSymbolToCalculation.emit({ symbol: 'tan' })"
+      (click)="addSymbolToCalculation.emit({ symbol: 'tan(' })"
       class="command"
     >
       tan
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: 'log(' })"
+      class="command"
+    >
+      log
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: 'ln(' })"
+      class="command"
+    >
+      ln
+    </button>
+    <button
+      (click)="addSymbolToCalculation.emit({ symbol: 'lg(' })"
+      class="command"
+    >
+      lg
     </button>
   </div>
   <div (click)="menuOpen = !menuOpen" class="swipe-container">

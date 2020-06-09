@@ -28,7 +28,7 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const operators = '+-x÷^mod';
+    const operators = ['+', '-', 'x', '÷', '^', 'mod', 'sin', 'cos', 'tan', 'log', 'ln', 'lg'];
     const numberSymbols = '0123456789πe';
     const lastSymbolOfCalc = this.calculation[this.calculation.length - 1];
 

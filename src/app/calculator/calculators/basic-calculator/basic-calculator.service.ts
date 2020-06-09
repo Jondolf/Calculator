@@ -5,9 +5,14 @@ import { Injectable } from '@angular/core';
 })
 export class BasicCalculatorService {
   countCalculation(calculation: string): number {
-    // With working code math operators (*, / etc.) instead of x and ÷ etc.
-    const realCalculation = calculation.replace(/x/g, '*').replace(/÷/g, '/').replace(/mod/g, 'm')
-      .replace(/sin/g, 's').replace(/cos/g, 'c').replace(/tan/g, 't').replace(/([0-9πe])π/g, '$1*π').replace(/([0-9πe])e/g, '$1*e');
+    /*
+    Replace calculation symbols with working code math operators (*, / etc.) instead of x and ÷ etc.
+    Each of these "commands" has to be one symbol long, so some names are a bit random like the logarithm names.
+    */
+    const realCalculation = calculation.replace(/x/g, '*').replace(/÷/g, '/').replace(/mod/g, 'm') // multiply, divide, modulo
+      .replace(/sin/g, 's').replace(/cos/g, 'c').replace(/tan/g, 't') // sin, cos, tan
+      .replace(/log/g, 'f').replace(/ln/g, 'g').replace(/lg/g, 'h') // log base 10, log base e, log base 2 (the letters are random)
+      .replace(/([0-9πe])π/g, '$1*π').replace(/([0-9πe])e/g, '$1*e'); // replace ππ and ee with π*π and e*e
     const result = this.countPlus(realCalculation);
     return result;
   }
@@ -102,6 +107,15 @@ export class BasicCalculatorService {
       }
       if (numberString[0] === 't' /* tan */ && numberString.length > 1) {
         return Math.tan(this.countPlus(numberString.substring(1, numberString.length)));
+      }
+      if (numberString[0] === 'f' /* log */ && numberString.length > 1) {
+        return Math.log10(this.countPlus(numberString.substring(1, numberString.length)));
+      }
+      if (numberString[0] === 'g' /* ln */ && numberString.length > 1) {
+        return Math.log(this.countPlus(numberString.substring(1, numberString.length)));
+      }
+      if (numberString[0] === 'h' /* lg */ && numberString.length > 1) {
+        return Math.log2(this.countPlus(numberString.substring(1, numberString.length)));
       }
       if (numberString[numberString.length - 1] === '%' && numberString.length > 1) {
         return this.countPlus(numberString.substring(0, numberString.length - 1)) / 100;
