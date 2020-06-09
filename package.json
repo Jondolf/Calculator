@@ -1,8 +1,8 @@
 {
-  "name": "ionic-ng-calculator",
+  "name": "calculator",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Gamitopia",
+  "homepage": "https://gamitopia.herokuapp.com",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~9.1.6",
     "@angular/platform-browser-dynamic": "~9.1.6",
     "@angular/router": "~9.1.6",
+    "@capacitor/android": "^2.1.2",
     "@capacitor/core": "2.1.2",
     "@ionic-native/core": "^5.0.7",
     "@ionic-native/splash-screen": "^5.0.0",
