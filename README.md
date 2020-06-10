@@ -1,5 +1,7 @@
 # Calculator
 
+<img src="./resources/icon.png" alt="Calculator icon" width="350" height="350">
+
 ## Used versions (updated 10.6.2020)
 
 Only the most important info is mentioned here.  
