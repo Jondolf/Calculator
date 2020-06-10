@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">ionic-ng-calculator</string>
-    <string name="title_activity_main">ionic-ng-calculator</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">Calculator</string>
+    <string name="title_activity_main">Calculator</string>
+    <string name="package_name">com.gamitopia.calculator</string>
+    <string name="custom_url_scheme">com.gamitopia.calculator</string>
 </resources>
