@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
+import { PopoverController, Animation, AnimationBuilder } from '@ionic/angular';
 import { OptionsPopoverComponent } from './options-popover/options-popover.component';
 
 @Component({
@@ -18,7 +18,8 @@ export class TopBarComponent {
       component: OptionsPopoverComponent,
       cssClass: 'options-popover',
       event: ev,
-      translucent: true
+      translucent: true,
+      animated: false
     });
     popover.present();
     return popover.onDidDismiss().then(
