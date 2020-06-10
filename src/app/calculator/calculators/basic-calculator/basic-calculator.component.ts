@@ -36,15 +36,16 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
     if (operators.includes(symbol.toString()) && operators.includes(lastSymbolOfCalc.toString())) {
       return;
     }
-    // Don't allow operator as first symbol
-    if (operators.includes(symbol.toString()) && this.calculation === '0') {
+    // Don't allow operator as first symbol (except minus symbol)
+    if (operators.includes(symbol.toString()) && this.calculation === '0' && symbol !== '-') {
       return;
     }
     // Parentheses restrictions
-    if (symbol === '(' && (numberSymbols.includes(lastSymbolOfCalc.toString()) || lastSymbolOfCalc === ')')) {
+    if (symbol === '(' && (numberSymbols.includes(lastSymbolOfCalc.toString()) || lastSymbolOfCalc === ')') && this.calculation !== '0') {
       return;
     } else if (symbol === ')' && operators.includes(lastSymbolOfCalc)) {
-      console.log('Return');
+      return;
+    } else if (operators.includes(symbol.toString()) && lastSymbolOfCalc === '(' && symbol !== '-') {
       return;
     }
     // Don't allow numbers right after closing parentheses
