@@ -1,3 +1,61 @@
-<p>
-  length-converter works!
-</p>
+<div class="unit-selection-container">
+  <div class="unit-container">
+    <ion-label>Choose a unit</ion-label>
+    <ion-select
+      value="meter"
+      okText="Confirm"
+      cancelText="Cancel"
+      placeholder="Choose the unit"
+      [(ngModel)]="currentUnitName"
+    >
+      <ion-select-option
+        *ngFor="let unit of lengthUnits.metric"
+        [value]="unit.name"
+        >{{ unit.name }}</ion-select-option
+      >
+      <ion-select-option
+        *ngFor="let unit of lengthUnits.us"
+        [value]="unit.name"
+        >{{ unit.name }}</ion-select-option
+      >
+    </ion-select>
+  </div>
+
+  <div class="amount-input-container">
+    <ion-label>Choose amount</ion-label>
+    <ion-input
+      [(ngModel)]="amount"
+      type="number"
+      inputmode="numeric"
+      placeholder="Type input"
+    ></ion-input>
+  </div>
+</div>
+
+<div class="results-container">
+  <ion-list>
+    <div class="header-container">
+      <ion-list-header>Unit</ion-list-header>
+      <ion-list-header>Value</ion-list-header>
+    </div>
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>Metric</ion-label>
+      </ion-item-divider>
+      <ion-item *ngFor="let unit of lengthUnits.metric">
+        <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
+        <ion-label>{{ countLength(unit) }}</ion-label>
+      </ion-item>
+    </ion-item-group>
+
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>Imperial/US</ion-label>
+      </ion-item-divider>
+      <ion-item *ngFor="let unit of lengthUnits.us">
+        <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
+        <ion-label>{{ countLength(unit) }}</ion-label>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+</div>
