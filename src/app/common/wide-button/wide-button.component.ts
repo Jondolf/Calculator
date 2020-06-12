@@ -11,7 +11,7 @@ export class WideButtonComponent implements OnInit {
   @Input() backgroundColor: string;
 
   ngOnInit() {
-    if (this.button.styles.backgroundRgb && this.button.styles.backgroundAlpha) {
+    if (this.button.styles && this.button.styles.backgroundRgb && this.button.styles.backgroundAlpha) {
       this.backgroundColor = this.getBackgroundColor();
     }
   }
