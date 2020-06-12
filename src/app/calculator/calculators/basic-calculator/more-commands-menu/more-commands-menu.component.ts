@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'app-more-commands-menu',
@@ -6,6 +6,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./more-commands-menu.component.scss']
 })
 export class MoreCommandsMenuComponent {
+  @Input() gridSize: string;
   @Output() addSymbolToCalculation = new EventEmitter();
 
   menuOpen = false;
