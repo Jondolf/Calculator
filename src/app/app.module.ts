@@ -30,7 +30,8 @@ import { OptionsPopoverComponent } from './calculator/top-bar/options-popover/op
 export class HammerConfig extends HammerGestureConfig {
   overrides = {
     // Override default config
-    swipe: { direction: Hammer.DIRECTION_ALL }
+    swipe: { direction: Hammer.DIRECTION_ALL },
+    press: { time: 1500 }
   };
 }
 

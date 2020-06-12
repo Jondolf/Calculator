@@ -145,6 +145,7 @@
   </button>
   <button
     (click)="backspaceEventHandler()"
+    (press)="calculation = '0'; currentResult = ''"
     [ngStyle]="styles.buttonStyles"
     class="ion-activatable command backspace"
   >
