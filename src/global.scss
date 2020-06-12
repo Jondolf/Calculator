@@ -58,6 +58,20 @@ input {
   outline: none;
 }
 
+// To avoid white on white and black on black
+.light.pure-white app-basic-calculator,
+.dark.pure-black app-basic-calculator {
+  app-customize-buttons-menu {
+    ion-range {
+      --ion-color-base: var(--ion-color-light-contrast) !important;
+    }
+    ion-radio {
+      --color: var(--ion-color-light-contrast);
+      --color-checked: var(--ion-color-light-contrast);
+    }
+  }
+}
+
 .options-popover .popover-content {
   background-color: var(--ion-color-light-tint);
   padding: 0;
@@ -72,8 +86,22 @@ input {
 }
 
 .alert-wrapper {
-  background-color: var(--ion-color-light-tint) !important;
+  --background: var(--ion-color-light-tint);
   .alert-radio-label {
     color: var(--ion-color-light-contrast) !important;
+  }
+}
+// To avoid white on white and black on black
+.light.pure-white .alert-wrapper,
+.dark.pure-black .alert-wrapper {
+  border: 1px solid var(--ion-color-light-contrast);
+  .alert-radio-icon {
+    border-color: var(--ion-color-light-contrast) !important;
+  }
+  .alert-radio-inner {
+    background-color: var(--ion-color-light-contrast);
+  }
+  .alert-button {
+    color: var(--ion-color-light-contrast);
   }
 }

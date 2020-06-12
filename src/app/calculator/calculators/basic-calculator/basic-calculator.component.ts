@@ -2,6 +2,9 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  Input,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { BasicCalculatorService } from './basic-calculator.service';
 
@@ -11,8 +14,13 @@ import { BasicCalculatorService } from './basic-calculator.service';
   styleUrls: ['./basic-calculator.component.scss'],
 })
 export class BasicCalculatorComponent implements OnInit, OnDestroy {
+  @Input() isBasicCalculatorButtonSettingsMenuOpen: boolean;
+  @Output() closeBasicCalculatorButtonSettingsMenu = new EventEmitter();
+
   calculation = '0';
   currentResult = '';
+
+  styles = this.getDefaultStyles();
 
   constructor(public calculator: BasicCalculatorService) { }
 
@@ -21,6 +29,17 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     document.body.removeEventListener('keydown', this.handleEvent);
+  }
+
+  getDefaultStyles() {
+    return {
+      gridSize: 'small',
+      gridGap: '0px',
+      buttonStyles: {
+        'border-radius': '0px',
+        'border-width': '1px'
+      }
+    };
   }
 
   addSymbolToCalculation(symbol: string | number): void {

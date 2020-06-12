@@ -1,5 +1,5 @@
-import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
-import { PopoverController, Animation, AnimationBuilder } from '@ionic/angular';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { PopoverController } from '@ionic/angular';
 import { OptionsPopoverComponent } from './options-popover/options-popover.component';
 
 @Component({
@@ -10,6 +10,7 @@ import { OptionsPopoverComponent } from './options-popover/options-popover.compo
 export class TopBarComponent {
   @Output() openCalculatorMenu = new EventEmitter();
   @Output() openSettingsMenu = new EventEmitter();
+  @Output() openBasicCalculatorButtonSettingsMenu = new EventEmitter();
 
   constructor(public popoverController: PopoverController) { }
 
@@ -28,6 +29,9 @@ export class TopBarComponent {
         const message = data.data.message;
         if (message === 'openSettingsMenu') {
           this.openSettingsMenu.emit();
+        }
+        if (message === 'openBasicCalculatorButtonSettingsMenu') {
+          this.openBasicCalculatorButtonSettingsMenu.emit();
         }
       });
   }

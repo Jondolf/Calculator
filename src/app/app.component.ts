@@ -14,6 +14,7 @@ export class AppComponent {
   @ViewChild('calculatormenu') calculatorMenu;
 
   isSettingsMenuOpen: boolean;
+  isBasicCalculatorButtonSettingsMenuOpen: boolean;
 
   constructor(
     private platform: Platform,

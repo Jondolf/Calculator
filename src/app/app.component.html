@@ -3,6 +3,9 @@
     <app-top-bar
       (openCalculatorMenu)="calculatorMenu.openFirst()"
       (openSettingsMenu)="isSettingsMenuOpen = true"
+      (openBasicCalculatorButtonSettingsMenu)="
+        isBasicCalculatorButtonSettingsMenuOpen = true
+      "
     ></app-top-bar>
 
     <app-settings-menu
@@ -13,6 +16,12 @@
     <!-- Calculators and converters -->
     <app-basic-calculator
       *ngIf="globals.currentCalculator === 'Basic calculator'"
+      [isBasicCalculatorButtonSettingsMenuOpen]="
+        isBasicCalculatorButtonSettingsMenuOpen
+      "
+      (closeBasicCalculatorButtonSettingsMenu)="
+        isBasicCalculatorButtonSettingsMenuOpen = false
+      "
     ></app-basic-calculator>
     <app-length-converter
       *ngIf="globals.currentCalculator === 'Length converter'"

@@ -10,6 +10,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { BasicCalculatorComponent } from './calculator/calculators/basic-calculator/basic-calculator.component';
+import { CustomizeButtonsMenuComponent } from './calculator/calculators/basic-calculator/customize-buttons-menu/customize-buttons-menu.component';
 import { LengthConverterComponent } from './calculator/calculators/length-converter/length-converter.component';
 import { TopBarComponent } from './calculator/top-bar/top-bar.component';
 import { CalculatorMenuComponent } from './calculator/calculator-menu/calculator-menu.component';
@@ -34,9 +35,9 @@ export class HammerConfig extends HammerGestureConfig {
 }
 
 @NgModule({
-  declarations: [AppComponent, BasicCalculatorComponent, LengthConverterComponent, TopBarComponent, OptionsPopoverComponent,
-    CalculatorMenuComponent, FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent, SettingsMenuComponent,
-    ThemesComponent, AboutComponent, MoreCommandsMenuComponent],
+  declarations: [AppComponent, BasicCalculatorComponent, CustomizeButtonsMenuComponent, LengthConverterComponent,
+    TopBarComponent, OptionsPopoverComponent, CalculatorMenuComponent, FullscreenContainerComponent, CircleButtonComponent,
+    WideButtonComponent, SettingsMenuComponent, ThemesComponent, AboutComponent, MoreCommandsMenuComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, HammerModule],
   providers: [
