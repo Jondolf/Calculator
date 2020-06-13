@@ -1,8 +1,24 @@
-<app-circle-button
+<!--<app-circle-button
   [iconName]="'menu'"
   (click)="openCalculatorMenu.emit()"
 ></app-circle-button>
 <app-circle-button
   [iconName]="'more_vert'"
   (click)="presentPopover($event)"
-></app-circle-button>
+></app-circle-button>-->
+
+<ion-toolbar>
+  <ion-buttons slot="start">
+    <ion-button (click)="openCalculatorMenu.emit()" slot="start">
+      <ion-icon slot="icon-only" name="menu"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+
+  <ion-buttons slot="end">
+    <ion-button (click)="presentPopover($event)" slot="start">
+      <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+
+  <ion-title>{{ globals.currentCalculator }}</ion-title>
+</ion-toolbar>

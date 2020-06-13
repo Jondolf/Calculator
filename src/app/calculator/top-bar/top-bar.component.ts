@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { OptionsPopoverComponent } from './options-popover/options-popover.component';
+import { GlobalVarsService } from 'src/app/global-vars.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -12,7 +13,7 @@ export class TopBarComponent {
   @Output() openSettingsMenu = new EventEmitter();
   @Output() openBasicCalculatorButtonSettingsMenu = new EventEmitter();
 
-  constructor(public popoverController: PopoverController) { }
+  constructor(public popoverController: PopoverController, public globals: GlobalVarsService) { }
 
   async presentPopover(ev: Event) {
     const popover = await this.popoverController.create({
