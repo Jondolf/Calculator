@@ -7,6 +7,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { BasicCalculatorService } from './basic-calculator.service';
+import { BasicCalculatorCustomStyles } from 'src/app/models/basic-calculator-custom-styles.interface';
 
 @Component({
   selector: 'app-basic-calculator',
@@ -20,7 +21,7 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
   calculation = '0';
   currentResult = '';
 
-  styles = this.getDefaultStyles();
+  styles: BasicCalculatorCustomStyles = this.getDefaultStyles();
 
   constructor(public calculator: BasicCalculatorService) { }
 
@@ -31,7 +32,7 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
     document.body.removeEventListener('keydown', this.handleEvent);
   }
 
-  getDefaultStyles() {
+  getDefaultStyles(): BasicCalculatorCustomStyles {
     return {
       gridSize: 'small',
       gridGap: '0px',
@@ -39,7 +40,7 @@ export class BasicCalculatorComponent implements OnInit, OnDestroy {
         'border-radius': '0px',
         'border-width': '1px'
       }
-    };
+    } as BasicCalculatorCustomStyles;
   }
 
   addSymbolToCalculation(symbol: string | number): void {

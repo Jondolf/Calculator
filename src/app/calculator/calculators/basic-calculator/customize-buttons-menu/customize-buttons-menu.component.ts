@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { BasicCalculatorCustomStyles } from 'src/app/models/basic-calculator-custom-styles.interface';
 
 @Component({
   selector: 'app-customize-buttons-menu',
@@ -11,7 +12,7 @@ export class CustomizeButtonsMenuComponent implements OnInit, OnChanges {
   @Output() stylesChange = new EventEmitter();
   @Output() resetToDefaults = new EventEmitter();
 
-  styles = {
+  styles: BasicCalculatorCustomStyles = {
     gridSize: 'small',
     gridGap: '0px',
     buttonStyles: {
