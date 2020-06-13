@@ -4,4 +4,8 @@ ion-toolbar {
   text-align: center;
   position: absolute;
   z-index: 3;
+
+  ion-icon {
+    color: var(--ion-color-light-contrast);
+  }
 }
