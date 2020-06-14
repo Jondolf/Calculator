@@ -1,19 +1,33 @@
 <ion-menu side="start" menuId="first" contentId="content">
   <ion-header>
     <ion-toolbar>
-      <ion-title>Calculator</ion-title>
+      <ion-title>Calculators</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
     <ion-list>
       <ion-item
         button
-        *ngFor="let button of calculatorMenuButtons; let i = index"
-        (click)="changeCalculator.emit({ calculatorName: button.buttonName })"
+        (click)="changeCalculator.emit({ calculatorName: 'Basic calculator' })"
       >
-        <ion-icon [name]="button.icon.iconName"></ion-icon>
-        <ion-label>{{ button.buttonName }}</ion-label>
+        <ion-icon [name]="'calculator-outline'"></ion-icon>
+        <ion-label>Basic calculator</ion-label>
       </ion-item>
+
+      <app-accordion-list
+        [listName]="'Converters'"
+        [iconName]="'chevron-down-outline'"
+      >
+        <ion-item
+          button
+          (click)="
+            changeCalculator.emit({ calculatorName: 'Length converter' })
+          "
+        >
+          <ion-icon [name]="'calculator-outline'"></ion-icon>
+          <ion-label>Length converter</ion-label>
+        </ion-item>
+      </app-accordion-list>
     </ion-list>
   </ion-content>
 </ion-menu>

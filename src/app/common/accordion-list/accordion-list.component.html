@@ -1,0 +1,21 @@
+<ion-list>
+  <ion-item button (click)="isCollapsed = !isCollapsed">
+    <ion-label>{{ listName }}</ion-label>
+    <ion-icon
+      *ngIf="iconName"
+      [name]="iconName"
+      [ngStyle]="{
+        transform: 'rotate(' + (isCollapsed ? '0deg' : '180deg') + ')'
+      }"
+    ></ion-icon>
+  </ion-item>
+
+  <!-- the list items will be placed here -->
+  <div
+    class="list-item-container"
+    [ngStyle]="{ height: !isCollapsed ? listHeight : '0px' }"
+    #accordionlist
+  >
+    <ng-content></ng-content>
+  </div>
+</ion-list>

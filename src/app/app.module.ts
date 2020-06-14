@@ -14,13 +14,15 @@ import { CustomizeButtonsMenuComponent } from './calculator/calculators/basic-ca
 import { LengthConverterComponent } from './calculator/calculators/length-converter/length-converter.component';
 import { TopBarComponent } from './calculator/top-bar/top-bar.component';
 import { CalculatorMenuComponent } from './calculator/calculator-menu/calculator-menu.component';
-import { FullscreenContainerComponent } from './common/fullscreen-container/fullscreen-container.component';
-import { CircleButtonComponent } from './common/circle-button/circle-button.component';
-import { WideButtonComponent } from './common/wide-button/wide-button.component';
 import { SettingsMenuComponent } from './calculator/settings-menu/settings-menu.component';
 import { ThemesComponent } from './calculator/settings-menu/themes/themes.component';
 import { AboutComponent } from './calculator/settings-menu/about/about.component';
 import { MoreCommandsMenuComponent } from './calculator/calculators/basic-calculator/more-commands-menu/more-commands-menu.component';
+// common
+import { FullscreenContainerComponent } from './common/fullscreen-container/fullscreen-container.component';
+import { CircleButtonComponent } from './common/circle-button/circle-button.component';
+import { WideButtonComponent } from './common/wide-button/wide-button.component';
+import { AccordionListComponent } from './common/accordion-list/accordion-list.component';
 
 import * as Hammer from 'hammerjs';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
@@ -37,8 +39,9 @@ export class HammerConfig extends HammerGestureConfig {
 
 @NgModule({
   declarations: [AppComponent, BasicCalculatorComponent, CustomizeButtonsMenuComponent, LengthConverterComponent,
-    TopBarComponent, OptionsPopoverComponent, CalculatorMenuComponent, FullscreenContainerComponent, CircleButtonComponent,
-    WideButtonComponent, SettingsMenuComponent, ThemesComponent, AboutComponent, MoreCommandsMenuComponent],
+    TopBarComponent, OptionsPopoverComponent, CalculatorMenuComponent,
+    FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent, AccordionListComponent,
+    SettingsMenuComponent, ThemesComponent, AboutComponent, MoreCommandsMenuComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, HammerModule],
   providers: [
