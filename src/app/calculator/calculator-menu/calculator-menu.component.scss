@@ -10,6 +10,7 @@ ion-menu {
     --background: var(--ion-color-light-tint);
     ion-list {
       background-color: var(--ion-color-light-tint);
+      padding: 0;
       ion-item {
         --background: var(--ion-color-light-tint);
         ion-icon {
