@@ -20,12 +20,13 @@
       >
         <ion-item
           button
+          *ngFor="let converter of converters"
           (click)="
-            changeCalculator.emit({ calculatorName: 'Length converter' })
+            changeCalculator.emit({ calculatorName: converter.buttonName })
           "
         >
-          <ion-icon [name]="'calculator-outline'"></ion-icon>
-          <ion-label>Length converter</ion-label>
+          <ion-icon [name]="converter.icon.iconName"></ion-icon>
+          <ion-label>{{ converter.buttonName }}</ion-label>
         </ion-item>
       </app-accordion-list>
     </ion-list>

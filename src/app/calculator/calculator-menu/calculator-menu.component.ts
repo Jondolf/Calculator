@@ -11,16 +11,30 @@ export class CalculatorMenuComponent {
   @Output() changeCalculator = new EventEmitter();
   @Output() closeCalculatorMenu = new EventEmitter();
 
-  calculatorMenuButtons: Button[] = [
+  converters: Button[] = [
     {
-      buttonName: 'Basic calculator',
+      buttonName: 'Length converter',
       icon: {
-        iconName: 'calculator-outline'
+        iconName: 'calculator'
       }
     },
     {
-      buttonName: 'Length converter',
-      icon: { iconName: 'calculator' }
+      buttonName: 'Test1',
+      icon: {
+        iconName: 'cash-outline'
+      }
+    },
+    {
+      buttonName: 'Test2',
+      icon: {
+        iconName: 'calculator'
+      }
+    },
+    {
+      buttonName: 'Test3',
+      icon: {
+        iconName: 'calculator'
+      }
     },
   ];
 
