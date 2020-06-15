@@ -7,6 +7,9 @@
       cancelText="Cancel"
       placeholder="Choose the unit"
       [(ngModel)]="currentUnitName"
+      (ionChange)="
+        currentUnit = unitConverter.findUnitByName(currentUnitName, lengthUnits)
+      "
     >
       <ion-select-option
         *ngFor="let unit of lengthUnits.metric"
@@ -42,7 +45,9 @@
         </ion-item-divider>
         <ion-item *ngFor="let unit of lengthUnits.metric">
           <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
-          <ion-label>{{ countLength(unit) }}</ion-label>
+          <ion-label>{{
+            unitConverter.convertUnit(unit, currentUnit, amount)
+          }}</ion-label>
         </ion-item>
       </ion-item-group>
 
@@ -52,7 +57,9 @@
         </ion-item-divider>
         <ion-item *ngFor="let unit of lengthUnits.us">
           <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
-          <ion-label>{{ countLength(unit) }}</ion-label>
+          <ion-label>{{
+            unitConverter.convertUnit(unit, currentUnit, amount)
+          }}</ion-label>
         </ion-item>
       </ion-item-group>
     </ion-list>
