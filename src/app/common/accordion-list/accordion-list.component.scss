@@ -1,5 +1,6 @@
 ion-list {
   padding: 0;
+  --background: var(--ion-color-light);
   ion-item:first-child ion-icon {
     transition: 0.2s ease-out;
   }
