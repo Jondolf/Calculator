@@ -19,7 +19,7 @@ export class CalculatorMenuComponent {
       }
     },
     {
-      buttonName: 'Test1',
+      buttonName: 'Currency converter',
       icon: {
         iconName: 'cash-outline'
       }

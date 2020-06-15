@@ -9,15 +9,18 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
-import { BasicCalculatorComponent } from './calculator/calculators/basic-calculator/basic-calculator.component';
-import { CustomizeButtonsMenuComponent } from './calculator/calculators/basic-calculator/customize-buttons-menu/customize-buttons-menu.component';
-import { LengthConverterComponent } from './calculator/calculators/length-converter/length-converter.component';
 import { TopBarComponent } from './calculator/top-bar/top-bar.component';
 import { CalculatorMenuComponent } from './calculator/calculator-menu/calculator-menu.component';
 import { SettingsMenuComponent } from './calculator/settings-menu/settings-menu.component';
 import { ThemesComponent } from './calculator/settings-menu/themes/themes.component';
 import { AboutComponent } from './calculator/settings-menu/about/about.component';
+// basic calculator
+import { BasicCalculatorComponent } from './calculator/calculators/basic-calculator/basic-calculator.component';
 import { MoreCommandsMenuComponent } from './calculator/calculators/basic-calculator/more-commands-menu/more-commands-menu.component';
+import { CustomizeButtonsMenuComponent } from './calculator/calculators/basic-calculator/customize-buttons-menu/customize-buttons-menu.component';
+// converters
+import { LengthConverterComponent } from './calculator/calculators/converters/length-converter/length-converter.component';
+import { CurrencyConverterComponent } from './calculator/calculators/converters/currency-converter/currency-converter.component';
 // common
 import { FullscreenContainerComponent } from './common/fullscreen-container/fullscreen-container.component';
 import { CircleButtonComponent } from './common/circle-button/circle-button.component';
@@ -38,10 +41,11 @@ export class HammerConfig extends HammerGestureConfig {
 }
 
 @NgModule({
-  declarations: [AppComponent, BasicCalculatorComponent, CustomizeButtonsMenuComponent, LengthConverterComponent,
-    TopBarComponent, OptionsPopoverComponent, CalculatorMenuComponent,
+  declarations: [AppComponent, TopBarComponent, OptionsPopoverComponent, CalculatorMenuComponent,
+    BasicCalculatorComponent, CustomizeButtonsMenuComponent, MoreCommandsMenuComponent,
+    LengthConverterComponent, CurrencyConverterComponent,
     FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent, AccordionListComponent,
-    SettingsMenuComponent, ThemesComponent, AboutComponent, MoreCommandsMenuComponent],
+    SettingsMenuComponent, ThemesComponent, AboutComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, HammerModule],
   providers: [
