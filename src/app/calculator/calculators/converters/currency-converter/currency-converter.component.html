@@ -68,55 +68,61 @@
         <ion-list-header>Value</ion-list-header>
       </div>
       <ion-item-group *ngIf="showOnlyMostTraded">
-        <ion-item-divider>
-          <ion-label>Most traded currencies</ion-label>
-        </ion-item-divider>
-        <ion-item
-          *ngFor="
-            let currency of currencyConverter.mostTradedCurrencies.currencies
-          "
+        <app-accordion-list
+          [listName]="'Most traded currencies'"
+          [iconName]="'chevron-down-outline'"
+          [background]="'rgba(var(--ion-color-light-shade-rgb), 0.3)'"
         >
-          <ion-label class="iso-code">{{ currency.isoCode }}</ion-label>
-          <ion-label
-            >{{ currency.name }} ({{ currency.abbreviation }})</ion-label
+          <ion-item
+            *ngFor="
+              let currency of currencyConverter.mostTradedCurrencies.currencies
+            "
           >
-          <ion-label>
-            {{
-              currency.multiplier && currency.multiplier !== '-1'
-                ? unitConverter.convertUnit(currency, currentUnit, amount)
-                : ''
-            }}
-            <ion-skeleton-text
-              *ngIf="currency.multiplier === '-1'"
-              animated
-              style="width: 100%;"
-            ></ion-skeleton-text>
-          </ion-label>
-        </ion-item>
+            <ion-label class="iso-code">{{ currency.isoCode }}</ion-label>
+            <ion-label
+              >{{ currency.name }} ({{ currency.abbreviation }})</ion-label
+            >
+            <ion-label>
+              {{
+                currency.multiplier && currency.multiplier !== '-1'
+                  ? unitConverter.convertUnit(currency, currentUnit, amount)
+                  : ''
+              }}
+              <ion-skeleton-text
+                *ngIf="currency.multiplier === '-1'"
+                animated
+                style="width: 100%;"
+              ></ion-skeleton-text>
+            </ion-label>
+          </ion-item>
+        </app-accordion-list>
       </ion-item-group>
 
       <ion-item-group *ngIf="!showOnlyMostTraded">
-        <ion-item-divider>
-          <ion-label>All currencies</ion-label>
-        </ion-item-divider>
-        <ion-item *ngFor="let currency of currencyConverter.currencies">
-          <ion-label class="iso-code">{{ currency.isoCode }}</ion-label>
-          <ion-label
-            >{{ currency.name }} ({{ currency.abbreviation }})</ion-label
-          >
-          <ion-label>
-            {{
-              currency.multiplier && currency.multiplier !== '-1'
-                ? unitConverter.convertUnit(currency, currentUnit, amount)
-                : ''
-            }}
-            <ion-skeleton-text
-              *ngIf="currency.multiplier === '-1'"
-              animated
-              style="width: 100%;"
-            ></ion-skeleton-text>
-          </ion-label>
-        </ion-item>
+        <app-accordion-list
+          [listName]="'All currencies'"
+          [iconName]="'chevron-down-outline'"
+          [background]="'rgba(var(--ion-color-light-shade-rgb), 0.3)'"
+        >
+          <ion-item *ngFor="let currency of currencyConverter.currencies">
+            <ion-label class="iso-code">{{ currency.isoCode }}</ion-label>
+            <ion-label
+              >{{ currency.name }} ({{ currency.abbreviation }})</ion-label
+            >
+            <ion-label>
+              {{
+                currency.multiplier && currency.multiplier !== '-1'
+                  ? unitConverter.convertUnit(currency, currentUnit, amount)
+                  : ''
+              }}
+              <ion-skeleton-text
+                *ngIf="currency.multiplier === '-1'"
+                animated
+                style="width: 100%;"
+              ></ion-skeleton-text>
+            </ion-label>
+          </ion-item>
+        </app-accordion-list>
       </ion-item-group>
     </ion-list>
   </div>

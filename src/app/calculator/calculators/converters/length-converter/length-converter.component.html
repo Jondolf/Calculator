@@ -39,27 +39,33 @@
         <ion-list-header>Value</ion-list-header>
       </div>
       <ion-item-group>
-        <ion-item-divider>
-          <ion-label>SI</ion-label>
-        </ion-item-divider>
-        <ion-item *ngFor="let unit of lengthUnits.metric">
-          <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
-          <ion-label>{{
-            unitConverter.convertUnit(unit, currentUnit, amount)
-          }}</ion-label>
-        </ion-item>
+        <app-accordion-list
+          [listName]="'SI'"
+          [iconName]="'chevron-down-outline'"
+          [background]="'rgba(var(--ion-color-light-shade-rgb), 0.3)'"
+        >
+          <ion-item *ngFor="let unit of lengthUnits.metric">
+            <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
+            <ion-label>{{
+              unitConverter.convertUnit(unit, currentUnit, amount)
+            }}</ion-label>
+          </ion-item>
+        </app-accordion-list>
       </ion-item-group>
 
       <ion-item-group>
-        <ion-item-divider>
-          <ion-label>Imperial/US</ion-label>
-        </ion-item-divider>
-        <ion-item *ngFor="let unit of lengthUnits.us">
-          <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
-          <ion-label>{{
-            unitConverter.convertUnit(unit, currentUnit, amount)
-          }}</ion-label>
-        </ion-item>
+        <app-accordion-list
+          [listName]="'Imperial/US'"
+          [iconName]="'chevron-down-outline'"
+          [background]="'rgba(var(--ion-color-light-shade-rgb), 0.3)'"
+        >
+          <ion-item *ngFor="let unit of lengthUnits.us">
+            <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
+            <ion-label>{{
+              unitConverter.convertUnit(unit, currentUnit, amount)
+            }}</ion-label>
+          </ion-item>
+        </app-accordion-list>
       </ion-item-group>
     </ion-list>
   </div>
