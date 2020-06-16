@@ -16,9 +16,9 @@ export class UnitConverterService {
     if (bigAmount) {
       // Count the length presicely and round it at ten decimals
       const length = new Decimal(bigFirstUnitMultiplier.div(bigSecondUnitMultiplier).times(bigAmount)).toFixed();
-      return length.toString() + firstUnit.abbreviation;
+      return `${length.toString()} ${firstUnit.abbreviation}`;
     } else {
-      return '0' + firstUnit.abbreviation;
+      return `0 ${firstUnit.abbreviation}`;
     }
   }
 
