@@ -1,5 +1,9 @@
 <ion-list>
-  <ion-item button (click)="isCollapsed = !isCollapsed">
+  <ion-item
+    button
+    (click)="isCollapsed = !isCollapsed"
+    class="toggle-collapse-button"
+  >
     <ion-label>{{ listName }}</ion-label>
     <ion-icon
       *ngIf="iconName"

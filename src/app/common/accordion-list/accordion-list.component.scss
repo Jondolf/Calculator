@@ -1,10 +1,32 @@
 ion-list {
   padding: 0;
   --background: var(--ion-color-light);
-  ion-item:first-child ion-icon {
-    transition: 0.2s ease-out;
+
+  .toggle-collapse-button {
+    --background: var(--ion-color-light);
+    --color: var(--ion-color-light-contrast);
+    ion-icon {
+      transition: 0.2s ease-out;
+      color: var(--ion-color-light-contrast);
+    }
   }
+
   .list-item-container {
     transition: 0.2s ease-out;
+    background: var(--ion-color-light-tint);
+  }
+}
+
+:host.color-light-tint ion-list {
+  --background: var(--ion-color-light-tint);
+  .toggle-collapse-button {
+    --background: var(--ion-color-light-tint);
+  }
+}
+
+:host.color-light-shade ion-list {
+  --background: var(--ion-color-light-shade);
+  .toggle-collapse-button {
+    --background: var(--ion-color-light-shade);
   }
 }
