@@ -14,13 +14,17 @@ export interface CurrencyUnit extends Unit {
   styleUrls: ['./currency-converter.component.scss'],
 })
 export class CurrencyConverterComponent implements OnInit {
-  amount = 1;
+  amount = '1';
   showOnlyMostTraded = true;
   currentUnitName = 'Euro';
+  /*
+  Multipliers are strings to avoid losing the precision with large numbers.
+  Unit converter changes them into Decimals and calculates them correctly.
+  */
   currentUnit: CurrencyUnit = {
     name: 'Euro',
     abbreviation: '€',
-    multiplier: 1,
+    multiplier: '1',
     isoCode: 'EUR'
   };
 

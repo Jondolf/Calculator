@@ -5,6 +5,9 @@ import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
+import Decimal from 'decimal.js';
+Decimal.set({ precision: 25, rounding: 4 });
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',

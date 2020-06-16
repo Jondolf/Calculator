@@ -1,34 +1,34 @@
 import { Injectable } from '@angular/core';
-import Big from 'big.js';
 import { Unit } from 'src/app/models/unit.interface';
+import Decimal from 'decimal.js';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UnitConverterService {
-  // converts a unit to a different unit, adds the corresponding abbreviation and returns it
-  convertUnit(firstUnit: Unit, secondUnit: Unit, amount: number): string {
-    // create new Big instances of the given parameters for counting precisely
-    const bigFirstUnitMultiplier = new Big(firstUnit.multiplier);
-    const bigSecondUnitMultiplier = new Big(secondUnit.multiplier);
-    const bigAmount = amount ? new Big(amount) : 0;
+  // Converts a unit to a different unit, adds the corresponding abbreviation and returns it
+  convertUnit(firstUnit: Unit, secondUnit: Unit, amount: number | string): string {
+    // Create new Big instances of the given parameters for counting precisely
+    const bigFirstUnitMultiplier = new Decimal(firstUnit.multiplier);
+    const bigSecondUnitMultiplier = new Decimal(secondUnit.multiplier);
+    const bigAmount = amount ? new Decimal(amount) : 0;
 
     if (bigAmount) {
-      // count the length presicely and round it at ten decimals
-      const length = new Big(bigFirstUnitMultiplier.div(bigSecondUnitMultiplier).times(bigAmount).round(10));
+      // Count the length presicely and round it at ten decimals
+      const length = new Decimal(bigFirstUnitMultiplier.div(bigSecondUnitMultiplier).times(bigAmount)).toFixed();
       return length.toString() + firstUnit.abbreviation;
     } else {
       return '0' + firstUnit.abbreviation;
     }
   }
 
-  // finds unit from objects by name
+  // Finds unit from objects by name
   findUnitByName(unitName: string, unitObject: any): Unit {
     // Object.keys gets the names of the sub-objects
     for (const unitCategoryName of Object.keys(unitObject)) {
       // foundUnit stores the found unit if it exists in the object
       const foundUnit: Unit = unitObject[unitCategoryName].find((lengthUnit: Unit) => lengthUnit.name === unitName
-        || /* for currency converter */ lengthUnit.isoCode === unitName);
+        || /* For currency converter */ lengthUnit.isoCode === unitName);
       if (foundUnit) {
         return foundUnit;
       }

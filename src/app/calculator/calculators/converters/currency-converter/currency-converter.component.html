@@ -52,7 +52,8 @@
   <div class="amount-input-container">
     <ion-label>Choose amount</ion-label>
     <ion-input
-      [(ngModel)]="amount"
+      (ionChange)="amount = $event.target.value"
+      [value]="amount"
       type="number"
       inputmode="numeric"
       placeholder="Type input"
