@@ -5,7 +5,7 @@ import { UnitConverterService } from '../unit-converter.service';
 import { CurrencyConverterService } from './currency-converter.service';
 
 export interface CurrencyUnit extends Unit {
-  isoCode: string;
+  isoCode?: string;
 }
 
 @Component({
