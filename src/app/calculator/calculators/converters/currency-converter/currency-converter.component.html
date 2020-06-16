@@ -82,12 +82,12 @@
           >
           <ion-label>
             {{
-              currency.multiplier && currency.multiplier !== -1
+              currency.multiplier && currency.multiplier !== '-1'
                 ? unitConverter.convertUnit(currency, currentUnit, amount)
                 : ''
             }}
             <ion-skeleton-text
-              *ngIf="currency.multiplier === -1"
+              *ngIf="currency.multiplier === '-1'"
               animated
               style="width: 100%;"
             ></ion-skeleton-text>
@@ -106,12 +106,12 @@
           >
           <ion-label>
             {{
-              currency.multiplier && currency.multiplier !== -1
+              currency.multiplier && currency.multiplier !== '-1'
                 ? unitConverter.convertUnit(currency, currentUnit, amount)
                 : ''
             }}
             <ion-skeleton-text
-              *ngIf="currency.multiplier === -1"
+              *ngIf="currency.multiplier === '-1'"
               animated
               style="width: 100%;"
             ></ion-skeleton-text>
