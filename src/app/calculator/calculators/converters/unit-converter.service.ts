@@ -27,7 +27,8 @@ export class UnitConverterService {
     // Object.keys gets the names of the sub-objects
     for (const unitCategoryName of Object.keys(unitObject)) {
       // foundUnit stores the found unit if it exists in the object
-      const foundUnit: Unit = unitObject[unitCategoryName].find((lengthUnit: Unit) => lengthUnit.name === unitName);
+      const foundUnit: Unit = unitObject[unitCategoryName].find((lengthUnit: Unit) => lengthUnit.name === unitName
+        || /* for currency converter */ lengthUnit.isoCode === unitName);
       if (foundUnit) {
         return foundUnit;
       }
