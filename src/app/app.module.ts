@@ -20,6 +20,7 @@ import { MoreCommandsMenuComponent } from './calculator/calculators/basic-calcul
 import { CustomizeButtonsMenuComponent } from './calculator/calculators/basic-calculator/customize-buttons-menu/customize-buttons-menu.component';
 // converters
 import { LengthConverterComponent } from './calculator/calculators/converters/length-converter/length-converter.component';
+import { MassConverterComponent } from './calculator/calculators/converters/mass-converter/mass-converter.component';
 import { CurrencyConverterComponent } from './calculator/calculators/converters/currency-converter/currency-converter.component';
 // common
 import { FullscreenContainerComponent } from './common/fullscreen-container/fullscreen-container.component';
@@ -43,7 +44,7 @@ export class HammerConfig extends HammerGestureConfig {
 @NgModule({
   declarations: [AppComponent, TopBarComponent, OptionsPopoverComponent, CalculatorMenuComponent,
     BasicCalculatorComponent, CustomizeButtonsMenuComponent, MoreCommandsMenuComponent,
-    LengthConverterComponent, CurrencyConverterComponent,
+    LengthConverterComponent, MassConverterComponent, CurrencyConverterComponent,
     FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent, AccordionListComponent,
     SettingsMenuComponent, ThemesComponent, AboutComponent],
   entryComponents: [],

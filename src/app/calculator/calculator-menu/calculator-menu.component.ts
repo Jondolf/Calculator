@@ -15,25 +15,29 @@ export class CalculatorMenuComponent {
     {
       buttonName: 'Length converter',
       icon: {
-        iconName: 'calculator'
+        iconName: 'calculator',
+        iconPack: 'Ionicons'
+      }
+    },
+    {
+      buttonName: 'Mass converter',
+      icon: {
+        iconName: 'fitness_center',
+        iconPack: 'Material Design'
       }
     },
     {
       buttonName: 'Currency converter',
       icon: {
-        iconName: 'cash-outline'
-      }
-    },
-    {
-      buttonName: 'Test2',
-      icon: {
-        iconName: 'calculator'
+        iconName: 'cash-outline',
+        iconPack: 'Ionicons'
       }
     },
     {
       buttonName: 'Test3',
       icon: {
-        iconName: 'calculator'
+        iconName: 'calculator',
+        iconPack: 'Ionicons'
       }
     },
   ];

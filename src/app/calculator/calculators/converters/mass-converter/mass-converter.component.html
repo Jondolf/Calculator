@@ -8,15 +8,15 @@
       placeholder="Choose the unit"
       [(ngModel)]="currentUnitName"
       (ionChange)="
-        currentUnit = unitConverter.findUnitByName(currentUnitName, lengthUnits)
+        currentUnit = unitConverter.findUnitByName(currentUnitName, massUnits)
       "
     >
       <ion-select-option
-        *ngFor="let unit of lengthUnits.metric"
+        *ngFor="let unit of massUnits.metric"
         [value]="unit.name"
         >{{ unit.name }} ({{ unit.abbreviation }})</ion-select-option
       >
-      <ion-select-option *ngFor="let unit of lengthUnits.us" [value]="unit.name"
+      <ion-select-option *ngFor="let unit of massUnits.us" [value]="unit.name"
         >{{ unit.name }} ({{ unit.abbreviation }})</ion-select-option
       >
     </ion-select>
@@ -41,7 +41,7 @@
         <ion-item-divider>
           <ion-label>SI</ion-label>
         </ion-item-divider>
-        <ion-item *ngFor="let unit of lengthUnits.metric">
+        <ion-item *ngFor="let unit of massUnits.metric">
           <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
           <ion-label>{{
             unitConverter.convertUnit(unit, currentUnit, amount)
@@ -53,7 +53,7 @@
         <ion-item-divider>
           <ion-label>Imperial/US</ion-label>
         </ion-item-divider>
-        <ion-item *ngFor="let unit of lengthUnits.us">
+        <ion-item *ngFor="let unit of massUnits.us">
           <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
           <ion-label>{{
             unitConverter.convertUnit(unit, currentUnit, amount)

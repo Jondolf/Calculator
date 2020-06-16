@@ -25,7 +25,15 @@
             changeCalculator.emit({ calculatorName: converter.buttonName })
           "
         >
-          <ion-icon [name]="converter.icon.iconName"></ion-icon>
+          <ion-icon
+            *ngIf="converter.icon.iconPack === 'Ionicons'"
+            [name]="converter.icon.iconName"
+          ></ion-icon>
+          <i
+            *ngIf="converter.icon.iconPack === 'Material Design'"
+            class="material-icons"
+            >{{ converter.icon.iconName }}</i
+          >
           <ion-label>{{ converter.buttonName }}</ion-label>
         </ion-item>
       </app-accordion-list>

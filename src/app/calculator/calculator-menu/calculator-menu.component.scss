@@ -13,7 +13,8 @@ ion-menu {
       padding: 0;
       ion-item {
         --background: var(--ion-color-light-tint);
-        ion-icon {
+        ion-icon,
+        i.material-icons {
           color: var(--ion-color-light-contrast);
           margin-right: 10px;
         }

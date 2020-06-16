@@ -1,0 +1,96 @@
+:host {
+  background-color: var(--ion-color-light);
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  & > div {
+    position: absolute;
+    top: 56px;
+    right: 15px;
+    bottom: 15px;
+    left: 15px;
+    display: grid;
+    gap: 15px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 8fr;
+
+    .unit-selection-container {
+      grid-column: 1/2;
+    }
+    .amount-input-container {
+      grid-column: 2/3;
+    }
+    .unit-selection-container,
+    .amount-input-container {
+      grid-row: 1/2;
+      & > ion-label {
+        display: flex;
+        align-items: center;
+        height: 35%;
+        font-weight: bolder;
+        color: var(--ion-color-light-contrast);
+      }
+      ion-select,
+      ion-input {
+        display: flex;
+        align-items: center;
+        height: 65%;
+        padding: 0;
+        padding-left: 10px;
+        padding-right: 10px;
+        background-color: var(--ion-color-light-tint);
+        color: var(--ion-color-light-contrast);
+        border-radius: 5px;
+        font-weight: bolder;
+      }
+    }
+  }
+
+  .results-container {
+    grid-column: 1/3;
+    grid-row: 2/3;
+    background-color: var(--ion-color-light-tint);
+    color: var(--ion-color-light-contrast);
+    box-sizing: border-box;
+    border-radius: 5px;
+    overflow: auto;
+
+    ion-list {
+      padding: 0;
+      background-color: var(--ion-color-light-tint);
+
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        ion-list-header {
+          display: block;
+          width: 50%;
+          font-weight: bolder;
+          font-size: 1.3rem;
+          color: var(--ion-color-primary-contrast);
+          background-color: rgba(var(--ion-color-primary-rgb), 0.75);
+          &:last-child {
+            padding: 0 !important;
+          }
+        }
+      }
+      ion-item-group {
+        ion-item-divider {
+          background-color: rgba(var(--ion-color-light-shade-rgb), 0.25);
+          ion-label {
+            font-weight: normal !important;
+            font-size: 1.15rem !important;
+            color: var(--ion-color-light-contrast) !important;
+          }
+        }
+        ion-item {
+          --background: var(--ion-color-light-tint);
+          --color: var(--ion-color-light-contrast);
+        }
+      }
+    }
+  }
+}
