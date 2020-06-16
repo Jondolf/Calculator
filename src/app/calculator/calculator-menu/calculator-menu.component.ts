@@ -15,15 +15,15 @@ export class CalculatorMenuComponent {
     {
       buttonName: 'Length converter',
       icon: {
-        iconName: 'calculator',
-        iconPack: 'Ionicons'
+        iconName: 'square_foot',
+        iconPack: 'Material Design'
       }
     },
     {
       buttonName: 'Mass converter',
       icon: {
-        iconName: 'fitness_center',
-        iconPack: 'Material Design'
+        iconName: 'barbell',
+        iconPack: 'Ionicons'
       }
     },
     {
