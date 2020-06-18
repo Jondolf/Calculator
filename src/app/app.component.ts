@@ -1,12 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { GlobalVarsService } from './global-vars.service';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-
-import { filter } from 'rxjs/operators';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 import Decimal from 'decimal.js';
 Decimal.set({ precision: 25, rounding: 4 });
@@ -14,7 +13,8 @@ Decimal.set({ precision: 25, rounding: 4 });
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  styleUrls: ['app.component.scss'],
+  providers: [ScreenOrientation]
 })
 export class AppComponent {
   @ViewChild('calculatormenu') calculatorMenu;
@@ -23,6 +23,7 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
+    private screenOrientation: ScreenOrientation,
     public globals: GlobalVarsService,
     public router: Router
   ) {
@@ -34,6 +35,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       console.log('Platform ready', new Date());
       this.setStatusBarColors();
+      this.screenOrientation.lock('portrait');
       this.splashScreen.hide();
     });
   }
