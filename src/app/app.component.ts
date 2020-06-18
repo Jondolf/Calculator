@@ -8,7 +8,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 import Decimal from 'decimal.js';
-Decimal.set({ precision: 25, rounding: 4 });
+Decimal.set({ precision: 100, rounding: 4 });
 
 @Component({
   selector: 'app-root',
