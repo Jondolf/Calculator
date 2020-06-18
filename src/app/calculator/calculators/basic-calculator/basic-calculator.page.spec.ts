@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { CurrencyConverterComponent } from './currency-converter.component';
+import { BasicCalculatorPage } from './basic-calculator.page';
 
-describe('CurrencyConverterComponent', () => {
-  let component: CurrencyConverterComponent;
-  let fixture: ComponentFixture<CurrencyConverterComponent>;
+describe('BasicCalculatorPage', () => {
+  let component: BasicCalculatorPage;
+  let fixture: ComponentFixture<BasicCalculatorPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CurrencyConverterComponent ],
+      declarations: [ BasicCalculatorPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CurrencyConverterComponent);
+    fixture = TestBed.createComponent(BasicCalculatorPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

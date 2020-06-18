@@ -1,12 +1,14 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { Button } from 'src/app/models/button.interface';
+import { Location } from '@angular/common';
+import { GlobalVarsService } from 'src/app/global-vars.service';
 
 @Component({
   selector: 'app-themes',
-  templateUrl: './themes.component.html',
-  styleUrls: ['./themes.component.scss']
+  templateUrl: './themes.page.html',
+  styleUrls: ['./themes.page.scss']
 })
-export class ThemesComponent {
+export class ThemesPage implements OnInit {
   @Output() closeThemesMenu = new EventEmitter();
 
   lightThemes: Button[] = [
@@ -77,12 +79,18 @@ export class ThemesComponent {
       styles: {
         backgroundRgb: '0, 0, 0',
         backgroundAlpha: '1',
-        fontColor: '225, 225, 225',
+        fontColor: '#e1e1e1',
         margin: '0 0 10px 0'
       }
     }];
   lighThemeClasses: string[] = ['light default-light', 'light solarized-light', 'light pure-white'];
   darkThemeClasses: string[] = ['dark default-dark', 'dark solarized-dark', 'dark palenight', 'dark pure-black'];
+
+  constructor(public location: Location, public globals: GlobalVarsService) { }
+
+  ngOnInit() {
+    this.globals.isInSettings = true;
+  }
 
   changeTheme(themeClassName: string) {
     document.body.className = themeClassName;

@@ -1,5 +1,6 @@
 <ion-button
-  (click)="emitMessage('openSettingsMenu')"
+  [routerLink]="['/settings']"
+  (click)="closePopover()"
   color="light"
   expand="full"
   fill="clear"
@@ -10,7 +11,7 @@
 
 <ion-button
   *ngIf="globals.currentCalculator === 'Basic calculator'"
-  (click)="emitMessage('openBasicCalculatorButtonSettingsMenu')"
+  (click)="presentCustomizeBasicCalculatorButtonsModal(); closePopover()"
   color="light"
   expand="full"
   fill="clear"

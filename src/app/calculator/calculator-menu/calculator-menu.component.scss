@@ -2,7 +2,7 @@ ion-menu {
   --background: var(--ion-color-light-tint);
 
   ion-header ion-toolbar {
-    --background: rgba(var(--ion-color-primary-rgb), 0.75);
+    --background: var(--ion-color-primary);
     --color: var(--ion-color-primary-contrast);
   }
 

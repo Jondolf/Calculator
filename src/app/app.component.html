@@ -1,42 +1,14 @@
 <ion-app>
-  <ion-content id="content">
-    <app-top-bar
-      (openCalculatorMenu)="calculatorMenu.openFirst()"
-      (openSettingsMenu)="isSettingsMenuOpen = true"
-      (openBasicCalculatorButtonSettingsMenu)="
-        isBasicCalculatorButtonSettingsMenuOpen = true
-      "
-    ></app-top-bar>
-
-    <app-settings-menu
-      *ngIf="isSettingsMenuOpen"
-      (closeSettingsMenu)="isSettingsMenuOpen = false"
-    ></app-settings-menu>
-
-    <!-- calculators -->
-    <app-basic-calculator
-      *ngIf="globals.currentCalculator === 'Basic calculator'"
-      [isBasicCalculatorButtonSettingsMenuOpen]="
-        isBasicCalculatorButtonSettingsMenuOpen
-      "
-      (closeBasicCalculatorButtonSettingsMenu)="
-        isBasicCalculatorButtonSettingsMenuOpen = false
-      "
-    ></app-basic-calculator>
-
-    <!-- converters -->
-    <app-length-converter
-      *ngIf="globals.currentCalculator === 'Length converter'"
-    ></app-length-converter>
-    <app-mass-converter *ngIf="globals.currentCalculator === 'Mass converter'">
-    </app-mass-converter>
-    <app-currency-converter
-      *ngIf="globals.currentCalculator === 'Currency converter'"
-    ></app-currency-converter>
-  </ion-content>
-
   <app-calculator-menu
     #calculatormenu
     (changeCalculator)="globals.changeCurrentCalculator($event.calculatorName)"
   ></app-calculator-menu>
+  <app-top-bar
+    *ngIf="!globals.isInSettings"
+    (openCalculatorMenu)="calculatorMenu.openFirst()"
+  ></app-top-bar>
+
+  <ion-content id="content">
+    <ion-router-outlet></ion-router-outlet>
+  </ion-content>
 </ion-app>

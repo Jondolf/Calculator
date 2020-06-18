@@ -1,46 +1,30 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
-  Input,
-  Output,
-  EventEmitter,
+  OnDestroy
 } from '@angular/core';
 import { BasicCalculatorService } from './basic-calculator.service';
 import { BasicCalculatorCustomStyles } from 'src/app/models/basic-calculator-custom-styles.interface';
+import { GlobalVarsService } from 'src/app/global-vars.service';
 
 @Component({
   selector: 'app-basic-calculator',
-  templateUrl: './basic-calculator.component.html',
-  styleUrls: ['./basic-calculator.component.scss'],
+  templateUrl: './basic-calculator.page.html',
+  styleUrls: ['./basic-calculator.page.scss'],
 })
-export class BasicCalculatorComponent implements OnInit, OnDestroy {
-  @Input() isBasicCalculatorButtonSettingsMenuOpen: boolean;
-  @Output() closeBasicCalculatorButtonSettingsMenu = new EventEmitter();
-
+export class BasicCalculatorPage implements OnInit, OnDestroy {
   calculation = '0';
   currentResult = '';
 
-  styles: BasicCalculatorCustomStyles = this.getDefaultStyles();
-
-  constructor(public calculator: BasicCalculatorService) { }
+  constructor(public calculator: BasicCalculatorService, public globals: GlobalVarsService) { }
 
   ngOnInit(): void {
     document.body.addEventListener('keydown', this.handleEvent);
+    this.calculator.buttonStyles = this.calculator.getDefaultStyles();
+    this.globals.currentCalculator = 'Basic calculator';
   }
   ngOnDestroy(): void {
     document.body.removeEventListener('keydown', this.handleEvent);
-  }
-
-  getDefaultStyles(): BasicCalculatorCustomStyles {
-    return {
-      gridSize: 'small',
-      gridGap: '0px',
-      buttonStyles: {
-        'border-radius': '0px',
-        'border-width': '1px'
-      }
-    } as BasicCalculatorCustomStyles;
   }
 
   addSymbolToCalculation(symbol: string | number): void {

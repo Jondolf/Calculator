@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="location.back(); globals.isInSettings = false">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-list>
+  <ion-item button [routerLink]="['/settings/themes']">
+    <ion-icon name="color-palette-outline" slot="start"></ion-icon>
+    <ion-label>Themes</ion-label>
+  </ion-item>
+</ion-list>

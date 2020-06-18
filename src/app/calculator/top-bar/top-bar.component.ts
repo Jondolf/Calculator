@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import { PopoverController } from '@ionic/angular';
 import { OptionsPopoverComponent } from './options-popover/options-popover.component';
 import { GlobalVarsService } from 'src/app/global-vars.service';
@@ -10,10 +11,8 @@ import { GlobalVarsService } from 'src/app/global-vars.service';
 })
 export class TopBarComponent {
   @Output() openCalculatorMenu = new EventEmitter();
-  @Output() openSettingsMenu = new EventEmitter();
-  @Output() openBasicCalculatorButtonSettingsMenu = new EventEmitter();
 
-  constructor(public popoverController: PopoverController, public globals: GlobalVarsService) { }
+  constructor(public popoverController: PopoverController, public globals: GlobalVarsService, public router: Router) { }
 
   async presentPopover(ev: Event) {
     const popover = await this.popoverController.create({
@@ -28,12 +27,17 @@ export class TopBarComponent {
       (data: any) => {
         if (!data || !data.data) { return; }
         const message = data.data.message;
-        if (message === 'openSettingsMenu') {
-          this.openSettingsMenu.emit();
-        }
-        if (message === 'openBasicCalculatorButtonSettingsMenu') {
-          this.openBasicCalculatorButtonSettingsMenu.emit();
-        }
       });
+  }
+
+  getCalculatorNameFromRoute() {
+    if (this.router.url === '/') {
+      return 'Basic calculator';
+    }
+    // Replace slashes and hyphens
+    let calculatorName = this.router.url.replace('/', '').replace(/-/g, ' ');
+    // Make first letter uppercased
+    calculatorName = calculatorName.charAt(0).toUpperCase() + calculatorName.slice(1);
+    return calculatorName;
   }
 }

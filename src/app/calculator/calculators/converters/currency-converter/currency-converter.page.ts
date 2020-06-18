@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import axios from 'axios';
 import { Unit } from 'src/app/models/unit.interface';
 import { UnitConverterService } from '../unit-converter.service';
 import { CurrencyConverterService } from './currency-converter.service';
@@ -10,10 +9,10 @@ export interface CurrencyUnit extends Unit {
 
 @Component({
   selector: 'app-currency-converter',
-  templateUrl: './currency-converter.component.html',
-  styleUrls: ['./currency-converter.component.scss'],
+  templateUrl: './currency-converter.page.html',
+  styleUrls: ['./currency-converter.page.scss'],
 })
-export class CurrencyConverterComponent implements OnInit {
+export class CurrencyConverterPage implements OnInit {
   amount = '1';
   showOnlyMostTraded = true;
   currentUnitName = 'Euro';

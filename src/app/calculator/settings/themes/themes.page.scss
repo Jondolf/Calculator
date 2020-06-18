@@ -1,0 +1,35 @@
+:host {
+  background: var(--ion-color-light);
+  display: block;
+  overflow: auto;
+}
+
+ion-header {
+  ion-toolbar {
+    --background: var(--ion-color-primary);
+    --color: var(--ion-color-primary-contrast);
+  }
+}
+
+ion-list {
+  background-color: transparent !important;
+  width: 85%;
+  margin: auto;
+  ion-item-divider {
+    background-color: transparent;
+    color: var(--ion-color-dark);
+    border: none;
+  }
+  ion-item {
+    border-radius: 5px;
+    margin-bottom: 10px;
+    --inner-border-width: 0;
+  }
+}
+
+p {
+  width: 85%;
+  margin: auto;
+  margin-bottom: 10px;
+  color: var(--ion-color-light-contrast);
+}

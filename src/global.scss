@@ -91,6 +91,11 @@ input {
     color: var(--ion-color-light-contrast) !important;
   }
 }
+
+.basic-calculator-customize-buttons-modal {
+  --background: transparent;
+}
+
 // To avoid white on white and black on black
 .light.pure-white .alert-wrapper,
 .dark.pure-black .alert-wrapper {

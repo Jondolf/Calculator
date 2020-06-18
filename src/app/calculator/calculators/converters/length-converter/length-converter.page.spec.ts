@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { CustomizeButtonsMenuComponent } from './customize-buttons-menu.component';
+import { LengthConverterPage } from './length-converter.page';
 
-describe('CustomizeButtonsMenuComponent', () => {
-  let component: CustomizeButtonsMenuComponent;
-  let fixture: ComponentFixture<CustomizeButtonsMenuComponent>;
+describe('LengthConverterPage', () => {
+  let component: LengthConverterPage;
+  let fixture: ComponentFixture<LengthConverterPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomizeButtonsMenuComponent ],
+      declarations: [LengthConverterPage],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CustomizeButtonsMenuComponent);
+    fixture = TestBed.createComponent(LengthConverterPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

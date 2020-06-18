@@ -8,6 +8,7 @@
     <ion-list>
       <ion-item
         button
+        [routerLink]="['/basic-calculator']"
         (click)="changeCalculator.emit({ calculatorName: 'Basic calculator' })"
       >
         <ion-icon [name]="'calculator-outline'"></ion-icon>
@@ -27,6 +28,9 @@
           (click)="
             changeCalculator.emit({ calculatorName: converter.buttonName })
           "
+          [routerLink]="[
+            '/' + converter.buttonName.toLowerCase().replace(' ', '-')
+          ]"
         >
           <ion-icon
             *ngIf="converter.icon.iconPack === 'Ionicons'"

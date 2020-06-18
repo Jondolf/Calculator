@@ -4,7 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class GlobalVarsService {
-  currentCalculator = 'Basic calculator';
+  currentCalculator: string;
+  isBasicCalculatorButtonSettingsMenuOpen = false;
+  isInSettings = false;
 
   changeCurrentCalculator(calculatorName: string): void {
     this.currentCalculator = calculatorName;

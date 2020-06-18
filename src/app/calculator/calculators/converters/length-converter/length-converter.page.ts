@@ -4,10 +4,10 @@ import { UnitConverterService } from '../unit-converter.service';
 
 @Component({
   selector: 'app-length-converter',
-  templateUrl: './length-converter.component.html',
-  styleUrls: ['./length-converter.component.scss'],
+  templateUrl: './length-converter.page.html',
+  styleUrls: ['./length-converter.page.scss'],
 })
-export class LengthConverterComponent {
+export class LengthConverterPage {
   amount = '1';
   currentUnitName = 'Meter';
   currentUnit: Unit = {

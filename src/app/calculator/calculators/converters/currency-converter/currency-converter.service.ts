@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CurrencyUnit } from './currency-converter.component';
+import { CurrencyUnit } from './currency-converter.page';
 import axios from 'axios';
 import { UnitConverterService } from '../unit-converter.service';
 

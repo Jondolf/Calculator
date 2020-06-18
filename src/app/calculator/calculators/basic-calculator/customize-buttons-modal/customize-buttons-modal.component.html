@@ -1,6 +1,6 @@
 <ion-toolbar>
   <ion-buttons slot="start">
-    <ion-button (click)="closeMenu.emit()" slot="start">
+    <ion-button (click)="dismissModal()" slot="start">
       <ion-icon slot="icon-only" name="close"></ion-icon>
     </ion-button>
   </ion-buttons>
@@ -12,9 +12,7 @@
   <ion-label>Gap between buttons ({{ styles.gridGap }})</ion-label>
   <ion-range
     [value]="styles.gridGap"
-    (ionChange)="
-      styles.gridGap = $event.target.value + 'px'; updateStyles($event)
-    "
+    (ionChange)="styles.gridGap = $event.target.value + 'px'; updateStyles()"
     min="0"
     max="20"
     pin="true"
@@ -33,7 +31,7 @@
     [value]="styles.buttonStyles['border-radius']"
     (ionChange)="
       styles.buttonStyles['border-radius'] = $event.target.value + 'px';
-      updateStyles($event)
+      updateStyles()
     "
     min="0"
     max="50"
@@ -51,7 +49,7 @@
     [value]="styles.buttonStyles['border-width']"
     (ionChange)="
       styles.buttonStyles['border-width'] = $event.target.value + 'px';
-      updateStyles($event)
+      updateStyles()
     "
     min="0"
     max="10"
@@ -95,7 +93,13 @@
     </ion-item>
   </ion-radio-group>
 
-  <ion-button (click)="resetToDefaults.emit()" color="dark" fill="outline"
+  <ion-button
+    (click)="
+      basicCalculator.buttonStyles = basicCalculator.getDefaultStyles();
+      this.styles = basicCalculator.buttonStyles
+    "
+    color="dark"
+    fill="outline"
     >Reset styles to defaults</ion-button
   >
 </div>

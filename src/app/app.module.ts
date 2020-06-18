@@ -11,22 +11,15 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './calculator/top-bar/top-bar.component';
 import { CalculatorMenuComponent } from './calculator/calculator-menu/calculator-menu.component';
-import { SettingsMenuComponent } from './calculator/settings-menu/settings-menu.component';
-import { ThemesComponent } from './calculator/settings-menu/themes/themes.component';
-import { AboutComponent } from './calculator/settings-menu/about/about.component';
-// basic calculator
-import { BasicCalculatorComponent } from './calculator/calculators/basic-calculator/basic-calculator.component';
+// Basic calculator
+import { BasicCalculatorPage } from './calculator/calculators/basic-calculator/basic-calculator.page';
+import { CustomizeButtonsModalComponent } from './calculator/calculators/basic-calculator/customize-buttons-modal/customize-buttons-modal.component';
 import { MoreCommandsMenuComponent } from './calculator/calculators/basic-calculator/more-commands-menu/more-commands-menu.component';
-import { CustomizeButtonsMenuComponent } from './calculator/calculators/basic-calculator/customize-buttons-menu/customize-buttons-menu.component';
-// converters
-import { LengthConverterComponent } from './calculator/calculators/converters/length-converter/length-converter.component';
-import { MassConverterComponent } from './calculator/calculators/converters/mass-converter/mass-converter.component';
-import { CurrencyConverterComponent } from './calculator/calculators/converters/currency-converter/currency-converter.component';
 // common
 import { FullscreenContainerComponent } from './common/fullscreen-container/fullscreen-container.component';
 import { CircleButtonComponent } from './common/circle-button/circle-button.component';
 import { WideButtonComponent } from './common/wide-button/wide-button.component';
-import { AccordionListComponent } from './common/accordion-list/accordion-list.component';
+import { AccordionListModule } from './common/accordion-list/accordion-list.module';
 
 import * as Hammer from 'hammerjs';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
@@ -42,13 +35,13 @@ export class HammerConfig extends HammerGestureConfig {
 }
 
 @NgModule({
-  declarations: [AppComponent, TopBarComponent, OptionsPopoverComponent, CalculatorMenuComponent,
-    BasicCalculatorComponent, CustomizeButtonsMenuComponent, MoreCommandsMenuComponent,
-    LengthConverterComponent, MassConverterComponent, CurrencyConverterComponent,
-    FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent, AccordionListComponent,
-    SettingsMenuComponent, ThemesComponent, AboutComponent],
+  declarations: [
+    AppComponent, TopBarComponent, OptionsPopoverComponent, CalculatorMenuComponent,
+    BasicCalculatorPage, CustomizeButtonsModalComponent, MoreCommandsMenuComponent,
+    FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent
+  ],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, HammerModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, HammerModule, AccordionListModule],
   providers: [
     StatusBar,
     SplashScreen,

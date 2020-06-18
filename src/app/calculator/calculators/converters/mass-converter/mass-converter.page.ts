@@ -4,10 +4,10 @@ import { UnitConverterService } from '../unit-converter.service';
 
 @Component({
   selector: 'app-mass-converter',
-  templateUrl: './mass-converter.component.html',
-  styleUrls: ['./mass-converter.component.scss'],
+  templateUrl: './mass-converter.page.html',
+  styleUrls: ['./mass-converter.page.scss'],
 })
-export class MassConverterComponent {
+export class MassConverterPage {
   amount = '1';
   currentUnitName = 'Gram';
   currentUnit: Unit = {

@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="location.back()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Themes</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-list>
+  <ion-item-group>
+    <ion-item-divider>Light themes</ion-item-divider>
+    <ion-item
+      button
+      *ngFor="let button of lightThemes; let i = index"
+      (click)="changeTheme(lighThemeClasses[i])"
+      [style.--background]="'rgb(' + button.styles.backgroundRgb + ')'"
+      [style.--color]="button.styles.fontColor"
+    >
+      <ion-label>{{button.buttonName}}</ion-label>
+    </ion-item>
+  </ion-item-group>
+
+  <ion-item-group>
+    <ion-item-divider>Dark themes</ion-item-divider>
+    <ion-item
+      button
+      *ngFor="let button of darkThemes; let i = index"
+      (click)="changeTheme(darkThemeClasses[i])"
+      [style.--background]="'rgb(' + button.styles.backgroundRgb + ')'"
+      [style.--color]="button.styles.fontColor"
+    >
+      <ion-label>{{button.buttonName}}</ion-label>
+    </ion-item>
+  </ion-item-group>
+</ion-list>
+
+<p>More may come in the future.</p>

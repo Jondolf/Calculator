@@ -1,9 +1,30 @@
 import { Injectable } from '@angular/core';
+import { BasicCalculatorCustomStyles } from 'src/app/models/basic-calculator-custom-styles.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BasicCalculatorService {
+  // Not related to logic
+  isBasicCalculatorButtonSettingsMenuOpen: boolean;
+  buttonStyles: BasicCalculatorCustomStyles;
+
+  getDefaultStyles(): BasicCalculatorCustomStyles {
+    return {
+      gridSize: 'small',
+      gridGap: '0px',
+      buttonStyles: {
+        'border-radius': '0px',
+        'border-width': '1px'
+      }
+    } as BasicCalculatorCustomStyles;
+  }
+
+  // Logic
+  /**
+   * Counts the calculation by calling other functions and formatting the given calculation.
+   * @param calculation A string representing the calculation to count. For example, 2x(3+7)
+   */
   countCalculation(calculation: string): number {
     /*
     Replace calculation symbols with working code math operators (*, / etc.) instead of x and ÷ etc.
