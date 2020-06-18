@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { Button } from 'src/app/models/button.interface';
 import { Location } from '@angular/common';
 import { GlobalVarsService } from 'src/app/global-vars.service';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 @Component({
   selector: 'app-themes',
@@ -86,7 +87,7 @@ export class ThemesPage implements OnInit {
   lighThemeClasses: string[] = ['light default-light', 'light solarized-light', 'light pure-white'];
   darkThemeClasses: string[] = ['dark default-dark', 'dark solarized-dark', 'dark palenight', 'dark pure-black'];
 
-  constructor(public location: Location, public globals: GlobalVarsService) { }
+  constructor(public statusBar: StatusBar, public location: Location, public globals: GlobalVarsService) { }
 
   ngOnInit() {
     this.globals.isInSettings = true;
@@ -94,5 +95,16 @@ export class ThemesPage implements OnInit {
 
   changeTheme(themeClassName: string) {
     document.body.className = themeClassName;
+    this.setStatusBarColors();
+  }
+
+  setStatusBarColors() {
+    if (document.body.className.includes('light')) {
+      this.statusBar.backgroundColorByName('white');
+      this.statusBar.styleDefault();
+    } else {
+      this.statusBar.backgroundColorByName('black');
+      this.statusBar.styleLightContent();
+    }
   }
 }

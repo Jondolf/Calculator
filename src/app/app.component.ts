@@ -33,8 +33,18 @@ export class AppComponent {
     console.log('Init app', new Date());
     this.platform.ready().then(() => {
       console.log('Platform ready', new Date());
-      this.statusBar.styleDefault();
+      this.setStatusBarColors();
       this.splashScreen.hide();
     });
+  }
+
+  setStatusBarColors() {
+    if (document.body.className.includes('light')) {
+      this.statusBar.backgroundColorByName('white');
+      this.statusBar.styleDefault();
+    } else {
+      this.statusBar.backgroundColorByName('black');
+      this.statusBar.styleLightContent();
+    }
   }
 }
