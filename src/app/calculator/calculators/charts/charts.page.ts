@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Chart, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { GlobalVarsService } from 'src/app/global-vars.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-charts',
@@ -37,7 +38,6 @@ export class ChartsPage {
 
   constructor(globals: GlobalVarsService) {
     globals.currentThemeChange.subscribe((value) => {
-      console.log(value);
       if (value.includes('light')) {
         Chart.defaults.global.defaultFontColor = 'black';
       } else {
@@ -70,6 +70,10 @@ export class ChartsPage {
     return `${r}, ${g}, ${b}`;
   }
 
+  filterChartDataInput(str: string) {
+
+  }
+
   addChartDataSet() {
     const color = this.getNewColor();
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -94,8 +98,13 @@ export class ChartsPage {
     this.chartDataSets.splice(indexOfDataSet, 1);
   }
 
-  handleDataInputChange(chartData: ChartDataSets, str: string): void {
-    this.parseChartDataStringToArray(chartData, str);
+  handleDataInputChange(chartData: ChartDataSets, event: KeyboardEvent, target: HTMLInputElement): void {
+    const isBackspaceEvent = event.key === null ? true : false;
+    target.value = isBackspaceEvent ? target.value : target.value.toString().replace(/[^0-9.,]/g, '');
+    this.parseChartDataStringToArray(
+      chartData,
+      isBackspaceEvent ? target.value.toString() : target.value.toString().replace(/[^0-9.,]/g, '')
+    );
     this.updateChartLabels();
     this.updateChart();
   }

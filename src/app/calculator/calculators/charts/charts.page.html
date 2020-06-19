@@ -43,11 +43,13 @@
         </ion-button>
       </ion-buttons>
       <ion-input
-        (ionChange)="handleDataInputChange(chartData, $event.target.value)"
-        [value]="chartData.data.toString().replace('[', '').replace(']', '')"
+        type="text"
+        inputmode="numeric"
+        (input)="handleDataInputChange(chartData, $event, $event.target)"
+        [value]="chartData.data.toString()"
       ></ion-input>
       <ion-input
-        (ionChange)="handleDataLabelInputChange(chartData, $event.target.value)"
+        (input)="handleDataLabelInputChange(chartData, $event.target.value)"
         [value]="chartData.label"
       ></ion-input>
     </ion-item>
