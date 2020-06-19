@@ -32,14 +32,7 @@ export class CalculatorMenuComponent {
         iconName: 'cash-outline',
         iconPack: 'Ionicons'
       }
-    },
-    {
-      buttonName: 'Test3',
-      icon: {
-        iconName: 'calculator',
-        iconPack: 'Ionicons'
-      }
-    },
+    }
   ];
 
   constructor(private menu: MenuController) { }
