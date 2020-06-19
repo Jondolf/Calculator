@@ -11,6 +11,7 @@ import { ChartsPageRoutingModule } from './charts-routing.module';
 import { ChartsPage } from './charts.page';
 import { LineChartComponent } from './line-chart/line-chart.component';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
+import { RadarChartComponent } from './radar-chart/radar-chart.component';
 
 @NgModule({
   imports: [
@@ -20,6 +21,6 @@ import { BarChartComponent } from './bar-chart/bar-chart.component';
     ChartsModule,
     ChartsPageRoutingModule
   ],
-  declarations: [ChartsPage, LineChartComponent, BarChartComponent]
+  declarations: [ChartsPage, LineChartComponent, BarChartComponent, RadarChartComponent]
 })
 export class ChartsPageModule { }

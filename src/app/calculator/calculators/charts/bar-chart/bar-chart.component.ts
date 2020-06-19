@@ -12,7 +12,7 @@ export class BarChartComponent {
   @Input() chartLabels: Label[];
   @Input() chartColors: Color[];
 
-  public barChartOptions: ChartOptions = {};
+  public barChartOptions: ChartOptions = { responsive: true };
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   public barChartPlugins = [];

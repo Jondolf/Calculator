@@ -120,6 +120,9 @@ export class ChartsPage {
       case 'Bar chart':
         this.currentChartName = 'Bar chart';
         break;
+      case 'Radar chart':
+        this.currentChartName = 'Radar chart';
+        break;
       default:
         this.currentChartName = 'Line chart';
     }

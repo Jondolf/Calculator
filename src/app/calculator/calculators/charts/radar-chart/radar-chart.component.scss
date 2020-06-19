@@ -1,0 +1,14 @@
+div {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+canvas {
+  width: 150% !important;
+  height: auto !important;
+  max-width: 570px;
+  max-height: 100%;
+  padding: 0 15px 0 15px !important;
+  margin: auto !important;
+}

@@ -3,10 +3,13 @@
   value="Line chart"
 >
   <ion-segment-button value="Line chart">
-    <ion-label>Line chart</ion-label>
+    <ion-label>Line</ion-label>
   </ion-segment-button>
   <ion-segment-button value="Bar chart">
-    <ion-label>Bar chart</ion-label>
+    <ion-label>Bar</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="Radar chart">
+    <ion-label>Radar</ion-label>
   </ion-segment-button>
 </ion-segment>
 
@@ -23,6 +26,12 @@
     [chartLabels]="chartLabels"
     #barchart
   ></app-bar-chart>
+  <app-radar-chart
+    *ngIf="currentChartName === 'Radar chart'"
+    [chartData]="chartDataSets"
+    [chartLabels]="chartLabels"
+    #barchart
+  ></app-radar-chart>
 </div>
 
 <div class="input-container">
