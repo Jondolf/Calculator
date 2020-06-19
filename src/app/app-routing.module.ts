@@ -26,6 +26,10 @@ const routes: Routes = [
     path: 'mass-converter',
     loadChildren: () => import('./calculator/calculators/converters/mass-converter/mass-converter.module')
       .then(m => m.MassConverterPageModule)
+  },
+  {
+    path: 'charts',
+    loadChildren: () => import('./calculator/calculators/charts/charts.module').then( m => m.ChartsPageModule)
   }
 ];
 

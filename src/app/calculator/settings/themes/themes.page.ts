@@ -95,6 +95,8 @@ export class ThemesPage implements OnInit {
 
   changeTheme(themeClassName: string) {
     document.body.className = themeClassName;
+    this.globals.currentTheme = themeClassName;
+    this.globals.currentThemeChange.next(this.globals.currentTheme);
     this.setStatusBarColors();
   }
 

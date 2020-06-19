@@ -1,0 +1,52 @@
+<ion-segment
+  (ionChange)="handleChartTypeChange($event.target.value)"
+  value="Line chart"
+>
+  <ion-segment-button value="Line chart">
+    <ion-label>Line chart</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="Bar chart">
+    <ion-label>Bar chart</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<div class="chart-container">
+  <app-line-chart
+    *ngIf="currentChartName === 'Line chart'"
+    [chartData]="chartDataSets"
+    [chartLabels]="chartLabels"
+    #linechart
+  ></app-line-chart>
+  <app-bar-chart
+    *ngIf="currentChartName === 'Bar chart'"
+    [chartData]="chartDataSets"
+    [chartLabels]="chartLabels"
+    #barchart
+  ></app-bar-chart>
+</div>
+
+<div class="input-container">
+  <ion-list>
+    <ion-item *ngFor="let chartData of chartDataSets">
+      <ion-buttons slot="start">
+        <ion-button (click)="removeDataSet(chartData)">
+          <ion-icon slot="icon-only" name="remove"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-input
+        (ionChange)="handleDataInputChange(chartData, $event.target.value)"
+        [value]="chartData.data.toString().replace('[', '').replace(']', '')"
+      ></ion-input>
+      <ion-input
+        (ionChange)="handleDataLabelInputChange(chartData, $event.target.value)"
+        [value]="chartData.label"
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+  <ion-item button (click)="addChartDataSet()" class="add-serie-button">
+    <div class="add-icon-container">
+      <ion-icon slot="start" name="add"></ion-icon>
+    </div>
+    <ion-label>Add serie</ion-label>
+  </ion-item>
+</div>
