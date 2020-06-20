@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Chart, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { GlobalVarsService } from 'src/app/global-vars.service';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-charts',

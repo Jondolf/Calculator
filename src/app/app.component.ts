@@ -8,6 +8,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 import Decimal from 'decimal.js';
+import { Storage } from '@ionic/storage';
 Decimal.set({ precision: 100, rounding: 4 });
 
 @Component({
@@ -25,7 +26,8 @@ export class AppComponent {
     private statusBar: StatusBar,
     private screenOrientation: ScreenOrientation,
     public globals: GlobalVarsService,
-    public router: Router
+    public router: Router,
+    private storage: Storage
   ) {
     this.initializeApp();
   }
@@ -34,6 +36,7 @@ export class AppComponent {
     console.log('Init app', new Date());
     this.platform.ready().then(() => {
       console.log('Platform ready', new Date());
+      this.storage.get('theme').then(val => { document.body.className = val; });
       this.setStatusBarColors();
       this.screenOrientation.lock('portrait');
       this.splashScreen.hide();

@@ -3,6 +3,7 @@ import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { RouteReuseStrategy } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { IonicStorageModule } from '@ionic/storage';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -41,7 +42,8 @@ export class HammerConfig extends HammerGestureConfig {
     FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent
   ],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule, HammerModule, AccordionListModule],
+  imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(),
+    AppRoutingModule, FormsModule, HammerModule, AccordionListModule],
   providers: [
     StatusBar,
     SplashScreen,

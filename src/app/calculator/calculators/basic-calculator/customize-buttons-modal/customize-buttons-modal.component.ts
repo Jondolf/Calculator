@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter, Input, OnInit, OnChanges, SimpleChange
 import { BasicCalculatorCustomStyles } from 'src/app/models/basic-calculator-custom-styles.interface';
 import { ModalController } from '@ionic/angular';
 import { BasicCalculatorService } from '../basic-calculator.service';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-customize-buttons-modal',
@@ -18,7 +19,10 @@ export class CustomizeButtonsModalComponent implements OnInit, OnChanges {
     }
   };
 
-  constructor(public modalController: ModalController, public basicCalculator: BasicCalculatorService) {
+  constructor(
+    public modalController: ModalController,
+    public basicCalculator: BasicCalculatorService,
+    private storage: Storage) {
 
   }
 
@@ -38,6 +42,7 @@ export class CustomizeButtonsModalComponent implements OnInit, OnChanges {
   updateStyles(): void {
     this.basicCalculator.buttonStyles = this.styles;
     this.styles = this.basicCalculator.buttonStyles;
+    this.storage.set('basicCalculatorCustomStyles', this.basicCalculator.buttonStyles);
   }
 
   pixelsToNumber(pixelString: string): number {

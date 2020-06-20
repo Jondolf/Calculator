@@ -4,7 +4,6 @@ import {
   OnDestroy
 } from '@angular/core';
 import { BasicCalculatorService } from './basic-calculator.service';
-import { BasicCalculatorCustomStyles } from 'src/app/models/basic-calculator-custom-styles.interface';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 
 @Component({
@@ -18,9 +17,8 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
 
   constructor(public calculator: BasicCalculatorService, public globals: GlobalVarsService) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     document.body.addEventListener('keydown', this.handleEvent);
-    this.calculator.buttonStyles = this.calculator.getDefaultStyles();
     this.globals.currentCalculator = 'Basic calculator';
   }
   ngOnDestroy(): void {

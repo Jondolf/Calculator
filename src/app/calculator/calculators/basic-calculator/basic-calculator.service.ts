@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage';
 import { BasicCalculatorCustomStyles } from 'src/app/models/basic-calculator-custom-styles.interface';
 
 import Decimal from 'decimal.js';
@@ -9,9 +10,17 @@ import Decimal from 'decimal.js';
 export class BasicCalculatorService {
   // Not related to logic
   isBasicCalculatorButtonSettingsMenuOpen: boolean;
-  buttonStyles: BasicCalculatorCustomStyles;
+  buttonStyles = this.getDefaultStyles();
 
-  getDefaultStyles(): BasicCalculatorCustomStyles {
+  constructor(private storage: Storage) {
+    this.storage.get('basicCalculatorCustomStyles').then(val => {
+      if (val) {
+        this.buttonStyles = val;
+      }
+    });
+  }
+
+  getDefaultStyles() {
     return {
       gridSize: 'small',
       gridGap: '0px',
