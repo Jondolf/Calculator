@@ -36,10 +36,21 @@ export class AppComponent {
     console.log('Init app', new Date());
     this.platform.ready().then(() => {
       console.log('Platform ready', new Date());
-      this.storage.get('theme').then(val => { document.body.className = val; });
+      this.setTheme();
       this.setStatusBarColors();
       this.screenOrientation.lock('portrait');
       this.splashScreen.hide();
+    });
+  }
+
+  setTheme() {
+    this.storage.get('theme').then(val => {
+      if (val) {
+        document.body.className = val; this.globals.currentTheme = val;
+      } else {
+        document.body.className = 'light default-light';
+        this.globals.currentTheme = 'light default-light';
+      }
     });
   }
 
