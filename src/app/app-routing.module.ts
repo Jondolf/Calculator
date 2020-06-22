@@ -29,7 +29,12 @@ const routes: Routes = [
   },
   {
     path: 'charts',
-    loadChildren: () => import('./calculator/calculators/charts/charts.module').then( m => m.ChartsPageModule)
+    loadChildren: () => import('./calculator/calculators/charts/charts.module').then(m => m.ChartsPageModule)
+  },
+  {
+    path: 'graphing-calculator',
+    loadChildren: () => import('./calculator/calculators/graphing-calculator/graphing-calculator.module')
+      .then(m => m.GraphingCalculatorPageModule)
   }
 ];
 

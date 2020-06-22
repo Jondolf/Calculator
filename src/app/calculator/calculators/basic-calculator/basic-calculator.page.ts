@@ -17,7 +17,7 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
 
   constructor(public calculator: BasicCalculatorService, public globals: GlobalVarsService) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     document.body.addEventListener('keydown', this.handleEvent);
     this.globals.currentCalculator = 'Basic calculator';
   }

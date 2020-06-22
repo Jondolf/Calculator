@@ -1,0 +1,79 @@
+:host {
+  background-color: var(--ion-color-light);
+}
+
+.graph-container {
+  width: 100%;
+  height: 55vh;
+  padding: 15px 15px 0 15px;
+  canvas {
+    border: 1px solid var(--ion-color-light-contrast);
+    width: 55vh;
+    height: 55vh;
+    margin: auto;
+  }
+  .zoom-in-button {
+    z-index: 2;
+    position: absolute;
+    top: 56px;
+    --background: var(--ion-color-primary);
+  }
+  .zoom-out-button {
+    z-index: 2;
+    position: absolute;
+    top: 100px;
+    --background: var(--ion-color-primary);
+  }
+}
+
+.input-container {
+  width: 100%;
+  height: 45vh;
+  padding: 15px;
+  position: relative;
+  overflow: hidden;
+
+  ion-list {
+    height: 100%;
+    padding: 0;
+    background-color: var(--ion-color-light-tint);
+    border-radius: 5px;
+    overflow: auto;
+    --inner-border-width: 0;
+
+    ion-item {
+      --color: var(--ion-color-light-contrast);
+      --background: transparent;
+      --border-color: rgba(var(--ion-color-light-contrast-rgb), 0.5);
+
+      ion-input {
+        --padding-end: 10px;
+      }
+
+      ion-icon {
+        color: var(--ion-color-light-contrast);
+      }
+    }
+
+    .add-serie-button {
+      --color: var(--ion-color-light-contrast);
+      --background: transparent;
+      --inner-border-width: 0;
+
+      .add-icon-container {
+        width: 48px;
+        height: 48px;
+        margin-right: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        ion-icon {
+          width: 24px;
+          height: 24px;
+          color: var(--ion-color-light-contrast);
+        }
+      }
+    }
+  }
+}
