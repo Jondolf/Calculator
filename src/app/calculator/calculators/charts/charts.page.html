@@ -53,11 +53,11 @@
         [value]="chartData.label"
       ></ion-input>
     </ion-item>
+    <ion-item button (click)="addChartDataSet()" class="add-serie-button">
+      <div class="add-icon-container">
+        <ion-icon slot="start" name="add"></ion-icon>
+      </div>
+      <ion-label>Add serie</ion-label>
+    </ion-item>
   </ion-list>
-  <ion-item button (click)="addChartDataSet()" class="add-serie-button">
-    <div class="add-icon-container">
-      <ion-icon slot="start" name="add"></ion-icon>
-    </div>
-    <ion-label>Add serie</ion-label>
-  </ion-item>
 </div>
