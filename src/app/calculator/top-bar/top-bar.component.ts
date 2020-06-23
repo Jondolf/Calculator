@@ -20,7 +20,7 @@ export class TopBarComponent {
       cssClass: 'options-popover',
       event: ev,
       translucent: true,
-      animated: false
+      animated: true
     });
     popover.present();
     return popover.onDidDismiss().then(
