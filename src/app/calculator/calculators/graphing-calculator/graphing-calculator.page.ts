@@ -39,11 +39,11 @@ export class GraphingCalculatorPage implements AfterViewInit {
     this.canvasHalfX = this.graphElement.width / 2;
     this.canvasHalfY = this.graphElement.height / 2;
 
-    this.squareSize = this.graphElement.width / 10;
+    this.squareSize = this.graphElement.width / 20;
     this.amountOfXSquares = this.graphElement.width / this.squareSize;
     this.amountOfYSquares = this.graphElement.height / this.squareSize;
 
-    this.ctx.font = '30px \'Nunito Sans\'';
+    this.ctx.font = '18px \'Nunito Sans\'';
     this.ctx.scale(2, 2);
     // this.ctx.translate(this.graphElement.width / 2, this.graphElement.height / 2);
     this.handleDraw();
@@ -56,17 +56,22 @@ export class GraphingCalculatorPage implements AfterViewInit {
    */
   handleEquationInputChange(equation: string, value: string): void {
     equation = value;
+    console.log(equation, value);
+    console.log('Original equation:', equation);
     this.handleDraw();
 
     this.ctx.beginPath();
     this.ctx.moveTo(0, this.canvasHalfY);
     for (
-      const coord = { x: 0, y: 0 };
-      coord.x < this.graphElement.width;
-      coord.x += this.convertCoordinatesToCanvasCoordinates({ x: 1, y: 0 }).x
+      const coord = { x: -(this.canvasHalfX / this.squareSize), y: 0 };
+      coord.x < this.graphElement.width / this.squareSize;
+      coord.x += 0.25
     ) {
-      this.ctx.lineTo(coord.x, +this.countEquation(this.formatEquation(value, coord.x)));
-
+      this.ctx.lineTo(
+        this.convertCoordinatesToCanvasCoordinates(coord).x,
+        this.convertCoordinatesToCanvasCoordinates({ x: 0, y: +this.countEquation(this.formatEquation(value, coord.x)) }).y
+      );
+      console.log('Loop:', coord);
     }
     this.ctx.stroke();
   }
@@ -86,9 +91,10 @@ export class GraphingCalculatorPage implements AfterViewInit {
    */
   convertCoordinatesToCanvasCoordinates(coordinate: Coordinate): Coordinate {
     const convertedCoordinate: Coordinate = {
-      x: coordinate.x < 0 ? this.canvasHalfX - (coordinate.x * this.squareSize) : this.canvasHalfX + (coordinate.x * this.squareSize),
-      y: coordinate.y < 0 ? this.canvasHalfY - (coordinate.y * this.squareSize) : this.canvasHalfY + (coordinate.y * this.squareSize)
+      x: this.canvasHalfX + (coordinate.x * this.squareSize),
+      y: this.canvasHalfY - (coordinate.y * this.squareSize)
     };
+    console.log('Coordinate:', coordinate, 'Converted:', convertedCoordinate);
     return convertedCoordinate;
   }
 
@@ -134,11 +140,20 @@ export class GraphingCalculatorPage implements AfterViewInit {
       this.coordinateSystemLineWidth, this.coordinateSystemLineColor,
       { x: this.graphElement.width / 2, y: 0 }, { x: this.graphElement.width / 2, y: this.graphElement.height }
     );
-    /*
-    for (let i = 1; i < this.graphElement.width; i += this.squareSize) {
-      this.ctx.fillText(i.toString(), i, this.graphElement.height / 2 + 5); // x-axis
-      this.ctx.fillText(i.toString(), this.graphElement.width / 2 - 5, i); // y-axis
-    }*/
+    // Numbers along axes
+    for (
+      const coord = { x: -(this.canvasHalfX / this.squareSize), y: 0 };
+      coord.x < this.graphElement.width / this.squareSize;
+      coord.x++
+    ) {
+      // For now it uses coord.x for y-axis as well and presumes that the grid is a square
+      if (coord.x !== 0) {
+        this.ctx.fillText(
+          coord.x.toString(), this.convertCoordinatesToCanvasCoordinates(coord).x - 6, this.graphElement.height / 2 + 22); // x-axis
+        this.ctx.fillText(
+          (-coord.x).toString(), this.graphElement.width / 2 - 20, this.convertCoordinatesToCanvasCoordinates(coord).x + 6); // y-axis
+      }
+    }
   }
 
   drawAcrossCanvas(lineWidth: number, strokeStyle: string, from: Coordinate, to: Coordinate): void {
