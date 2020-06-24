@@ -42,7 +42,8 @@ export class HammerConfig extends HammerGestureConfig {
     FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent
   ],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(),
+  imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(
+    { name: '_calculatordb', driverOrder: ['indexeddb', 'sqlite', 'websql', 'localstorage'] }),
     AppRoutingModule, FormsModule, HammerModule, AccordionListModule],
   providers: [
     StatusBar,
