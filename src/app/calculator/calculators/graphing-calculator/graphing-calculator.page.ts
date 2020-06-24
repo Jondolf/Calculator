@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { BasicCalculatorService } from '../basic-calculator/basic-calculator.service';
 import { PanZoomConfig } from 'ng2-panzoom';
+import { GlobalVarsService } from 'src/app/global-vars.service';
 
 interface Coordinate {
   x: number;
@@ -38,11 +39,27 @@ export class GraphingCalculatorPage implements AfterViewInit {
   squareBorderColor = 'rgba(175, 175, 175, 0.5)';
 
   coordinateSystemLineWidth = 4;
-  coordinateSystemLineColor = 'black';
+  coordinateSystemColor = 'black';
 
   equations = [];
 
-  constructor(private calculator: BasicCalculatorService) { }
+  constructor(private calculator: BasicCalculatorService, private globals: GlobalVarsService) {
+    globals.currentThemeChange.subscribe((value) => {
+      if (value.includes('light')) {
+        this.coordinateSystemColor = 'black';
+      } else {
+        this.coordinateSystemColor = 'white';
+      }
+      this.handleDraw();
+      this.drawEquations();
+    });
+
+    if (globals.currentTheme.includes('light')) {
+      this.coordinateSystemColor = 'black';
+    } else {
+      this.coordinateSystemColor = 'white';
+    }
+  }
 
   ngAfterViewInit() {
     this.graphElement = this.graphRef.nativeElement;
@@ -159,14 +176,15 @@ export class GraphingCalculatorPage implements AfterViewInit {
   drawCoordinateSystem() {
     // x-axis
     this.drawAcrossCanvas(
-      this.coordinateSystemLineWidth, this.coordinateSystemLineColor,
+      this.coordinateSystemLineWidth, this.coordinateSystemColor,
       { x: 0, y: this.graphElement.height / 2 }, { x: this.graphElement.width, y: this.graphElement.height / 2 }
     );
     // y-axis
     this.drawAcrossCanvas(
-      this.coordinateSystemLineWidth, this.coordinateSystemLineColor,
+      this.coordinateSystemLineWidth, this.coordinateSystemColor,
       { x: this.graphElement.width / 2, y: 0 }, { x: this.graphElement.width / 2, y: this.graphElement.height }
     );
+    this.ctx.fillStyle = this.coordinateSystemColor;
     // Numbers along axes
     for (
       const coord = { x: -(this.canvasHalfX / this.squareSize), y: 0 };
