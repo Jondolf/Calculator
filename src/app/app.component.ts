@@ -43,15 +43,23 @@ export class AppComponent {
     });
   }
 
-  setTheme() {
-    this.storage.get('theme').then(val => {
-      if (val) {
-        document.body.className = val; this.globals.currentTheme = val;
+  async setTheme(): Promise<void> {
+    try {
+      const theme: string = await this.storage.get('theme');
+      if (theme) {
+        document.body.className = theme;
+        this.globals.currentTheme = theme;
       } else {
         document.body.className = 'light default-light';
         this.globals.currentTheme = 'light default-light';
       }
-    });
+      this.setStatusBarColors();
+    } catch (error) {
+      document.body.className = 'light default-light';
+      this.globals.currentTheme = 'light default-light';
+      this.setStatusBarColors();
+      throw new Error(error);
+    }
   }
 
   setStatusBarColors() {
