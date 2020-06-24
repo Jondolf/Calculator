@@ -55,13 +55,12 @@ export class GraphingCalculatorPage implements AfterViewInit {
     this.amountOfXSquares = this.graphElement.width / this.squareSize;
     this.amountOfYSquares = this.graphElement.height / this.squareSize;
 
-    this.ctx.font = '18px \'Nunito Sans\'';
+    this.ctx.font = '24px \'Nunito Sans\'';
     this.handleDraw();
   }
 
   changeEquation(index: number, newEquation: string): void {
     this.equations[index] = newEquation;
-    console.log(this.equations);
   }
 
   // Used in a template for-loop to avoid an unfocus problem
@@ -72,12 +71,21 @@ export class GraphingCalculatorPage implements AfterViewInit {
   // Draws the lines and shapes of all equations
   drawEquations(): void {
     this.handleDraw();
-    for (const equation of this.equations) {
-      this.drawLineFromEquation(equation);
-      console.log(equation);
+    for (let equation of this.equations) {
+      equation = equation.replace(/ /g, '');
+      if (equation.includes('=')) {
+        this.drawLineFromEquation(equation);
+      } else if (equation.split(',').length === 2) {
+        const coords = equation.split(',');
+        this.drawDotAtCoordinate(this.convertCoordinatesToCanvasCoordinates({ x: coords[0], y: coords[1] }));
+      }
     }
   }
 
+  /**
+   * Draws a line by using a given equation. The calculation is done on every x-coordinate/part of x-coordinate
+   * @param equation The equation used to count where to draw the line
+   */
   drawLineFromEquation(equation: string): void {
     this.ctx.lineWidth = 3;
     this.ctx.beginPath();
@@ -94,6 +102,16 @@ export class GraphingCalculatorPage implements AfterViewInit {
 
     }
     this.ctx.stroke();
+  }
+
+  /**
+   * Draws a dot/small circle to a given point on the canvas.
+   * @param coordinate A canvas coordinate
+   */
+  drawDotAtCoordinate(coordinate: Coordinate): void {
+    this.ctx.beginPath();
+    this.ctx.arc(coordinate.x, coordinate.y, 10, 0, 2 * Math.PI, true);
+    this.ctx.fill();
   }
 
   formatEquation(equation: string, replaceWith: any): string {
@@ -157,10 +175,12 @@ export class GraphingCalculatorPage implements AfterViewInit {
     ) {
       // For now it uses coord.x for y-axis as well and presumes that the grid is a square
       if (coord.x !== 0) {
+        this.ctx.textAlign = 'center';
         this.ctx.fillText(
-          coord.x.toString(), this.convertCoordinatesToCanvasCoordinates(coord).x - 6, this.graphElement.height / 2 + 22); // x-axis
+          coord.x.toString(), this.convertCoordinatesToCanvasCoordinates(coord).x, this.graphElement.height / 2 + 35); // x-axis
+        this.ctx.textAlign = 'right';
         this.ctx.fillText(
-          (-coord.x).toString(), this.graphElement.width / 2 - 20, this.convertCoordinatesToCanvasCoordinates(coord).x + 6); // y-axis
+          (-coord.x).toString(), this.graphElement.width / 2 - 20, this.convertCoordinatesToCanvasCoordinates(coord).x + 9); // y-axis
       }
     }
   }
