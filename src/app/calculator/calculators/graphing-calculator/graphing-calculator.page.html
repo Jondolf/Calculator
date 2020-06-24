@@ -1,16 +1,14 @@
 <div class="graph-container">
-  <canvas width="1000" height="1000" #graph></canvas>
-  <ion-button (click)="zoomIn(1.5)" class="zoom-in-button">
-    <ion-icon slot="icon-only" name="add"></ion-icon>
-  </ion-button>
-  <ion-button (click)="zoomOut(0.75)" class="zoom-out-button">
-    <ion-icon slot="icon-only" name="remove"></ion-icon>
-  </ion-button>
+  <pan-zoom [config]="panZoomConfig">
+    <canvas width="5000" height="5000" id="canvas" #canvas></canvas>
+  </pan-zoom>
 </div>
 
 <div class="input-container">
   <ion-list>
-    <ion-item *ngFor="let equation of equations">
+    <ion-item
+      *ngFor="let equation of equations; let i = index; trackBy: trackBy"
+    >
       <ion-buttons slot="start">
         <ion-button (click)="equations.splice(equation, 1)">
           <ion-icon slot="icon-only" name="remove"></ion-icon>
@@ -18,7 +16,7 @@
       </ion-buttons>
       <ion-input
         type="text"
-        (input)="handleEquationInputChange(equation, $event.target.value)"
+        (input)="changeEquation(i, $event.target.value); drawEquations()"
         [value]="equation"
       ></ion-input>
     </ion-item>

@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { BasicCalculatorService } from '../basic-calculator/basic-calculator.service';
+import { PanZoomConfig } from 'ng2-panzoom';
 
 interface Coordinate {
   x: number;
@@ -12,7 +13,18 @@ interface Coordinate {
   styleUrls: ['./graphing-calculator.page.scss'],
 })
 export class GraphingCalculatorPage implements AfterViewInit {
-  @ViewChild('graph') graphRef: ElementRef;
+  @ViewChild('canvas') graphRef: ElementRef;
+
+  panZoomConfig = new PanZoomConfig({
+    zoomLevels: 15,
+    neutralZoomLevel: 5,
+    initialZoomLevel: 10,
+    scalePerZoomLevel: 1.5,
+    invertMouseWheel: true,
+    freeMouseWheel: false,
+    zoomSetDuration: 1,
+    keepInBounds: true
+  });
 
   graphElement: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -39,27 +51,34 @@ export class GraphingCalculatorPage implements AfterViewInit {
     this.canvasHalfX = this.graphElement.width / 2;
     this.canvasHalfY = this.graphElement.height / 2;
 
-    this.squareSize = this.graphElement.width / 20;
+    this.squareSize = this.graphElement.width / 100;
     this.amountOfXSquares = this.graphElement.width / this.squareSize;
     this.amountOfYSquares = this.graphElement.height / this.squareSize;
 
     this.ctx.font = '18px \'Nunito Sans\'';
-    this.ctx.scale(2, 2);
-    // this.ctx.translate(this.graphElement.width / 2, this.graphElement.height / 2);
     this.handleDraw();
   }
 
-  /**
-   * Handles what should happen when the equation's input's value is changed. This function is called on each input.
-   * @param equation The equation that the input's value is assigned to
-   * @param value The current value of the input
-   */
-  handleEquationInputChange(equation: string, value: string): void {
-    equation = value;
-    console.log(equation, value);
-    console.log('Original equation:', equation);
-    this.handleDraw();
+  changeEquation(index: number, newEquation: string): void {
+    this.equations[index] = newEquation;
+    console.log(this.equations);
+  }
 
+  // Used in a template for-loop to avoid an unfocus problem
+  trackBy(index: number): number {
+    return index;
+  }
+
+  // Draws the lines and shapes of all equations
+  drawEquations(): void {
+    this.handleDraw();
+    for (const equation of this.equations) {
+      this.drawLineFromEquation(equation);
+      console.log(equation);
+    }
+  }
+
+  drawLineFromEquation(equation: string): void {
     this.ctx.beginPath();
     this.ctx.moveTo(0, this.canvasHalfY);
     for (
@@ -69,15 +88,15 @@ export class GraphingCalculatorPage implements AfterViewInit {
     ) {
       this.ctx.lineTo(
         this.convertCoordinatesToCanvasCoordinates(coord).x,
-        this.convertCoordinatesToCanvasCoordinates({ x: 0, y: +this.countEquation(this.formatEquation(value, coord.x)) }).y
+        this.convertCoordinatesToCanvasCoordinates({ x: 0, y: +this.countEquation(this.formatEquation(equation, coord.x)) }).y
       );
-      console.log('Loop:', coord);
+
     }
     this.ctx.stroke();
   }
 
-  formatEquation(equation: string, replaceWith: any) {
-    const formattedEquation = equation.replace(/x/g, replaceWith).slice(equation.lastIndexOf('=') + 1);
+  formatEquation(equation: string, replaceWith: any): string {
+    const formattedEquation: string = equation.replace(/x/g, '(' + replaceWith + ')').slice(equation.lastIndexOf('=') + 1);
     return formattedEquation;
   }
 
@@ -94,18 +113,7 @@ export class GraphingCalculatorPage implements AfterViewInit {
       x: this.canvasHalfX + (coordinate.x * this.squareSize),
       y: this.canvasHalfY - (coordinate.y * this.squareSize)
     };
-    console.log('Coordinate:', coordinate, 'Converted:', convertedCoordinate);
     return convertedCoordinate;
-  }
-
-  zoomIn(amount: number): void {
-    this.ctx.scale(amount, amount);
-    this.handleDraw();
-  }
-
-  zoomOut(amount: number): void {
-    this.ctx.scale(amount, amount);
-    this.handleDraw();
   }
 
   handleDraw() {
