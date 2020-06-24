@@ -3,12 +3,14 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { BasicCalculatorService } from './basic-calculator.service';
 import Decimal from 'decimal.js';
+import { Storage } from '@ionic/storage';
 
 fdescribe('Service: BasicCalculator', () => {
   let service: BasicCalculatorService;
+  const storage = new Storage({});
 
   beforeEach(() => {
-    service = new BasicCalculatorService();
+    service = new BasicCalculatorService(storage);
     TestBed.configureTestingModule({
       providers: [BasicCalculatorService]
     });

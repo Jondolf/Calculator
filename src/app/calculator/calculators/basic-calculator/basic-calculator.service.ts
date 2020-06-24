@@ -44,7 +44,9 @@ export class BasicCalculatorService {
     const realCalculation = calculation.replace(/x/g, '*').replace(/÷/g, '/').replace(/mod/g, 'm') // multiply, divide, modulo
       .replace(/sin/g, 's').replace(/cos/g, 'c').replace(/tan/g, 't') // sin, cos, tan
       .replace(/log/g, 'f').replace(/ln/g, 'g').replace(/lg/g, 'h') // log base 10, log base e, log base 2 (the letters are random)
-      .replace(/([0-9πe])π/g, '$1*π').replace(/([0-9πe])e/g, '$1*e'); // replace ππ and ee with π*π and e*e
+      .replace(/([0-9πe])π/g, '$1*π').replace(/([0-9πe])e/g, '$1*e') // replace ππ and ee with π*π and e*e
+      .replace(/(\))([\(0-9πe])/g, '$1*$2')
+      .replace(/([0-9πe])(\()/g, '$1*$2');
     const result = this.countPlus(realCalculation);
     return result.toFixed();
   }
