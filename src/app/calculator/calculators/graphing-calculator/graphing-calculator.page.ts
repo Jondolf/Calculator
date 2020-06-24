@@ -34,10 +34,10 @@ export class GraphingCalculatorPage implements AfterViewInit {
   squareSize: number;
   amountOfXSquares: number;
   amountOfYSquares: number;
-  squareBorderWidth = 1;
+  squareBorderWidth = 2;
   squareBorderColor = 'rgba(175, 175, 175, 0.5)';
 
-  coordinateSystemLineWidth = 2;
+  coordinateSystemLineWidth = 4;
   coordinateSystemLineColor = 'black';
 
   equations = [];
@@ -79,12 +79,13 @@ export class GraphingCalculatorPage implements AfterViewInit {
   }
 
   drawLineFromEquation(equation: string): void {
+    this.ctx.lineWidth = 3;
     this.ctx.beginPath();
     this.ctx.moveTo(0, this.canvasHalfY);
     for (
       const coord = { x: -(this.canvasHalfX / this.squareSize), y: 0 };
       coord.x < this.graphElement.width / this.squareSize;
-      coord.x += 0.25
+      coord.x += 0.1
     ) {
       this.ctx.lineTo(
         this.convertCoordinatesToCanvasCoordinates(coord).x,
