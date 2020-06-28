@@ -1,7 +1,13 @@
-<div class="graph-container">
-  <pan-zoom [config]="panZoomConfig">
-    <canvas width="10000" height="10000" id="canvas" #canvas></canvas>
-  </pan-zoom>
+<div
+  (panstart)="onPan($event)"
+  (panmove)="onPan($event)"
+  (wheel)="onWheel($event)"
+  (pinchin)="onPinchIn()"
+  (pinchout)="onPinchOut()"
+  class="graph-container"
+  #canvascontainer
+>
+  <canvas width="10000" height="10000" id="canvas" #canvas></canvas>
 </div>
 
 <div class="input-container">

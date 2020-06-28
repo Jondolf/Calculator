@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Chart, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { GlobalVarsService } from 'src/app/global-vars.service';
@@ -8,7 +8,7 @@ import { GlobalVarsService } from 'src/app/global-vars.service';
   templateUrl: './charts.page.html',
   styleUrls: ['./charts.page.scss'],
 })
-export class ChartsPage {
+export class ChartsPage implements OnInit, OnDestroy {
   currentChartName = 'Line chart';
   colors = [
     '150, 150, 255',
@@ -35,8 +35,10 @@ export class ChartsPage {
   ];
   chartLabels: Label[] = ['1', '2', '3'];
 
-  constructor(globals: GlobalVarsService) {
-    globals.currentThemeChange.subscribe((value) => {
+  constructor(private globals: GlobalVarsService) { }
+
+  ngOnInit(): void {
+    this.globals.currentThemeChange.subscribe((value) => {
       if (value.includes('light')) {
         Chart.defaults.global.defaultFontColor = 'black';
       } else {
@@ -45,12 +47,15 @@ export class ChartsPage {
       this.updateChart();
     });
 
-    if (globals.currentTheme.includes('light')) {
+    if (this.globals.currentTheme.includes('light')) {
       Chart.defaults.global.defaultFontColor = 'black';
     } else {
       Chart.defaults.global.defaultFontColor = 'white';
     }
     Chart.defaults.global.defaultFontFamily = 'Nunito Sans';
+  }
+  ngOnDestroy(): void {
+    this.globals.currentThemeChange.unsubscribe();
   }
 
   getNewColor(): string {
@@ -67,10 +72,6 @@ export class ChartsPage {
     const g = Math.random() * (255 - darkestPossibleValue) + darkestPossibleValue;
     const b = Math.random() * (255 - darkestPossibleValue) + darkestPossibleValue;
     return `${r}, ${g}, ${b}`;
-  }
-
-  filterChartDataInput(str: string) {
-
   }
 
   addChartDataSet() {

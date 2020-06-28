@@ -53,6 +53,7 @@ export class AppComponent {
         document.body.className = 'light default-light';
         this.globals.currentTheme = 'light default-light';
       }
+      this.globals.currentThemeChange.next(this.globals.currentTheme);
       this.setStatusBarColors();
     } catch (error) {
       document.body.className = 'light default-light';

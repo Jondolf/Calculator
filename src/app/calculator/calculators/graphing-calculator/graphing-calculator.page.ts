@@ -1,6 +1,5 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 import { BasicCalculatorService } from '../basic-calculator/basic-calculator.service';
-import { PanZoomConfig } from 'ng2-panzoom';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 
 interface Coordinate {
@@ -13,38 +12,36 @@ interface Coordinate {
   templateUrl: './graphing-calculator.page.html',
   styleUrls: ['./graphing-calculator.page.scss'],
 })
-export class GraphingCalculatorPage implements AfterViewInit {
-  @ViewChild('canvas') graphRef: ElementRef;
+export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewChecked {
+  @ViewChild('canvas') canvasRef: ElementRef;
+  @ViewChild('canvascontainer') canvasContainerRef: ElementRef;
 
-  panZoomConfig = new PanZoomConfig({
-    zoomLevels: 15,
-    neutralZoomLevel: 5,
-    initialZoomLevel: 10,
-    scalePerZoomLevel: 1.5,
-    invertMouseWheel: true,
-    freeMouseWheel: false,
-    zoomSetDuration: 1,
-    keepInBounds: true
-  });
+  canvasElement: HTMLCanvasElement;
+  canvasContainerElement: HTMLDivElement;
 
-  graphElement: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   canvasHalfX: number;
   canvasHalfY: number;
+  canvasCssTransforms = {
+    translate: { x: 0, y: 0 } as Coordinate,
+    scale: 0.25
+  };
 
   squareSize: number;
   amountOfXSquares: number;
   amountOfYSquares: number;
-  squareBorderWidth = 2;
+  squareBorderWidth = 4;
   squareBorderColor = 'rgba(175, 175, 175, 0.5)';
 
-  coordinateSystemLineWidth = 4;
+  coordinateSystemLineWidth = 6;
   coordinateSystemColor = 'black';
 
   equations = [];
 
-  constructor(private calculator: BasicCalculatorService, private globals: GlobalVarsService) {
-    globals.currentThemeChange.subscribe((value) => {
+  constructor(private calculator: BasicCalculatorService, private globals: GlobalVarsService) { }
+
+  ngOnInit(): void {
+    this.globals.currentThemeChange.subscribe((value) => {
       if (value.includes('light')) {
         this.coordinateSystemColor = 'black';
       } else {
@@ -53,26 +50,35 @@ export class GraphingCalculatorPage implements AfterViewInit {
       this.handleDraw();
       this.drawEquations();
     });
-
-    if (globals.currentTheme.includes('light')) {
+    if (this.globals.currentTheme.includes('light')) {
       this.coordinateSystemColor = 'black';
     } else {
       this.coordinateSystemColor = 'white';
     }
   }
+  ngOnDestroy(): void {
+    this.globals.currentThemeChange.unsubscribe();
+  }
+  ngAfterViewChecked(): void {
+    this.canvasElement = this.canvasRef.nativeElement;
+    this.canvasContainerElement = this.canvasContainerRef.nativeElement;
+    this.ctx = this.canvasElement.getContext('2d');
 
-  ngAfterViewInit() {
-    this.graphElement = this.graphRef.nativeElement;
-    this.ctx = this.graphElement.getContext('2d');
+    this.canvasHalfX = this.canvasElement.width / 2;
+    this.canvasHalfY = this.canvasElement.height / 2;
 
-    this.canvasHalfX = this.graphElement.width / 2;
-    this.canvasHalfY = this.graphElement.height / 2;
+    this.squareSize = this.canvasElement.width / 100;
+    this.amountOfXSquares = this.canvasElement.width / this.squareSize;
+    this.amountOfYSquares = this.canvasElement.height / this.squareSize;
 
-    this.squareSize = this.graphElement.width / 100;
-    this.amountOfXSquares = this.graphElement.width / this.squareSize;
-    this.amountOfYSquares = this.graphElement.height / this.squareSize;
+    this.canvasCssTransforms.translate = {
+      x: -this.canvasHalfX + this.canvasContainerElement.offsetWidth * 0.5,
+      y: -this.canvasHalfY + this.canvasContainerElement.offsetHeight * 0.5
+    };
+    this.setCanvasTransforms();
 
-    this.ctx.font = '24px \'Nunito Sans\'';
+    this.ctx.font = '32px \'Nunito Sans\'';
+
     this.handleDraw();
   }
 
@@ -85,7 +91,9 @@ export class GraphingCalculatorPage implements AfterViewInit {
     return index;
   }
 
-  // Draws the lines and shapes of all equations
+  /**
+   * Draws the lines and shapes of all equations
+   */
   drawEquations(): void {
     this.handleDraw();
     for (let equation of this.equations) {
@@ -104,12 +112,12 @@ export class GraphingCalculatorPage implements AfterViewInit {
    * @param equation The equation used to count where to draw the line
    */
   drawLineFromEquation(equation: string): void {
-    this.ctx.lineWidth = 3;
+    this.ctx.lineWidth = 6;
     this.ctx.beginPath();
     this.ctx.moveTo(0, this.canvasHalfY);
     for (
       const coord = { x: -(this.canvasHalfX / this.squareSize), y: 0 };
-      coord.x < this.graphElement.width / this.squareSize;
+      coord.x < this.canvasElement.width / this.squareSize;
       coord.x += 0.1
     ) {
       this.ctx.lineTo(
@@ -152,53 +160,86 @@ export class GraphingCalculatorPage implements AfterViewInit {
     return convertedCoordinate;
   }
 
-  handleDraw() {
+  onPan(event): void {
+    this.canvasCssTransforms.translate = {
+      x: this.canvasCssTransforms.translate.x + event.deltaX * 0.005,
+      y: this.canvasCssTransforms.translate.y + event.deltaY * 0.005
+    };
+    this.setCanvasTransforms();
+  }
+
+  onWheel(event: WheelEvent): void {
+    if (event.deltaY < 0) {
+      this.canvasCssTransforms.scale += 0.1;
+    } else if (event.deltaY > 0 && this.canvasCssTransforms.scale - 0.1 >= 0) {
+      this.canvasCssTransforms.scale -= 0.1;
+    }
+    this.setCanvasTransforms();
+  }
+
+  onPinchIn() {
+    if (this.canvasCssTransforms.scale - 0.1 >= 0) {
+      this.canvasCssTransforms.scale -= 0.1;
+      this.setCanvasTransforms();
+    }
+  }
+  onPinchOut() {
+    this.canvasCssTransforms.scale += 0.1;
+    this.setCanvasTransforms();
+  }
+
+  // CSS transforms
+  setCanvasTransforms() {
+    this.canvasElement.style.transform = `translate(${this.canvasCssTransforms.translate.x}px, ${this.canvasCssTransforms.translate.y}px) scale(${this.canvasCssTransforms.scale})`;
+  }
+
+  handleDraw(): void {
     this.clearCanvas();
     this.drawGrid();
     this.drawCoordinateSystem();
   }
 
-  drawGrid() {
-    for (let i = 0; i < this.graphElement.width; i += this.squareSize) {
+  drawGrid(): void {
+    for (let i = 0; i < this.canvasElement.width; i += this.squareSize) {
       // Horizontal lines
       this.drawAcrossCanvas(
         this.squareBorderWidth, this.squareBorderColor,
-        { x: 0, y: i }, { x: this.graphElement.width, y: i }
+        { x: 0, y: i }, { x: this.canvasElement.width, y: i }
       );
       // Vertical lines
       this.drawAcrossCanvas(
         this.squareBorderWidth, this.squareBorderColor,
-        { x: i, y: 0 }, { x: i, y: this.graphElement.height }
+        { x: i, y: 0 }, { x: i, y: this.canvasElement.height }
       );
     }
   }
 
-  drawCoordinateSystem() {
+  drawCoordinateSystem(): void {
     // x-axis
     this.drawAcrossCanvas(
       this.coordinateSystemLineWidth, this.coordinateSystemColor,
-      { x: 0, y: this.graphElement.height / 2 }, { x: this.graphElement.width, y: this.graphElement.height / 2 }
+      { x: 0, y: this.canvasElement.height / 2 }, { x: this.canvasElement.width, y: this.canvasElement.height / 2 }
     );
     // y-axis
     this.drawAcrossCanvas(
       this.coordinateSystemLineWidth, this.coordinateSystemColor,
-      { x: this.graphElement.width / 2, y: 0 }, { x: this.graphElement.width / 2, y: this.graphElement.height }
+      { x: this.canvasElement.width / 2, y: 0 }, { x: this.canvasElement.width / 2, y: this.canvasElement.height }
     );
     this.ctx.fillStyle = this.coordinateSystemColor;
     // Numbers along axes
     for (
       const coord = { x: -(this.canvasHalfX / this.squareSize), y: 0 };
-      coord.x < this.graphElement.width / this.squareSize;
+      coord.x < this.canvasElement.width / this.squareSize;
       coord.x++
     ) {
       // For now it uses coord.x for y-axis as well and presumes that the grid is a square
       if (coord.x !== 0) {
         this.ctx.textAlign = 'center';
         this.ctx.fillText(
-          coord.x.toString(), this.convertCoordinatesToCanvasCoordinates(coord).x, this.graphElement.height / 2 + 35); // x-axis
+          coord.x.toString(), this.convertCoordinatesToCanvasCoordinates(coord).x, this.canvasElement.height / 2 + 50); // x-axis
         this.ctx.textAlign = 'right';
         this.ctx.fillText(
-          (-coord.x).toString(), this.graphElement.width / 2 - 20, this.convertCoordinatesToCanvasCoordinates(coord).x + 9); // y-axis
+          (-coord.x).toString(), this.canvasElement.width / 2 - 25, this.convertCoordinatesToCanvasCoordinates(coord).x + 9); // y-axis
       }
     }
   }
@@ -207,21 +248,18 @@ export class GraphingCalculatorPage implements AfterViewInit {
     this.ctx.lineWidth = lineWidth;
     this.ctx.strokeStyle = strokeStyle;
 
-    // this.ctx.save();
-    // this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.beginPath();
     this.ctx.moveTo(from.x, from.y);
     this.ctx.lineTo(to.x, to.y);
     this.ctx.stroke();
-    // this.ctx.restore();
   }
 
-  clearCanvas() {
+  clearCanvas(): void {
     // Save transforms
     this.ctx.save();
     // Reset transforms to make clearRect work properly
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-    this.ctx.clearRect(0, 0, this.graphElement.width, this.graphElement.height);
+    this.ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
     // Restore transforms
     this.ctx.restore();
   }
