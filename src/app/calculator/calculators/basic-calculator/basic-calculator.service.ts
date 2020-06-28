@@ -8,9 +8,6 @@ import Decimal from 'decimal.js';
   providedIn: 'root'
 })
 export class BasicCalculatorService {
-  // Not related to logic
-  isBasicCalculatorButtonSettingsMenuOpen: boolean;
-  buttonStyles = this.getDefaultStyles();
 
   constructor(private storage: Storage) {
     this.storage.get('basicCalculatorCustomStyles').then(val => {
@@ -19,6 +16,11 @@ export class BasicCalculatorService {
       }
     });
   }
+  // Not related to logic
+  isBasicCalculatorButtonSettingsMenuOpen: boolean;
+  buttonStyles = this.getDefaultStyles();
+
+  isDeg = false; // Default is radians but can be changed to degrees
 
   getDefaultStyles() {
     return {
@@ -130,32 +132,40 @@ export class BasicCalculatorService {
       if (numberString === 'e') {
         return Decimal.exp(1);
       }
-      if (numberString[0] === '√' && numberString.length > 1) {
-        return Decimal.sqrt(this.countPlus(numberString.substring(1, numberString.length)));
-      }
-      if (numberString[0] === 's' /* sin */ && numberString.length > 1) {
-        return Decimal.sin(this.countPlus(numberString.substring(1, numberString.length)));
-      }
-      if (numberString[0] === 'c' /* cos */ && numberString.length > 1) {
-        return Decimal.cos(this.countPlus(numberString.substring(1, numberString.length)));
-      }
-      if (numberString[0] === 't' /* tan */ && numberString.length > 1) {
-        return Decimal.tan(this.countPlus(numberString.substring(1, numberString.length)));
-      }
-      if (numberString[0] === 'f' /* log */ && numberString.length > 1) {
-        return Decimal.log10(this.countPlus(numberString.substring(1, numberString.length)));
-      }
-      if (numberString[0] === 'g' /* ln */ && numberString.length > 1) {
-        return Decimal.ln(this.countPlus(numberString.substring(1, numberString.length)));
-      }
-      if (numberString[0] === 'h' /* lg */ && numberString.length > 1) {
-        return Decimal.log2(this.countPlus(numberString.substring(1, numberString.length)));
-      }
-      if (numberString[numberString.length - 1] === '%' && numberString.length > 1) {
-        return this.countPlus(numberString.substring(0, numberString.length - 1)).div(100);
-      }
-      if (numberString[numberString.length - 1] === '!' && numberString.length > 1) {
-        return this.countFactorial(this.countPlus(numberString.substring(0, numberString.length - 1)));
+
+      if (numberString.length > 1) {
+        // Mathematical functions, like sin(...)
+        const calculatedStringAfterMathFunction: Decimal = this.countPlus(numberString.substring(1, numberString.length));
+        switch (numberString[0]) {
+          case '√':
+            return Decimal.sqrt(calculatedStringAfterMathFunction);
+          case 's': // sin
+            return this.isDeg
+              ? Decimal.sin(this.convertToRadians(calculatedStringAfterMathFunction))
+              : Decimal.sin(calculatedStringAfterMathFunction);
+          case 'c': // cos
+            return this.isDeg ?
+              Decimal.cos(this.convertToRadians(calculatedStringAfterMathFunction))
+              : Decimal.cos(calculatedStringAfterMathFunction);
+          case 't': // tan
+            return this.isDeg
+              ? Decimal.tan(this.convertToRadians(calculatedStringAfterMathFunction))
+              : Decimal.tan(calculatedStringAfterMathFunction);
+          case 'f': // log
+            return Decimal.log10(calculatedStringAfterMathFunction);
+          case 'g': // ln
+            return Decimal.ln(calculatedStringAfterMathFunction);
+          case 'h': // lg
+            return Decimal.log2(calculatedStringAfterMathFunction);
+        }
+        // Mathematical functions where the function is after the number, like 25% or 10!
+        const stringBeforeMathFunction: string = numberString.substring(0, numberString.length - 1);
+        switch (numberString[numberString.length - 1]) {
+          case '%':
+            return this.countPlus(stringBeforeMathFunction).div(100);
+          case '!':
+            return this.countFactorial(this.countPlus(stringBeforeMathFunction));
+        }
       }
       return new Decimal(numberString);
     });
@@ -174,5 +184,11 @@ export class BasicCalculatorService {
       result = result.times(i);
     }
     return result;
+  }
+
+  convertToRadians(angle: Decimal): Decimal {
+    console.log(angle.toString());
+    console.log(angle.mul(new Decimal(180).div(Decimal.acos(-1))).toString());
+    return angle.mul(Decimal.acos(-1).div(new Decimal(180)));
   }
 }

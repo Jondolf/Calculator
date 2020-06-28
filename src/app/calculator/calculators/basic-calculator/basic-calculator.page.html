@@ -1,12 +1,17 @@
 <div class="calculator-input">
-  <p class="calculation">{{ calculation }}</p>
-  <p class="current-result">{{ currentResult }}</p>
+  <ion-button (click)="calculator.isDeg = !calculator.isDeg" fill="clear"
+    >{{ calculator.isDeg ? 'DEG': 'RAD' }}</ion-button
+  >
+  <div class="calculation-container">
+    <p class="calculation">{{ calculation }}</p>
+    <p class="current-result">{{ currentResult }}</p>
+  </div>
 </div>
 
 <app-more-commands-menu
   *ngIf="calculator.buttonStyles.gridSize !== 'large'"
   [gridSize]="calculator.buttonStyles.gridSize"
-  (addSymbolToCalculation)="addSymbolToCalculation($event.symbol)"
+  (addSymbolToCalculation)="addSymbolToCalculation($event['symbol'])"
 ></app-more-commands-menu>
 
 <div
