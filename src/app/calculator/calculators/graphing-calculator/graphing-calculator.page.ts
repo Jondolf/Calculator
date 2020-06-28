@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { BasicCalculatorService } from '../basic-calculator/basic-calculator.service';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 
@@ -12,7 +12,7 @@ interface Coordinate {
   templateUrl: './graphing-calculator.page.html',
   styleUrls: ['./graphing-calculator.page.scss'],
 })
-export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewChecked {
+export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   @ViewChild('canvas') canvasRef: ElementRef;
   @ViewChild('canvascontainer') canvasContainerRef: ElementRef;
 
@@ -26,6 +26,8 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewCheck
     translate: { x: 0, y: 0 } as Coordinate,
     scale: 0.25
   };
+
+  firstLoad = true; // Used for settng initial canvas CSS transforms
 
   squareSize: number;
   amountOfXSquares: number;
@@ -59,7 +61,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewCheck
   ngOnDestroy(): void {
     this.globals.currentThemeChange.unsubscribe();
   }
-  ngAfterViewChecked(): void {
+  ngAfterViewInit(): void {
     this.canvasElement = this.canvasRef.nativeElement;
     this.canvasContainerElement = this.canvasContainerRef.nativeElement;
     this.ctx = this.canvasElement.getContext('2d');
@@ -71,15 +73,20 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewCheck
     this.amountOfXSquares = this.canvasElement.width / this.squareSize;
     this.amountOfYSquares = this.canvasElement.height / this.squareSize;
 
-    this.canvasCssTransforms.translate = {
-      x: -this.canvasHalfX + this.canvasContainerElement.offsetWidth * 0.5,
-      y: -this.canvasHalfY + this.canvasContainerElement.offsetHeight * 0.5
-    };
-    this.setCanvasTransforms();
-
     this.ctx.font = '32px \'Nunito Sans\'';
-
-    this.handleDraw();
+  }
+  ngAfterViewChecked(): void {
+    if (this.firstLoad) {
+      this.canvasCssTransforms.translate = {
+        x: -this.canvasHalfX + this.canvasContainerElement.offsetWidth * 0.5,
+        y: -this.canvasHalfY + this.canvasContainerElement.offsetHeight * 0.5
+      };
+      if (this.canvasContainerElement.offsetWidth !== 0) {
+        this.setCanvasTransforms();
+        this.handleDraw();
+        this.firstLoad = false;
+      }
+    }
   }
 
   changeEquation(index: number, newEquation: string): void {
@@ -160,7 +167,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewCheck
     return convertedCoordinate;
   }
 
-  onPan(event): void {
+  onPan(event: HammerInput): void {
     this.canvasCssTransforms.translate = {
       x: this.canvasCssTransforms.translate.x + event.deltaX * 0.005,
       y: this.canvasCssTransforms.translate.y + event.deltaY * 0.005
