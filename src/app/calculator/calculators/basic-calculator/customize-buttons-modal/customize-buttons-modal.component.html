@@ -61,7 +61,7 @@
   </ion-range>
 
   <ion-radio-group
-    (ionChange)="styles.gridSize = $event.target.value"
+    (ionChange)="styles.gridSize = $event.target.value; updateStyles()"
     [value]="styles.gridSize"
   >
     <ion-label>Grid size</ion-label>
