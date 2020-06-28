@@ -9,6 +9,12 @@ import Decimal from 'decimal.js';
 })
 export class BasicCalculatorService {
 
+  // Not related to logic
+  isBasicCalculatorButtonSettingsMenuOpen: boolean;
+  buttonStyles = this.getDefaultStyles();
+
+  isDeg = false; // Default is radians but can be changed to degrees
+
   constructor(private storage: Storage) {
     this.storage.get('basicCalculatorCustomStyles').then(val => {
       if (val) {
@@ -16,11 +22,6 @@ export class BasicCalculatorService {
       }
     });
   }
-  // Not related to logic
-  isBasicCalculatorButtonSettingsMenuOpen: boolean;
-  buttonStyles = this.getDefaultStyles();
-
-  isDeg = false; // Default is radians but can be changed to degrees
 
   getDefaultStyles() {
     return {
@@ -187,8 +188,6 @@ export class BasicCalculatorService {
   }
 
   convertToRadians(angle: Decimal): Decimal {
-    console.log(angle.toString());
-    console.log(angle.mul(new Decimal(180).div(Decimal.acos(-1))).toString());
     return angle.mul(Decimal.acos(-1).div(new Decimal(180)));
   }
 }
