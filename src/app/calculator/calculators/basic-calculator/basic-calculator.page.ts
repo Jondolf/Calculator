@@ -74,8 +74,7 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
     }
     // Reset calculation to defaults if first symbol of calculation is equals but equals symbol isn't pressed
     if (this.calculation[0] === '=') {
-      this.calculation = '0';
-      this.currentResult = '';
+      this.resetCalculation();
     }
     // Remove initial zero before first symbol is added
     if (this.calculation === '0') {
@@ -90,16 +89,38 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
   }
 
   backspaceEventHandler() {
-    if (this.calculation.length === 1) {
-      this.calculation = '0';
-      this.currentResult = '';
-    } else if (this.calculation[0] === '=') {
-      this.calculation = '0';
-      this.currentResult = '';
+    if (this.calculation.length === 1 || this.calculation[0] === '=') {
+      this.resetCalculation();
+    } else if (this.checkIfTwoCharMathFunction()) {
+      this.calculation = this.calculation.slice(0, this.calculation.length - 2);
+      this.calculation === '' ? this.resetCalculation() : this.calculation = this.calculation;
+    } else if (this.checkIfThreeCharMathFunction()) {
+      this.calculation = this.calculation.slice(0, this.calculation.length - 3);
+      this.calculation === '' ? this.resetCalculation() : this.calculation = this.calculation;
     } else {
       this.calculation = this.removeLastChar(this.calculation);
+    }
+    if (this.calculation !== '0') {
       this.currentResult = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
     }
+  }
+
+  resetCalculation() {
+    this.calculation = '0';
+    this.currentResult = '';
+  }
+
+  // Used for deleting entire words
+  checkIfTwoCharMathFunction(): boolean {
+    const twoCharMathFunctions = 'ln lg';
+    const twoLastLettersOfCalculation = this.calculation.slice(this.calculation.length - 2);
+    return twoCharMathFunctions.includes(twoLastLettersOfCalculation);
+  }
+  // Used for deleting entire words
+  checkIfThreeCharMathFunction(): boolean {
+    const threeCharMathFunctions = 'mod sin cos tan log';
+    const threeLastLettersOfCalculation = this.calculation.slice(this.calculation.length - 3);
+    return threeCharMathFunctions.includes(threeLastLettersOfCalculation);
   }
 
   handleEvent = (e: KeyboardEvent): void => {

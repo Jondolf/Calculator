@@ -120,7 +120,7 @@
   </button>
 
   <button
-    (click)="calculation = '0'; currentResult = ''"
+    (click)="resetCalculation()"
     [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command clear"
   >
@@ -145,7 +145,7 @@
   </button>
   <button
     (click)="backspaceEventHandler()"
-    (press)="calculation = '0'; currentResult = ''"
+    (press)="resetCalculation()"
     [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command backspace"
   >
