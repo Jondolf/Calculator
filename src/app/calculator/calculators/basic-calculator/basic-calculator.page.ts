@@ -4,6 +4,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { BasicCalculatorService } from './basic-calculator.service';
+import { PreciseCalculatorService } from '../precise-calculator.service';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 
 @Component({
@@ -15,7 +16,10 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
   calculation = '0';
   currentResult = '';
 
-  constructor(public calculator: BasicCalculatorService, public globals: GlobalVarsService) { }
+  constructor(
+    public basicCalculator: BasicCalculatorService,
+    public preciseCalculator: PreciseCalculatorService,
+    private globals: GlobalVarsService) { }
 
   ngOnInit() {
     document.body.addEventListener('keydown', this.handleEvent);
@@ -64,7 +68,7 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
     }
     // Calculate calculation and clear current result field if equals symbol is pressed
     if (symbol.toString() === '=') {
-      this.calculation = `=${this.calculator.countCalculation(this.calculation).toString()}`;
+      this.calculation = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
       this.currentResult = '';
       return;
     }
@@ -78,7 +82,7 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
       this.calculation = '';
     }
     this.calculation += symbol.toString();
-    this.currentResult = `=${this.calculator.countCalculation(this.calculation).toString()}`;
+    this.currentResult = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
   }
 
   removeLastChar(str: string): string {
@@ -94,7 +98,7 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
       this.currentResult = '';
     } else {
       this.calculation = this.removeLastChar(this.calculation);
-      this.currentResult = `=${this.calculator.countCalculation(this.calculation).toString()}`;
+      this.currentResult = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
     }
   }
 
@@ -121,7 +125,7 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
     }
     // Get result
     if (this.calculation[0] !== '=' && (e.key === 'Enter' || e.key === '=')) {
-      this.calculation = `=${this.calculator.countCalculation(this.calculation).toString()}`;
+      this.calculation = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
       this.currentResult = '';
     }
     // Remove

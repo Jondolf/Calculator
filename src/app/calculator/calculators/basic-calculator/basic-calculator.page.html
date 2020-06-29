@@ -1,6 +1,8 @@
 <div class="calculator-input">
-  <ion-button (click)="calculator.isDeg = !calculator.isDeg" fill="clear"
-    >{{ calculator.isDeg ? 'DEG': 'RAD' }}</ion-button
+  <ion-button
+    (click)="preciseCalculator.isDeg = !preciseCalculator.isDeg"
+    fill="clear"
+    >{{ preciseCalculator.isDeg ? 'DEG': 'RAD' }}</ion-button
   >
   <div class="calculation-container">
     <p class="calculation">{{ calculation }}</p>
@@ -9,25 +11,25 @@
 </div>
 
 <app-more-commands-menu
-  *ngIf="calculator.buttonStyles.gridSize !== 'large'"
-  [gridSize]="calculator.buttonStyles.gridSize"
+  *ngIf="basicCalculator.buttonStyles.gridSize !== 'large'"
+  [gridSize]="basicCalculator.buttonStyles.gridSize"
   (addSymbolToCalculation)="addSymbolToCalculation($event['symbol'])"
 ></app-more-commands-menu>
 
 <div
   [ngClass]="[
     'calculator-container',
-    calculator.buttonStyles.gridSize ? calculator.buttonStyles.gridSize : 'small'
+    basicCalculator.buttonStyles.gridSize ? basicCalculator.buttonStyles.gridSize : 'small'
     ]"
   [ngStyle]="{
-    'grid-gap': calculator.buttonStyles.gridGap,
-    padding: calculator.buttonStyles.gridGap
+    'grid-gap': basicCalculator.buttonStyles.gridGap,
+    padding: basicCalculator.buttonStyles.gridGap
   }"
 >
   <button
     button
     (click)="addSymbolToCalculation(1)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable number one"
   >
     1
@@ -35,7 +37,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation(2)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable number two"
   >
     2
@@ -43,7 +45,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation(3)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable number three"
   >
     3
@@ -51,7 +53,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation(4)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable number four"
   >
     4
@@ -59,7 +61,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation(5)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable number five"
   >
     5
@@ -67,7 +69,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation(6)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable number six"
   >
     6
@@ -75,7 +77,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation(7)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable number seven"
   >
     7
@@ -83,7 +85,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation(8)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable number eight"
   >
     8
@@ -91,7 +93,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation(9)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable number nine"
   >
     9
@@ -99,7 +101,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation(0)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable number zero"
   >
     0
@@ -107,7 +109,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('.')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable number dot"
   >
     .
@@ -116,7 +118,7 @@
 
   <button
     (click)="calculation = '0'; currentResult = ''"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command clear"
   >
     C
@@ -124,7 +126,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command opening-parentheses"
   >
     (
@@ -132,7 +134,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation(')')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command closing-parentheses"
   >
     )
@@ -141,7 +143,7 @@
   <button
     (click)="backspaceEventHandler()"
     (press)="calculation = '0'; currentResult = ''"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command backspace"
   >
     <i class="material-icons">backspace</i>
@@ -149,7 +151,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('+')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command plus"
   >
     +
@@ -157,7 +159,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('-')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command minus"
   >
     -
@@ -165,7 +167,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('x')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command multiply"
   >
     x
@@ -173,7 +175,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('÷')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command divide"
   >
     ÷
@@ -181,7 +183,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('=')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command equals"
   >
     =
@@ -191,7 +193,7 @@
   <!-- These will be in the more-commands menu if the grid size is set to small -->
   <button
     (click)="addSymbolToCalculation('√')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command sqrt medium-grid-button"
   >
     √
@@ -199,7 +201,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('^')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command pow medium-grid-button"
   >
     ^
@@ -207,7 +209,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('π')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command pi medium-grid-button"
   >
     π
@@ -215,7 +217,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('e')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command euler medium-grid-button"
   >
     e
@@ -225,7 +227,7 @@
   <!-- These will be in the more-commands menu if the grid size is set to small or medium -->
   <button
     (click)="addSymbolToCalculation('mod')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command mod large-grid-button"
   >
     mod
@@ -233,7 +235,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('%')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command percent large-grid-button"
   >
     %
@@ -241,7 +243,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('!')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command factorial large-grid-button"
   >
     n!
@@ -249,7 +251,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('sin(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command sin large-grid-button"
   >
     sin
@@ -257,7 +259,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('cos(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command cos large-grid-button"
   >
     cos
@@ -265,7 +267,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('tan(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command tan large-grid-button"
   >
     tan
@@ -273,7 +275,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('log(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command log large-grid-button"
   >
     log
@@ -281,7 +283,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('ln(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command ln large-grid-button"
   >
     ln
@@ -289,7 +291,7 @@
   </button>
   <button
     (click)="addSymbolToCalculation('lg(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
+    [ngStyle]="basicCalculator.buttonStyles.buttonStyles"
     class="ion-activatable command lg large-grid-button"
   >
     lg

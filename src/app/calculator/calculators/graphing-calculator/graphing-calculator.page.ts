@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy, AfterViewInit, AfterViewChecked } from '@angular/core';
-import { BasicCalculatorService } from '../basic-calculator/basic-calculator.service';
+import { CalculatorService } from '../calculator.service';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 
 interface Coordinate {
@@ -40,7 +40,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
 
   equations = [];
 
-  constructor(private calculator: BasicCalculatorService, private globals: GlobalVarsService) { }
+  constructor(private calculator: CalculatorService, private globals: GlobalVarsService) { }
 
   ngOnInit(): void {
     this.globals.currentThemeChange.subscribe((value) => {
@@ -49,7 +49,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
       } else {
         this.coordinateSystemColor = 'white';
       }
-      this.handleDraw();
+      this.drawInitial();
       this.drawEquations();
     });
     if (this.globals.currentTheme.includes('light')) {
@@ -83,7 +83,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
       };
       if (this.canvasContainerElement.offsetWidth !== 0) {
         this.setCanvasTransforms();
-        this.handleDraw();
+        this.drawInitial();
         this.firstLoad = false;
       }
     }
@@ -102,10 +102,10 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
    * Draws the lines and shapes of all equations
    */
   drawEquations(): void {
-    this.handleDraw();
+    this.drawInitial();
     for (let equation of this.equations) {
       equation = equation.replace(/ /g, '');
-      if (equation.includes('=')) {
+      if (equation.split('=').length === 2 && equation.split('=')[1]) {
         this.drawLineFromEquation(equation);
       } else if (equation.split(',').length === 2) {
         const coords = equation.split(',');
@@ -120,18 +120,24 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
    */
   drawLineFromEquation(equation: string): void {
     this.ctx.lineWidth = 6;
+    // Functions that can create curves or other complex shapes
+    const complexMathFunctions: string[] = ['xx', '^', '√', 'sin', 'cos', 'tan', 'log', 'ln', 'lg'];
+    // Does it have curves or other complex shapes or is it a very simple line/shape
+    const isComplex: boolean = complexMathFunctions.some((value: string) => equation.includes(value));
     this.ctx.beginPath();
     this.ctx.moveTo(0, this.canvasHalfY);
     for (
-      const coord = { x: -(this.canvasHalfX / this.squareSize), y: 0 };
-      coord.x < this.canvasElement.width / this.squareSize;
-      coord.x += 0.1
+      const coord = { x: -(this.amountOfXSquares / 2), y: 0 };
+      coord.x < this.amountOfXSquares;
+      coord.x += isComplex ? 0.1 : 1
     ) {
-      this.ctx.lineTo(
-        this.convertCoordinatesToCanvasCoordinates(coord).x,
-        this.convertCoordinatesToCanvasCoordinates({ x: 0, y: +this.countEquation(this.formatEquation(equation, coord.x)) }).y
-      );
-
+      const newY: number = +this.countEquation(this.formatEquation(equation, coord.x));
+      if (!isNaN(newY)) {
+        this.ctx.lineTo(
+          this.convertCoordinatesToCanvasCoordinates(coord).x,
+          this.convertCoordinatesToCanvasCoordinates({ x: 0, y: newY }).y
+        );
+      }
     }
     this.ctx.stroke();
   }
@@ -151,7 +157,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     return formattedEquation;
   }
 
-  countEquation(equation: string): string {
+  countEquation(equation: string): string | number {
     return this.calculator.countCalculation(equation);
   }
 
@@ -200,7 +206,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     this.canvasElement.style.transform = `translate(${this.canvasCssTransforms.translate.x}px, ${this.canvasCssTransforms.translate.y}px) scale(${this.canvasCssTransforms.scale})`;
   }
 
-  handleDraw(): void {
+  drawInitial(): void {
     this.clearCanvas();
     this.drawGrid();
     this.drawCoordinateSystem();
