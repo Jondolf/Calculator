@@ -1,6 +1,9 @@
 <div class="calculator-input">
   <ion-button
-    (click)="preciseCalculator.isDeg = !preciseCalculator.isDeg"
+    (click)="
+    preciseCalculator.isDeg = !preciseCalculator.isDeg;
+    currentResult = preciseCalculator.countCalculation(calculation)
+    "
     fill="clear"
     >{{ preciseCalculator.isDeg ? 'DEG': 'RAD' }}</ion-button
   >
