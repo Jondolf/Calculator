@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { ThemesModalComponent } from './themes/themes-modal.component';
 
 @Component({
-  selector: 'app-settings',
+  selector: 'app-settings-modal',
   templateUrl: './settings-modal.component.html',
   styleUrls: ['./settings-modal.component.scss'],
 })
