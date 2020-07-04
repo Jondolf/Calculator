@@ -37,9 +37,11 @@ export class AppComponent {
     this.platform.ready().then(() => {
       console.log('Platform ready', new Date());
       this.setTheme();
-      this.setStatusBarColors();
-      this.screenOrientation.lock('portrait');
-      this.splashScreen.hide();
+      if (this.platform.is('cordova') || this.platform.is('capacitor')) {
+        this.setStatusBarColors();
+        this.screenOrientation.lock('portrait');
+        this.splashScreen.hide();
+      }
     });
   }
 
@@ -64,12 +66,14 @@ export class AppComponent {
   }
 
   setStatusBarColors() {
-    if (document.body.className.includes('light')) {
-      this.statusBar.backgroundColorByName('white');
-      this.statusBar.styleDefault();
-    } else {
-      this.statusBar.backgroundColorByName('black');
-      this.statusBar.styleLightContent();
+    if (this.platform.is('cordova') || this.platform.is('capacitor')) {
+      if (document.body.className.includes('light')) {
+        this.statusBar.backgroundColorByName('white');
+        this.statusBar.styleDefault();
+      } else {
+        this.statusBar.backgroundColorByName('black');
+        this.statusBar.styleLightContent();
+      }
     }
   }
 }
