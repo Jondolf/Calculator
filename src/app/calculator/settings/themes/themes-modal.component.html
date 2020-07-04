@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="location.back()">
+      <ion-button (click)="dismissModal()">
         <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -19,7 +19,7 @@
       [style.--background]="'rgb(' + button.styles.backgroundRgb + ')'"
       [style.--color]="button.styles.fontColor"
     >
-      <ion-label>{{button.buttonName}}</ion-label>
+      <ion-label>{{ button.buttonName }}</ion-label>
     </ion-item>
   </ion-item-group>
 
@@ -32,7 +32,7 @@
       [style.--background]="'rgb(' + button.styles.backgroundRgb + ')'"
       [style.--color]="button.styles.fontColor"
     >
-      <ion-label>{{button.buttonName}}</ion-label>
+      <ion-label>{{ button.buttonName }}</ion-label>
     </ion-item>
   </ion-item-group>
 </ion-list>

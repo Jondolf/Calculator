@@ -1,14 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { GlobalVarsService } from './global-vars.service';
-
-import { Platform } from '@ionic/angular';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-
-import Decimal from 'decimal.js';
+import { Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import Decimal from 'decimal.js';
+import { GlobalVarsService } from './global-vars.service';
+
+
 Decimal.set({ precision: 100, rounding: 4 });
 
 @Component({

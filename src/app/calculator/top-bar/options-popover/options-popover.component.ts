@@ -3,6 +3,7 @@ import { PopoverController, ModalController } from '@ionic/angular';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 import { BasicCalculatorService } from '../../calculators/basic-calculator/basic-calculator.service';
 
+import { SettingsModalComponent } from '../../settings/settings-modal.component';
 import { CustomizeButtonsModalComponent } from '../../calculators/basic-calculator/customize-buttons-modal/customize-buttons-modal.component';
 
 @Component({
@@ -25,6 +26,13 @@ export class OptionsPopoverComponent {
     this.popoverController.dismiss();
   }
 
+  async presentSettingsModal() {
+    const modal = await this.modalController.create({
+      component: SettingsModalComponent,
+      cssClass: 'settings-modal'
+    });
+    return await modal.present();
+  }
   async presentCustomizeBasicCalculatorButtonsModal() {
     const modal = await this.modalController.create({
       component: CustomizeButtonsModalComponent,

@@ -11,12 +11,16 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './calculator/top-bar/top-bar.component';
+import { OptionsPopoverComponent } from './calculator/top-bar/options-popover/options-popover.component';
 import { CalculatorMenuComponent } from './calculator/calculator-menu/calculator-menu.component';
+// Settings
+import { SettingsModalComponent } from './calculator/settings/settings-modal.component';
+import { ThemesModalComponent } from './calculator/settings/themes/themes-modal.component';
 // Basic calculator
 import { BasicCalculatorPage } from './calculator/calculators/basic-calculator/basic-calculator.page';
 import { CustomizeButtonsModalComponent } from './calculator/calculators/basic-calculator/customize-buttons-modal/customize-buttons-modal.component';
 import { MoreCommandsMenuComponent } from './calculator/calculators/basic-calculator/more-commands-menu/more-commands-menu.component';
-// common
+// Common
 import { FullscreenContainerComponent } from './common/fullscreen-container/fullscreen-container.component';
 import { CircleButtonComponent } from './common/circle-button/circle-button.component';
 import { WideButtonComponent } from './common/wide-button/wide-button.component';
@@ -24,7 +28,6 @@ import { AccordionListModule } from './common/accordion-list/accordion-list.modu
 
 import * as Hammer from 'hammerjs';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
-import { OptionsPopoverComponent } from './calculator/top-bar/options-popover/options-popover.component';
 
 @Injectable()
 export class HammerConfig extends HammerGestureConfig {
@@ -40,6 +43,7 @@ export class HammerConfig extends HammerGestureConfig {
   declarations: [
     AppComponent, TopBarComponent, OptionsPopoverComponent, CalculatorMenuComponent,
     BasicCalculatorPage, CustomizeButtonsModalComponent, MoreCommandsMenuComponent,
+    SettingsModalComponent, ThemesModalComponent,
     FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent
   ],
   entryComponents: [],

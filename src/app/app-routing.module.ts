@@ -9,10 +9,6 @@ const routes: Routes = [
     component: BasicCalculatorPage
   },
   {
-    path: 'settings',
-    loadChildren: () => import('./calculator/settings/settings.module').then(m => m.SettingsPageModule)
-  },
-  {
     path: 'currency-converter',
     loadChildren: () => import('./calculator/calculators/converters/currency-converter/currency-converter.module')
       .then(m => m.CurrencyConverterPageModule)

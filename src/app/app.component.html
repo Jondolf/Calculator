@@ -3,10 +3,7 @@
     #calculatormenu
     (changeCalculator)="globals.changeCurrentCalculator($event.calculatorName)"
   ></app-calculator-menu>
-  <app-top-bar
-    *ngIf="!globals.isInSettings"
-    (openCalculatorMenu)="calculatorMenu.openFirst()"
-  ></app-top-bar>
+  <app-top-bar (openCalculatorMenu)="calculatorMenu.openFirst()"></app-top-bar>
 
   <ion-content id="content">
     <ion-router-outlet></ion-router-outlet>

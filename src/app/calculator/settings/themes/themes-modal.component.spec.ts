@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ThemesPage } from './themes.page';
+import { ThemesModalComponent } from './themes-modal.component';
 
-describe('ThemesPage', () => {
-  let component: ThemesPage;
-  let fixture: ComponentFixture<ThemesPage>;
+describe('ThemesModalComponent', () => {
+  let component: ThemesModalComponent;
+  let fixture: ComponentFixture<ThemesModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ThemesPage]
+      declarations: [ThemesModalComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ThemesPage);
+    fixture = TestBed.createComponent(ThemesModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

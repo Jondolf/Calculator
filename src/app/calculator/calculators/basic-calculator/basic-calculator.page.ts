@@ -30,14 +30,6 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
   }
 
   addSymbolToCalculation(symbol: string | number): void {
-    /*
-    If route has changed, remove keydown eventlistener. ngOnDestroy doesn't really work anymore, because Ionic keeps previous pages running.
-    This made typing into other pages' inputs (on keyboard) impossible because the event listener with preventDefault() was still there.
-    */
-    if (this.globals.currentCalculator !== 'Basic calculator') {
-      document.body.removeEventListener('keydown', this.handleEvent);
-      return;
-    }
     if (symbol === 'Enter') {
       return;
     }
@@ -124,6 +116,14 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
   }
 
   handleEvent = (e: KeyboardEvent): void => {
+    /*
+    If route has changed, remove keydown eventlistener. ngOnDestroy doesn't really work anymore, because Ionic keeps previous pages running.
+    This made typing into other pages' inputs (on keyboard) impossible because the event listener with preventDefault() was still there.
+    */
+    if (this.globals.currentCalculator !== 'Basic calculator') {
+      document.body.removeEventListener('keydown', this.handleEvent);
+      return;
+    }
     e.preventDefault();
     if (e.key === ' ') {
       return;

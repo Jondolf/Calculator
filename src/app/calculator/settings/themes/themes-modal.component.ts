@@ -1,16 +1,16 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { Button } from 'src/app/models/button.interface';
-import { Location } from '@angular/common';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
+import { ModalController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-themes',
-  templateUrl: './themes.page.html',
-  styleUrls: ['./themes.page.scss']
+  selector: 'app-themes-modal',
+  templateUrl: './themes-modal.component.html',
+  styleUrls: ['./themes-modal.component.scss']
 })
-export class ThemesPage implements OnInit {
+export class ThemesModalComponent {
   @Output() closeThemesMenu = new EventEmitter();
 
   lightThemes: Button[] = [
@@ -88,11 +88,11 @@ export class ThemesPage implements OnInit {
   lighThemeClasses: string[] = ['light default-light', 'light solarized-light', 'light pure-white'];
   darkThemeClasses: string[] = ['dark default-dark', 'dark solarized-dark', 'dark palenight', 'dark pure-black'];
 
-  constructor(public statusBar: StatusBar, public location: Location, public globals: GlobalVarsService, private storage: Storage) { }
-
-  ngOnInit() {
-    this.globals.isInSettings = true;
-  }
+  constructor(
+    public globals: GlobalVarsService,
+    private statusBar: StatusBar,
+    private storage: Storage,
+    private modalController: ModalController) { }
 
   changeTheme(themeClassName: string) {
     document.body.className = themeClassName;
@@ -110,5 +110,9 @@ export class ThemesPage implements OnInit {
       this.statusBar.backgroundColorByName('black');
       this.statusBar.styleLightContent();
     }
+  }
+
+  dismissModal(message?): void {
+    this.modalController.dismiss(message ? { message } : null);
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Chart, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { GlobalVarsService } from 'src/app/global-vars.service';
@@ -9,6 +10,7 @@ import { GlobalVarsService } from 'src/app/global-vars.service';
   styleUrls: ['./charts.page.scss'],
 })
 export class ChartsPage implements OnInit, OnDestroy {
+  themeSubscription: Subscription;
   currentChartName = 'Line chart';
   colors = [
     '150, 150, 255',
@@ -38,7 +40,7 @@ export class ChartsPage implements OnInit, OnDestroy {
   constructor(private globals: GlobalVarsService) { }
 
   ngOnInit(): void {
-    this.globals.currentThemeChange.subscribe((value) => {
+    this.themeSubscription = this.globals.currentThemeChange.subscribe((value) => {
       if (value.includes('light')) {
         Chart.defaults.global.defaultFontColor = 'black';
       } else {
@@ -55,7 +57,7 @@ export class ChartsPage implements OnInit, OnDestroy {
     Chart.defaults.global.defaultFontFamily = 'Nunito Sans';
   }
   ngOnDestroy(): void {
-    this.globals.currentThemeChange.unsubscribe();
+    this.themeSubscription.unsubscribe();
   }
 
   getNewColor(): string {

@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { CalculatorService } from '../calculator.service';
 import { GlobalVarsService } from 'src/app/global-vars.service';
+import { Subscription } from 'rxjs';
 
 interface Coordinate {
   x: number;
@@ -15,6 +16,8 @@ interface Coordinate {
 export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   @ViewChild('canvas') canvasRef: ElementRef;
   @ViewChild('canvascontainer') canvasContainerRef: ElementRef;
+
+  themeSubscription: Subscription;
 
   canvasElement: HTMLCanvasElement;
   canvasContainerElement: HTMLDivElement;
@@ -43,7 +46,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
   constructor(private calculator: CalculatorService, private globals: GlobalVarsService) { }
 
   ngOnInit(): void {
-    this.globals.currentThemeChange.subscribe((value) => {
+    this.themeSubscription = this.globals.currentThemeChange.subscribe((value) => {
       if (value.includes('light')) {
         this.coordinateSystemColor = 'black';
       } else {
@@ -59,7 +62,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     }
   }
   ngOnDestroy(): void {
-    this.globals.currentThemeChange.unsubscribe();
+    this.themeSubscription.unsubscribe();
   }
   ngAfterViewInit(): void {
     this.canvasElement = this.canvasRef.nativeElement;
@@ -133,9 +136,11 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     ) {
       const newY: number = +this.countEquation(this.formatEquation(equation, coord.x));
       if (!isNaN(newY)) {
+        console.log(newY);
+        const newCoord = this.convertCoordinatesToCanvasCoordinates({ x: coord.x, y: newY });
         this.ctx.lineTo(
-          this.convertCoordinatesToCanvasCoordinates(coord).x,
-          this.convertCoordinatesToCanvasCoordinates({ x: 0, y: newY }).y
+          newCoord.x,
+          newCoord.y
         );
       }
     }
