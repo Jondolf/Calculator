@@ -19,7 +19,7 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
   constructor(
     public basicCalculator: BasicCalculatorService,
     public preciseCalculator: PreciseCalculatorService,
-    private globals: GlobalVarsService) { }
+    public globals: GlobalVarsService) { }
 
   ngOnInit() {
     document.body.addEventListener('keydown', this.handleEvent);
