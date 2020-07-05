@@ -3,7 +3,7 @@ import { Button } from 'src/app/models/button.interface';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
-import { ModalController } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-themes-modal',
@@ -90,6 +90,7 @@ export class ThemesModalComponent {
 
   constructor(
     public globals: GlobalVarsService,
+    private platform: Platform,
     private statusBar: StatusBar,
     private storage: Storage,
     private modalController: ModalController) { }
@@ -103,12 +104,14 @@ export class ThemesModalComponent {
   }
 
   setStatusBarColors() {
-    if (document.body.className.includes('light')) {
-      this.statusBar.backgroundColorByName('white');
-      this.statusBar.styleDefault();
-    } else {
-      this.statusBar.backgroundColorByName('black');
-      this.statusBar.styleLightContent();
+    if (this.platform.is('cordova') || this.platform.is('capacitor')) {
+      if (document.body.className.includes('light')) {
+        this.statusBar.backgroundColorByName('white');
+        this.statusBar.styleDefault();
+      } else {
+        this.statusBar.backgroundColorByName('black');
+        this.statusBar.styleLightContent();
+      }
     }
   }
 
