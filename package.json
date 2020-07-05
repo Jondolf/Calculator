@@ -68,5 +68,5 @@
     "tslint": "~6.1.0",
     "typescript": "~3.8.3"
   },
-  "description": "An Ionic project"
+  "description": "A customizable calculator application with a calculator, many unit converters, a chart maker, a graphing calculator, many color themes and more."
 }
