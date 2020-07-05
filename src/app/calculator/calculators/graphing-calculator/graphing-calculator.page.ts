@@ -19,12 +19,13 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
 
   themeSubscription: Subscription;
 
+  isMouseDownOnCanvas = false;
+
   canvasElement: HTMLCanvasElement;
   canvasContainerElement: HTMLDivElement;
 
   ctx: CanvasRenderingContext2D;
-  canvasHalfX: number;
-  canvasHalfY: number;
+  canvasHalf: Coordinate = { x: 0, y: 0 };
   canvasCssTransforms = {
     translate: { x: 0, y: 0 } as Coordinate,
     scale: 0.25
@@ -33,8 +34,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
   firstLoad = true; // Used for settng initial canvas CSS transforms
 
   squareSize: number;
-  amountOfXSquares: number;
-  amountOfYSquares: number;
+  amountOfSquares: Coordinate = { x: 0, y: 0 };
   squareBorderWidth = 4;
   squareBorderColor = 'rgba(175, 175, 175, 0.5)';
 
@@ -69,27 +69,38 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     this.canvasContainerElement = this.canvasContainerRef.nativeElement;
     this.ctx = this.canvasElement.getContext('2d');
 
-    this.canvasHalfX = this.canvasElement.width / 2;
-    this.canvasHalfY = this.canvasElement.height / 2;
-
-    this.squareSize = this.canvasElement.width / 100;
-    this.amountOfXSquares = this.canvasElement.width / this.squareSize;
-    this.amountOfYSquares = this.canvasElement.height / this.squareSize;
-
+    this.canvasContainerElement.addEventListener('wheel', (e: WheelEvent) => this.onWheel(e), { passive: false });
+    this.setCanvasSizeRelatedVars();
     this.ctx.font = '32px \'Nunito Sans\'';
   }
   ngAfterViewChecked(): void {
     if (this.firstLoad) {
       this.canvasCssTransforms.translate = {
-        x: -this.canvasHalfX + this.canvasContainerElement.offsetWidth * 0.5,
-        y: -this.canvasHalfY + this.canvasContainerElement.offsetHeight * 0.5
+        x: -this.canvasHalf.x + this.canvasContainerElement.offsetWidth * 0.5,
+        y: -this.canvasHalf.y + this.canvasContainerElement.offsetHeight * 0.5
       };
       if (this.canvasContainerElement.offsetWidth !== 0) {
-        this.setCanvasTransforms();
+        this.setCanvasCssTransforms();
         this.drawInitial();
         this.firstLoad = false;
       }
     }
+  }
+
+  /**
+   * A helper function for setting canvas size and position related variables,
+   * such as the canvas center coordinates, square size and amount of squares
+   */
+  setCanvasSizeRelatedVars() {
+    this.squareSize = this.canvasElement.width / 100;
+    this.canvasHalf = {
+      x: this.canvasElement.width / 2,
+      y: this.canvasElement.height / 2
+    };
+    this.amountOfSquares = {
+      x: this.canvasElement.width / this.squareSize,
+      y: this.canvasElement.height / this.squareSize
+    };
   }
 
   changeEquation(index: number, newEquation: string): void {
@@ -128,10 +139,10 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     // Does it have curves or other complex shapes or is it a very simple line/shape
     const isComplex: boolean = complexMathFunctions.some((value: string) => equation.includes(value));
     this.ctx.beginPath();
-    this.ctx.moveTo(0, this.canvasHalfY);
+    this.ctx.moveTo(0, this.canvasHalf.y);
     for (
-      const coord = { x: -(this.amountOfXSquares / 2), y: 0 };
-      coord.x < this.amountOfXSquares;
+      const coord = { x: -(this.amountOfSquares.x / 2), y: 0 };
+      coord.x < this.amountOfSquares.x;
       coord.x += isComplex ? 0.1 : 1
     ) {
       const newY: number = +this.countEquation(this.formatEquation(equation, coord.x));
@@ -172,18 +183,18 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
    */
   convertCoordinatesToCanvasCoordinates(coordinate: Coordinate): Coordinate {
     const convertedCoordinate: Coordinate = {
-      x: this.canvasHalfX + (coordinate.x * this.squareSize),
-      y: this.canvasHalfY - (coordinate.y * this.squareSize)
+      x: this.canvasHalf.x + (coordinate.x * this.squareSize),
+      y: this.canvasHalf.y - (coordinate.y * this.squareSize)
     };
     return convertedCoordinate;
   }
 
   onPan(event: HammerInput): void {
     this.canvasCssTransforms.translate = {
-      x: this.canvasCssTransforms.translate.x + event.deltaX * 0.005,
-      y: this.canvasCssTransforms.translate.y + event.deltaY * 0.005
+      x: this.canvasCssTransforms.translate.x + event.velocityX * ((1 + this.canvasCssTransforms.scale) * 6.5),
+      y: this.canvasCssTransforms.translate.y + event.velocityY * ((1 + this.canvasCssTransforms.scale) * 6.5)
     };
-    this.setCanvasTransforms();
+    this.setCanvasCssTransforms();
   }
 
   onWheel(event: WheelEvent): void {
@@ -192,22 +203,21 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     } else if (event.deltaY > 0 && this.canvasCssTransforms.scale - 0.1 >= 0) {
       this.canvasCssTransforms.scale -= 0.1;
     }
-    this.setCanvasTransforms();
+    this.setCanvasCssTransforms();
   }
 
   onPinchIn() {
     if (this.canvasCssTransforms.scale - 0.1 >= 0) {
       this.canvasCssTransforms.scale -= 0.1;
-      this.setCanvasTransforms();
+      this.setCanvasCssTransforms();
     }
   }
   onPinchOut() {
     this.canvasCssTransforms.scale += 0.1;
-    this.setCanvasTransforms();
+    this.setCanvasCssTransforms();
   }
 
-  // CSS transforms
-  setCanvasTransforms() {
+  setCanvasCssTransforms() {
     this.canvasElement.style.transform = `translate(${this.canvasCssTransforms.translate.x}px, ${this.canvasCssTransforms.translate.y}px) scale(${this.canvasCssTransforms.scale})`;
   }
 
@@ -246,7 +256,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     this.ctx.fillStyle = this.coordinateSystemColor;
     // Numbers along axes
     for (
-      const coord = { x: -(this.canvasHalfX / this.squareSize), y: 0 };
+      const coord = { x: -(this.canvasHalf.x / this.squareSize), y: 0 };
       coord.x < this.canvasElement.width / this.squareSize;
       coord.x++
     ) {

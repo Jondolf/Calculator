@@ -34,6 +34,7 @@ export class HammerConfig extends HammerGestureConfig {
   overrides = {
     // Override default config
     swipe: { direction: Hammer.DIRECTION_ALL },
+    pan: { threshold: 0 },
     pinch: { enable: true },
     press: { time: 1500 }
   };
