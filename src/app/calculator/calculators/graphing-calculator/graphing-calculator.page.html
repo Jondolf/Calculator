@@ -1,35 +1,45 @@
 <div
   (panstart)="onPan($event)"
   (panmove)="onPan($event)"
-  (pinchin)="onPinchIn()"
-  (pinchout)="onPinchOut()"
+  (pinchin)="zoom(1.1)"
+  (pinchout)="zoom(0.9)"
   class="graph-container"
   #canvascontainer
 >
-  <canvas width="10000" height="10000" id="canvas" #canvas></canvas>
+  <canvas width="4000" height="2000" id="canvas" #canvas></canvas>
 </div>
 
 <div class="input-container">
-  <ion-list>
-    <ion-item
-      *ngFor="let equation of equations; let i = index; trackBy: trackBy"
-    >
-      <ion-buttons slot="start">
-        <ion-button (click)="equations.splice(equation, 1)">
-          <ion-icon slot="icon-only" name="remove"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-      <ion-input
-        type="text"
-        (input)="changeEquation(i, $event.target.value); drawEquations()"
-        [value]="equation"
-      ></ion-input>
-    </ion-item>
-    <ion-item button (click)="equations.push('')" class="add-serie-button">
-      <div class="add-icon-container">
-        <ion-icon slot="start" name="add"></ion-icon>
-      </div>
-      <ion-label>Add equation</ion-label>
-    </ion-item>
-  </ion-list>
+  <form>
+    <ion-list class="special-symbol-buttons-container">
+      <ion-item button (click)="addSpecialSymbolToEquation('π')">π</ion-item>
+      <ion-item button (click)="addSpecialSymbolToEquation('√')">√</ion-item>
+      <ion-item button (click)="addSpecialSymbolToEquation('^')">^</ion-item>
+    </ion-list>
+    <ion-list class="equations-container">
+      <ion-item
+        *ngFor="let equation of equations; let i = index; trackBy: trackBy"
+      >
+        <ion-buttons slot="start">
+          <ion-button (click)="equations.splice(equation, 1)">
+            <ion-icon slot="icon-only" name="remove"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-input
+          type="text"
+          (input)="changeEquation(i, $event.target.value); drawEquations(); caretPosition = $event.target.selectionStart"
+          (ionFocus)="onEquationInputFocus(i, $event.target)"
+          (ionBlur)="caretPosition = $event.target.firstChild.selectionStart"
+          [value]="equation"
+          placeholder="Type in an equation or coordinates"
+        ></ion-input>
+      </ion-item>
+      <ion-item button (click)="equations.push('')" class="add-serie-button">
+        <div class="add-icon-container">
+          <ion-icon slot="start" name="add"></ion-icon>
+        </div>
+        <ion-label>Add equation</ion-label>
+      </ion-item>
+    </ion-list>
+  </form>
 </div>
