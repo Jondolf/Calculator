@@ -47,10 +47,12 @@
         inputmode="numeric"
         (input)="handleDataInputChange(chartData, $event, $event.target)"
         [value]="chartData.data.toString()"
+        placeholder="Type in a comma seperated list of numbers"
       ></ion-input>
       <ion-input
         (input)="handleDataLabelInputChange(chartData, $event.target.value)"
         [value]="chartData.label"
+        placeholder="Type in the serie name"
       ></ion-input>
     </ion-item>
     <ion-item button (click)="addChartDataSet()" class="add-serie-button">
