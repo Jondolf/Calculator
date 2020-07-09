@@ -31,10 +31,16 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
 
   ctx: CanvasRenderingContext2D;
   canvasHalf: Coordinate = { x: 0, y: 0 };
-  canvasCssTransforms = {
-    translate: { x: 0, y: 0 } as Coordinate,
-    scale: 1
+  /**
+   * The distances between the center of the canvas and each side of the canvas (in coordinate system units)
+   */
+  canvasSides = {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   };
+  canvasOffset: Coordinate = { x: 0, y: 0 }; // Used for panning
   scale = 10; // How many squares displayed on the x-axis
   // scaleAsInteger: number = +Math.round((this.canvasCssTransforms.scale + Number.EPSILON) * 10); // The scale rounded and multiplied
   // lastDigitOfIntScale: number = +this.scaleAsInteger.toString()[this.scaleAsInteger.toString().length - 1];
@@ -85,14 +91,9 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
 
     this.canvasContainerElement.addEventListener('wheel', (e: WheelEvent) => this.zoom(e.deltaY < 0 ? 0.9 : 1.1), { passive: false });
     this.setCanvasSizeRelatedVars();
-    this.ctx.font = '24px \'Nunito Sans\'';
   }
   ngAfterViewChecked(): void {
     if (this.firstLoad) {
-      this.canvasCssTransforms.translate = {
-        x: 0,
-        y: 0
-      };
       if (this.canvasContainerElement.offsetWidth !== 0) {
         this.handleSetCanvasSize();
         this.firstLoad = false;
@@ -116,6 +117,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
    */
   setCanvasSizeRelatedVars(): void {
     this.squareSize = this.canvasElement.width / this.scale;
+    this.ctx.font = `${this.squareSize * 0.25}px 'Nunito Sans'`;
     this.canvasHalf = {
       x: this.canvasElement.width / 2,
       y: this.canvasElement.height / 2
@@ -124,9 +126,16 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
       x: this.canvasElement.width / this.squareSize,
       y: this.canvasElement.height / this.squareSize
     };
+    this.setCanvasSides();
   }
-  setCanvasCssTransforms(): void {
-    this.canvasElement.style.transform = `translate(${this.canvasCssTransforms.translate.x}px, ${this.canvasCssTransforms.translate.y}px) scale(${this.canvasCssTransforms.scale})`;
+
+  setCanvasSides() {
+    this.canvasSides = {
+      top: this.convertCanvasCoordinatesToCoordinates({ x: 0, y: 0 }).y,
+      bottom: this.convertCanvasCoordinatesToCoordinates({ x: 0, y: this.canvasElement.height }).y,
+      left: this.convertCanvasCoordinatesToCoordinates({ x: 0, y: 0 }).x,
+      right: this.convertCanvasCoordinatesToCoordinates({ x: this.canvasElement.width, y: 0 }).x
+    };
   }
 
   changeEquation(index: number, newEquation: string): void {
@@ -134,11 +143,13 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
   }
 
   async addSpecialSymbolToEquation(symbol: string): Promise<void> {
-    this.equations[this.focusedEquationIndex] = this.insertCharToString(
-      symbol, this.equations[this.focusedEquationIndex], this.caretPosition);
-    this.caretPosition = this.caretPosition + 1;
-    this.focusedEquationElement.setFocus();
-    this.drawEquations();
+    if (this.focusedEquationElement && this.caretPosition) {
+      this.equations[this.focusedEquationIndex] = this.insertCharToString(
+        symbol, this.equations[this.focusedEquationIndex], this.caretPosition);
+      this.caretPosition = this.caretPosition + 1;
+      this.focusedEquationElement.setFocus();
+      this.drawEquations();
+    }
   }
   insertCharToString(char: string, str: string, index: number): string {
     return [str.slice(0, index), char, str.slice(index)].join('');
@@ -157,11 +168,12 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     this.caretPosition = inputElement.selectionStart;
   }
   onPan(event: HammerInput): void {
-    this.canvasCssTransforms.translate = {
-      x: this.canvasCssTransforms.translate.x + event.velocityX * ((1 + this.scale * this.squareSize) * 0.005),
-      y: this.canvasCssTransforms.translate.y + event.velocityY * ((1 + this.scale * this.squareSize) * 0.005)
+    this.canvasOffset = {
+      x: this.canvasOffset.x + event.velocityX * (0.2 + this.scale * 0.1),
+      y: this.canvasOffset.y - event.velocityY * (0.2 + this.scale * 0.1)
     };
-    this.setCanvasCssTransforms();
+    this.setCanvasSides();
+    this.drawEquations();
   }
 
   zoom(amount: number): void {
@@ -178,6 +190,18 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     const convertedCoordinate: Coordinate = {
       x: this.canvasHalf.x + (coordinate.x * this.squareSize),
       y: this.canvasHalf.y - (coordinate.y * this.squareSize)
+    };
+    return convertedCoordinate;
+  }
+
+  /**
+   * Converts the given canvas coordinates to coordinate system coordinates
+   * @param coordinate An object with the x and y coordinates that the function should convert to coordinate system coordinates
+   */
+  convertCanvasCoordinatesToCoordinates(coordinate: Coordinate): Coordinate {
+    const convertedCoordinate: Coordinate = {
+      x: (coordinate.x <= 0 ? -coordinate.x : coordinate.x / this.squareSize) - this.amountOfSquares.x * 0.5,
+      y: -((coordinate.y / this.squareSize) - this.amountOfSquares.y * 0.5)
     };
     return convertedCoordinate;
   }
@@ -201,7 +225,9 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
         this.drawLineFromEquation(equation);
       } else if (equation.split(',').length === 2) {
         const coords = equation.split(',');
-        this.drawDotAtCoordinate(this.convertCoordinatesToCanvasCoordinates({ x: +coords[0], y: +coords[1] }));
+        this.drawDotAtCoordinate(this.convertCoordinatesToCanvasCoordinates({
+          x: +coords[0] + this.canvasOffset.x, y: +coords[1] + this.canvasOffset.y
+        }));
       }
     }
   }
@@ -211,26 +237,51 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
    * @param equation The equation used to count where to draw the line
    */
   drawLineFromEquation(equation: string): void {
-    this.ctx.lineWidth = 6;
+    this.ctx.lineWidth = this.squareBorderWidth * 1.5;
     // Functions that can create curves or other complex shapes
-    const complexMathFunctions: string[] = ['xx', '^', '√', 'sin', 'cos', 'tan', 'log', 'ln', 'lg'];
+    const complexMathFunctions = ['xx', '^', '√', 'sin', 'cos', 'tan', 'log', 'ln', 'lg'];
+    const veryComplexMathFunctions = ['tan(xx)'];
     // Does it have curves or other complex shapes or is it a very simple line/shape
     const isComplex: boolean = complexMathFunctions.some((value: string) => equation.includes(value));
-    const roundedAmountOfXSquares = Math.round(this.amountOfSquares.x);
+    const isVeryComplex: boolean = veryComplexMathFunctions.some((value: string) => equation.includes(value));
     this.ctx.beginPath();
-    this.ctx.moveTo(0, this.canvasHalf.y);
+    // Two seperate loops to make sure it is symmetrical
+    // Left half
     for (
-      const coord = { x: -Math.round(roundedAmountOfXSquares * 0.5), y: 0 };
-      coord.x < roundedAmountOfXSquares;
-      coord.x += isComplex ? 0.1 : 1
+      let x = 0;
+      x >= this.canvasSides.left - this.canvasOffset.x;
+      x -= isVeryComplex ? 0.025 : (isComplex ? 0.1 : 1)
     ) {
-      const newY: number = +this.calculator.countCalculation(this.formatEquation(equation, coord.x));
-      if (!isNaN(newY)) {
-        const newCoord = this.convertCoordinatesToCanvasCoordinates({ x: coord.x, y: newY });
-        this.ctx.lineTo(
-          newCoord.x,
-          newCoord.y
-        );
+      const y: number = +this.calculator.countCalculation(this.formatEquation(equation, x)) + this.canvasOffset.y;
+      if (!isNaN(y)) {
+        const newCoord = this.convertCoordinatesToCanvasCoordinates({ x: x + this.canvasOffset.x, y });
+        if (x === 0) {
+          this.ctx.moveTo(newCoord.x, newCoord.y);
+        } else {
+          this.ctx.lineTo(
+            newCoord.x,
+            newCoord.y
+          );
+        }
+      }
+    }
+    // Right half
+    for (
+      let x = 0;
+      x <= this.canvasSides.right - this.canvasOffset.x;
+      x += isVeryComplex ? 0.025 : (isComplex ? 0.1 : 1)
+    ) {
+      const y: number = +this.calculator.countCalculation(this.formatEquation(equation, x)) + this.canvasOffset.y;
+      if (!isNaN(y)) {
+        const newCoord = this.convertCoordinatesToCanvasCoordinates({ x: x + this.canvasOffset.x, y });
+        if (x === 0) {
+          this.ctx.moveTo(newCoord.x, newCoord.y);
+        } else {
+          this.ctx.lineTo(
+            newCoord.x,
+            newCoord.y
+          );
+        }
       }
     }
     this.ctx.stroke();
@@ -241,12 +292,12 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
   }
 
   /**
-  * Draws a dot/small circle to a given point on the canvas.
-  * @param coordinate A canvas coordinate
-  */
+   * Draws a dot/small circle to a given point on the canvas.
+   * @param coordinate A canvas coordinate
+   */
   drawDotAtCoordinate(coordinate: Coordinate): void {
     this.ctx.beginPath();
-    this.ctx.arc(coordinate.x, coordinate.y, 10, 0, 2 * Math.PI, true);
+    this.ctx.arc(coordinate.x, coordinate.y, 20, 0, 2 * Math.PI, true);
     this.ctx.fill();
   }
 
@@ -260,21 +311,34 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     this.ctx.lineWidth = lineWidth;
     this.ctx.strokeStyle = strokeStyle;
     this.ctx.beginPath();
-    for (let i = 0; i < this.scale * 0.5; i += squareSizeMultiplier) {
-      const canvasCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: i, y: i });
-      // Horizontal lines
+    /*
+    I made four seperate for loops (two for both horizontal halfs, two for both vertical halfs)
+    instead of two loops (one for all horizontal lines, one for all vertical lines)
+    because I want to always start from the center of the coordinate system.
+    If I started drawing the grid from the top for example, it would be a bit harder to make sure the lines match up with
+    the coordninate system's lines. The four-for-loop solution is more robust in my opinion.
+    */
+    // Top half horizontal lines
+    for (let i = 0; i < this.canvasSides.top - this.canvasOffset.y; i += squareSizeMultiplier) {
+      const canvasCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: 0, y: i + this.canvasOffset.y });
       this.ctx.moveTo(0, canvasCoord.y + 0.5);
       this.ctx.lineTo(this.canvasElement.width, canvasCoord.y + 0.5);
-      // Vertical lines
+    }
+    // Bottom half horizontal lines
+    for (let i = 0; i > this.canvasSides.bottom - this.canvasOffset.y; i -= squareSizeMultiplier) {
+      const canvasCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: 0, y: i + this.canvasOffset.y });
+      this.ctx.moveTo(0, canvasCoord.y + 0.5);
+      this.ctx.lineTo(this.canvasElement.width, canvasCoord.y + 0.5);
+    }
+    // Left half vertical lines
+    for (let i = 0; i > this.canvasSides.left - this.canvasOffset.x; i -= squareSizeMultiplier) {
+      const canvasCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: i + this.canvasOffset.x, y: 0 });
       this.ctx.moveTo(canvasCoord.x + 0.5, 0);
       this.ctx.lineTo(canvasCoord.x + 0.5, this.canvasElement.height);
     }
-    for (let i = 0; i > -this.scale * 0.5; i -= squareSizeMultiplier) {
-      const canvasCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: i, y: i });
-      // Horizontal lines
-      this.ctx.moveTo(0, canvasCoord.y + 0.5);
-      this.ctx.lineTo(this.canvasElement.width, canvasCoord.y + 0.5);
-      // Vertical lines
+    // Right half vertical lines
+    for (let i = 0; i < this.canvasSides.right - this.canvasOffset.x; i += squareSizeMultiplier) {
+      const canvasCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: i + this.canvasOffset.x, y: 0 });
       this.ctx.moveTo(canvasCoord.x + 0.5, 0);
       this.ctx.lineTo(canvasCoord.x + 0.5, this.canvasElement.height);
     }
@@ -284,7 +348,9 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
   drawCoordinateSystem(): void {
     this.ctx.lineWidth = this.squareBorderWidth * 2.5;
     this.ctx.strokeStyle = this.coordinateSystemColor;
-    const canvasMidCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: 0, y: 0 });
+    const canvasMidCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({
+      x: this.canvasOffset.x, y: this.canvasOffset.y
+    });
     // x-axis
     this.ctx.beginPath();
     this.ctx.moveTo(0, canvasMidCoord.y + 0.5);
@@ -293,22 +359,30 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     this.ctx.moveTo(canvasMidCoord.x + 0.5, 0);
     this.ctx.lineTo(canvasMidCoord.x + 0.5, this.canvasElement.height);
     this.ctx.stroke();
+
     // Numbers along axes
     this.ctx.fillStyle = this.coordinateSystemColor;
-    for (let i = 1; i < Math.ceil(this.scale * 0.5); i += 1) {
-      const canvasCoord: number = this.convertCoordinatesToCanvasCoordinates({ x: i, y: 0 }).x;
-      // x-axis
-      this.ctx.textAlign = 'center';
-      this.ctx.fillText(
-        i.toString(),
-        canvasCoord,
-        canvasMidCoord.y + this.convertCoordinatesToCanvasCoordinates({ x: 0, y: 0.5 }).y);
-      // y-axis
-      this.ctx.textAlign = 'right';
-      this.ctx.fillText(
-        i.toString(),
-        canvasMidCoord.x - this.convertCoordinatesToCanvasCoordinates({ x: 0.5, y: 0 }).x,
-        canvasCoord);
+    // x-axis
+    this.ctx.textAlign = 'center';
+    for (let i = 1 + this.canvasOffset.x; i < this.canvasSides.right; i += 1) {
+      const x: number = this.convertCoordinatesToCanvasCoordinates({ x: i, y: 0 }).x;
+      this.ctx.fillText(Math.round(i - this.canvasOffset.x).toString(), x, canvasMidCoord.y + this.squareSize * 0.4);
+    }
+    for (let i = -1 + this.canvasOffset.x; i > this.canvasSides.left; i -= 1) {
+      const x: number = this.convertCoordinatesToCanvasCoordinates({ x: i, y: 0 }).x;
+      this.ctx.fillText((Math.round(i - this.canvasOffset.x)).toString(), x, canvasMidCoord.y + this.squareSize * 0.4);
+    }
+    // y-axis
+    this.ctx.textAlign = 'right';
+    for (let i = 1 + this.canvasOffset.y; i < this.canvasSides.top; i += 1) {
+      const y: number = this.convertCoordinatesToCanvasCoordinates({ x: 0, y: i }).y;
+      this.ctx.fillText(Math.round(i - this.canvasOffset.y).toString(), canvasMidCoord.x - this.squareSize * 0.225,
+        y + this.squareSize * 0.075);
+    }
+    for (let i = -1 + this.canvasOffset.y; i > this.canvasSides.bottom; i -= 1) {
+      const y: number = this.convertCoordinatesToCanvasCoordinates({ x: 0, y: i }).y;
+      this.ctx.fillText((Math.round(i - this.canvasOffset.y)).toString(), canvasMidCoord.x - this.squareSize * 0.225,
+        y + this.squareSize * 0.075);
     }
   }
 

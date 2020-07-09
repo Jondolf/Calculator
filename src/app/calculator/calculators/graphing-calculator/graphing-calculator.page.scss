@@ -26,8 +26,10 @@
   border-top-right-radius: 25px;
   overflow: hidden;
 
-  form {
+  .list-container {
     background-color: rgba(var(--ion-color-light-tint-rgb), 0.85);
+    max-height: 100%;
+    overflow: auto;
 
     ion-list.special-symbol-buttons-container {
       padding: 0;
