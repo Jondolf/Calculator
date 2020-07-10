@@ -9,6 +9,10 @@ interface Coordinate {
   y: number;
 }
 
+interface GraphValues {
+  [x: string]: number;
+}
+
 @Component({
   selector: 'app-graphing-calculator',
   templateUrl: './graphing-calculator.page.html',
@@ -17,6 +21,8 @@ interface Coordinate {
 export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   @ViewChild('canvas') canvasRef: ElementRef;
   @ViewChild('canvascontainer') canvasContainerRef: ElementRef;
+
+  inputContainerOpen = true;
 
   themeSubscription: Subscription;
 
@@ -59,11 +65,14 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
   focusedEquationElement: IonInput;
   focusedEquationIndex: number;
 
+  previousY = 0;
+  savedYValues: GraphValues = {};
+
   constructor(private calculator: CalculatorService, private globals: GlobalVarsService) { }
 
   ngOnInit(): void {
     this.resizeObserveble = fromEvent(window, 'resize');
-    this.resizeSubscription = this.resizeObserveble.subscribe(() => this.handleSetCanvasSize());
+    this.resizeSubscription = this.resizeObserveble.subscribe(() => this.handleSetCanvasSize(0));
 
     this.themeSubscription = this.globals.currentThemeChange.subscribe((value) => {
       if (value.includes('light')) {
@@ -95,16 +104,19 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
   ngAfterViewChecked(): void {
     if (this.firstLoad) {
       if (this.canvasContainerElement.offsetWidth !== 0) {
-        this.handleSetCanvasSize();
+        this.handleSetCanvasSize(0);
         this.firstLoad = false;
       }
     }
   }
 
-  handleSetCanvasSize() {
-    this.setCanvasSize();
-    this.setCanvasSizeRelatedVars();
-    this.drawEquations();
+  // Delay to set sizes at correct time
+  handleSetCanvasSize(delay: number) {
+    setTimeout(() => {
+      this.setCanvasSize();
+      this.setCanvasSizeRelatedVars();
+      this.drawEquations();
+    }, delay);
   }
 
   setCanvasSize() {
@@ -140,6 +152,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
 
   changeEquation(index: number, newEquation: string): void {
     this.equations[index] = newEquation;
+    this.savedYValues = {};
   }
 
   async addSpecialSymbolToEquation(symbol: string): Promise<void> {
@@ -244,51 +257,63 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     // Does it have curves or other complex shapes or is it a very simple line/shape
     const isComplex: boolean = complexMathFunctions.some((value: string) => equation.includes(value));
     const isVeryComplex: boolean = veryComplexMathFunctions.some((value: string) => equation.includes(value));
+    const stepBetweenX = isVeryComplex ? 0.025 : (isComplex ? 0.1 : 1);
+    this.previousY = 0;
     this.ctx.beginPath();
-    // Two seperate loops to make sure it is symmetrical
-    // Left half
-    for (
-      let x = 0;
-      x >= this.canvasSides.left - this.canvasOffset.x;
-      x -= isVeryComplex ? 0.025 : (isComplex ? 0.1 : 1)
-    ) {
-      const y: number = +this.calculator.countCalculation(this.formatEquation(equation, x)) + this.canvasOffset.y;
-      if (!isNaN(y)) {
-        const newCoord = this.convertCoordinatesToCanvasCoordinates({ x: x + this.canvasOffset.x, y });
-        if (x === 0) {
-          this.ctx.moveTo(newCoord.x, newCoord.y);
-        } else {
-          this.ctx.lineTo(
-            newCoord.x,
-            newCoord.y
-          );
-        }
-      }
-    }
-    // Right half
-    for (
-      let x = 0;
-      x <= this.canvasSides.right - this.canvasOffset.x;
-      x += isVeryComplex ? 0.025 : (isComplex ? 0.1 : 1)
-    ) {
-      const y: number = +this.calculator.countCalculation(this.formatEquation(equation, x)) + this.canvasOffset.y;
-      if (!isNaN(y)) {
-        const newCoord = this.convertCoordinatesToCanvasCoordinates({ x: x + this.canvasOffset.x, y });
-        if (x === 0) {
-          this.ctx.moveTo(newCoord.x, newCoord.y);
-        } else {
-          this.ctx.lineTo(
-            newCoord.x,
-            newCoord.y
-          );
-        }
-      }
-    }
+    this.drawLineEquationHalf(this.canvasSides.left, stepBetweenX, equation);
+    this.drawLineEquationHalf(this.canvasSides.right, stepBetweenX, equation);
     this.ctx.stroke();
+  }
+  drawLineEquationHalf(side: number, numberStep: number, equation: string) {
+    for (
+      let x = 0;
+      side >= 0 ? x < side - this.canvasOffset.x + 1 : x >= side - this.canvasOffset.x - 1;
+      x += (side >= 0 ? numberStep : -numberStep)
+    ) {
+      const y = this.getOrCalculate(equation, x);
+      if (isNaN(this.previousY) && !isNaN(x)) {
+        for (
+          let i = (side < 0 ? x + numberStep : x - numberStep);
+          side >= 0 ? i < x : i > x;
+          i += (side >= 0 ? numberStep * 0.1 : -numberStep * 0.1)) {
+          const y2: number = this.getOrCalculate(equation, i);
+          if (!isNaN(y2)) {
+            const newCoord = this.convertCoordinatesToCanvasCoordinates({ x: i + this.canvasOffset.x, y: y2 + this.canvasOffset.y });
+            if (i === 0) {
+              this.ctx.moveTo(newCoord.x, newCoord.y);
+            } else {
+              this.ctx.lineTo(
+                newCoord.x,
+                newCoord.y
+              );
+            }
+          }
+        }
+      }
+      if (!isNaN(y)) {
+        const newCoord = this.convertCoordinatesToCanvasCoordinates({ x: x + this.canvasOffset.x, y: y + this.canvasOffset.y });
+        if (x === 0) {
+          this.ctx.moveTo(newCoord.x, newCoord.y);
+        } else {
+          this.ctx.lineTo(
+            newCoord.x,
+            newCoord.y
+          );
+        }
+      }
+      this.previousY = y;
+    }
   }
   formatEquation(equation: string, replaceWith: any): string {
     const formattedEquation: string = equation.replace(/x/g, '(' + replaceWith + ')').slice(equation.lastIndexOf('=') + 1);
     return formattedEquation;
+  }
+
+  getOrCalculate(equation: string, x: number): number {
+    if (this.savedYValues[x] === undefined) {
+      this.savedYValues[x] = +this.calculator.countCalculation(this.formatEquation(equation, x));
+    }
+    return this.savedYValues[x];
   }
 
   /**

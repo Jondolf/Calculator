@@ -3,13 +3,29 @@
   (panmove)="onPan($event)"
   (pinchin)="zoom(1.1)"
   (pinchout)="zoom(0.9)"
+  [style.height]="inputContainerOpen ? '60vh' : '95vh'"
   class="graph-container"
   #canvascontainer
 >
   <canvas width="4000" height="2000" id="canvas" #canvas></canvas>
 </div>
 
-<div class="input-container">
+<div
+  class="input-container"
+  [style.bottom]="inputContainerOpen ? '0' : '-40vh'"
+>
+  <div
+    (click)="inputContainerOpen = !inputContainerOpen; handleSetCanvasSize(500)"
+    (swipeup)="inputContainerOpen = true; handleSetCanvasSize(500)"
+    (swipedown)="inputContainerOpen = false; handleSetCanvasSize(500)"
+    class="swipe-container"
+  >
+    <i
+      [style.transform]="inputContainerOpen ? 'rotate(0deg)' : 'rotate(180deg)'"
+      class="material-icons"
+      >expand_more</i
+    >
+  </div>
   <div class="list-container">
     <ion-list class="special-symbol-buttons-container">
       <ion-item button (click)="addSpecialSymbolToEquation('π')">π</ion-item>
