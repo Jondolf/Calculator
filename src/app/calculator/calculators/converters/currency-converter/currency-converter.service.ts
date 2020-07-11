@@ -18,10 +18,16 @@ export class CurrencyConverterService {
   */
   currencies: CurrencyUnit[] = [
     {
-      name: 'Australian dollar',
-      abbreviation: '$',
+      name: 'Bulgarian lev',
+      abbreviation: 'лв.',
       multiplier: '-1',
-      isoCode: 'AUD'
+      isoCode: 'BGN'
+    },
+    {
+      name: 'Brazilian real',
+      abbreviation: 'R$',
+      multiplier: '-1',
+      isoCode: 'BRL'
     },
     {
       name: 'Canadian dollar',
@@ -42,6 +48,18 @@ export class CurrencyConverterService {
       isoCode: 'CNY'
     },
     {
+      name: 'Czech koruna',
+      abbreviation: 'Kč',
+      multiplier: '-1',
+      isoCode: 'CZK'
+    },
+    {
+      name: 'Danish krone',
+      abbreviation: 'kr',
+      multiplier: '-1',
+      isoCode: 'DKK'
+    },
+    {
       name: 'Euro',
       abbreviation: '€',
       multiplier: '1',
@@ -60,10 +78,70 @@ export class CurrencyConverterService {
       isoCode: 'HKD'
     },
     {
+      name: 'Croatian kuna',
+      abbreviation: 'kn',
+      multiplier: '-1',
+      isoCode: 'HRK'
+    },
+    {
+      name: 'Hungarian forint',
+      abbreviation: 'Ft',
+      multiplier: '-1',
+      isoCode: 'HUF'
+    },
+    {
+      name: 'Indonesian rupiah',
+      abbreviation: 'Rp',
+      multiplier: '-1',
+      isoCode: 'IDR'
+    },
+    {
+      name: 'Israeli shekel',
+      abbreviation: '₪',
+      multiplier: '-1',
+      isoCode: 'ILS'
+    },
+    {
+      name: 'Indian rupee',
+      abbreviation: '₹',
+      multiplier: '-1',
+      isoCode: 'INR'
+    },
+    {
+      name: 'Icelandic krona',
+      abbreviation: 'kr',
+      multiplier: '-1',
+      isoCode: 'ISK'
+    },
+    {
       name: 'Japanese yen',
       abbreviation: '¥',
       multiplier: '-1',
       isoCode: 'JPY'
+    },
+    {
+      name: 'South Korean won',
+      abbreviation: '₩',
+      multiplier: '-1',
+      isoCode: 'KRW'
+    },
+    {
+      name: 'Mexican peso',
+      abbreviation: '$',
+      multiplier: '-1',
+      isoCode: 'MXN'
+    },
+    {
+      name: 'Malaysian ringgit',
+      abbreviation: 'RM',
+      multiplier: '-1',
+      isoCode: 'MYR'
+    },
+    {
+      name: 'Norwegian krone',
+      abbreviation: 'kr',
+      multiplier: '-1',
+      isoCode: 'NOK'
     },
     {
       name: 'New Zealand dollar',
@@ -72,10 +150,64 @@ export class CurrencyConverterService {
       isoCode: 'NZD'
     },
     {
+      name: 'Philippine peso',
+      abbreviation: '₱',
+      multiplier: '-1',
+      isoCode: 'PHP'
+    },
+    {
+      name: 'Polish zloty',
+      abbreviation: 'zł',
+      multiplier: '-1',
+      isoCode: 'PLN'
+    },
+    {
+      name: 'Romanian leu',
+      abbreviation: 'lei',
+      multiplier: '-1',
+      isoCode: 'RON'
+    },
+    {
+      name: 'Russian rouble',
+      abbreviation: '₽',
+      multiplier: '-1',
+      isoCode: 'RUB'
+    },
+    {
+      name: 'Swedish krona',
+      abbreviation: 'kr',
+      multiplier: '-1',
+      isoCode: 'SEK'
+    },
+    {
+      name: 'Singapore dollar',
+      abbreviation: '$',
+      multiplier: '-1',
+      isoCode: 'SGD'
+    },
+    {
+      name: 'Thai baht',
+      abbreviation: '฿',
+      multiplier: '-1',
+      isoCode: 'THB'
+    },
+    {
+      name: 'Turkish lira',
+      abbreviation: '₺',
+      multiplier: '-1',
+      isoCode: 'TRY'
+    },
+    {
       name: 'US dollar',
       abbreviation: '$',
       multiplier: '-1',
       isoCode: 'USD'
+    },
+    {
+      name: 'South African rand',
+      abbreviation: 'R',
+      multiplier: '-1',
+      isoCode: 'ZAR'
     }
   ];
 

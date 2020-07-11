@@ -32,8 +32,7 @@
           "
           [value]="currency.name"
         >
-          {{ currency.isoCode }} - {{ currency.name }} ({{
-            currency.abbreviation
+          {{ currency.isoCode }} - {{ currency.name }} ({{ currency.abbreviation
           }})
         </ion-select-option>
       </ng-container>
@@ -42,8 +41,7 @@
           *ngFor="let currency of currencyConverter.currencies"
           [value]="currency.name"
         >
-          {{ currency.isoCode }} - {{ currency.name }} ({{
-            currency.abbreviation
+          {{ currency.isoCode }} - {{ currency.name }} ({{ currency.abbreviation
           }})
         </ion-select-option>
       </ng-container>
@@ -69,7 +67,7 @@
       </div>
       <ion-item-group *ngIf="showOnlyMostTraded">
         <app-accordion-list
-          [listName]="'Most traded currencies'"
+          [listName]="'Most traded currencies (from Europian Central Bank)'"
           [iconName]="'chevron-down-outline'"
           [background]="'rgba(var(--ion-color-light-shade-rgb), 0.3)'"
         >
@@ -83,11 +81,8 @@
               >{{ currency.name }} ({{ currency.abbreviation }})</ion-label
             >
             <ion-label>
-              {{
-                currency.multiplier && currency.multiplier !== '-1'
-                  ? unitConverter.convertUnit(currency, currentUnit, amount)
-                  : ''
-              }}
+              {{ currency.multiplier && currency.multiplier !== '-1' ?
+              unitConverter.convertUnit(currency, currentUnit, amount) : '' }}
               <ion-skeleton-text
                 *ngIf="currency.multiplier === '-1'"
                 animated
@@ -100,7 +95,7 @@
 
       <ion-item-group *ngIf="!showOnlyMostTraded">
         <app-accordion-list
-          [listName]="'All currencies'"
+          [listName]="'All currencies (from Europian Central Bank)'"
           [iconName]="'chevron-down-outline'"
           [background]="'rgba(var(--ion-color-light-shade-rgb), 0.3)'"
         >
@@ -110,11 +105,8 @@
               >{{ currency.name }} ({{ currency.abbreviation }})</ion-label
             >
             <ion-label>
-              {{
-                currency.multiplier && currency.multiplier !== '-1'
-                  ? unitConverter.convertUnit(currency, currentUnit, amount)
-                  : ''
-              }}
+              {{ currency.multiplier && currency.multiplier !== '-1' ?
+              unitConverter.convertUnit(currency, currentUnit, amount) : '' }}
               <ion-skeleton-text
                 *ngIf="currency.multiplier === '-1'"
                 animated
