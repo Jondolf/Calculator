@@ -110,7 +110,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     }
   }
 
-  // Delay to set sizes at correct time
+  // Delay to set sizes at correct time (such as after CSS transition)
   handleSetCanvasSize(delay: number) {
     setTimeout(() => {
       this.setCanvasSize();
@@ -260,33 +260,32 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     const stepBetweenX = isVeryComplex ? 0.025 : (isComplex ? 0.1 : 1);
     this.previousY = 0;
     this.ctx.beginPath();
-    this.drawLineEquationHalf(this.canvasSides.left, stepBetweenX, equation);
+    this.drawLineEquationHalf(this.canvasSides.left, -stepBetweenX, equation);
     this.drawLineEquationHalf(this.canvasSides.right, stepBetweenX, equation);
     this.ctx.stroke();
   }
   drawLineEquationHalf(side: number, numberStep: number, equation: string) {
+    this.previousY = 0;
+    const pannedSide = side - this.canvasOffset.x; // The side, but it also adds the correct offset
     for (
       let x = 0;
-      side >= 0 ? x < side - this.canvasOffset.x + 1 : x >= side - this.canvasOffset.x - 1;
-      x += (side >= 0 ? numberStep : -numberStep)
+      side >= 0 ? x <= pannedSide + 1 : x >= pannedSide - 1;
+      x += numberStep
     ) {
       const y = this.getOrCalculate(equation, x);
-      if (isNaN(this.previousY) && !isNaN(x)) {
+      if (isNaN(this.previousY) && !isNaN(y)) {
         for (
-          let i = (side < 0 ? x + numberStep : x - numberStep);
+          let i = x - numberStep;
           side >= 0 ? i < x : i > x;
-          i += (side >= 0 ? numberStep * 0.1 : -numberStep * 0.1)) {
+          i += numberStep * 0.1) {
           const y2: number = this.getOrCalculate(equation, i);
           if (!isNaN(y2)) {
+            this.ctx.strokeStyle = 'red';
             const newCoord = this.convertCoordinatesToCanvasCoordinates({ x: i + this.canvasOffset.x, y: y2 + this.canvasOffset.y });
-            if (i === 0) {
-              this.ctx.moveTo(newCoord.x, newCoord.y);
-            } else {
-              this.ctx.lineTo(
-                newCoord.x,
-                newCoord.y
-              );
-            }
+            this.ctx.lineTo(
+              newCoord.x,
+              newCoord.y
+            );
           }
         }
       }
@@ -295,6 +294,7 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
         if (x === 0) {
           this.ctx.moveTo(newCoord.x, newCoord.y);
         } else {
+          this.ctx.strokeStyle = 'white';
           this.ctx.lineTo(
             newCoord.x,
             newCoord.y
@@ -308,7 +308,6 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     const formattedEquation: string = equation.replace(/x/g, '(' + replaceWith + ')').slice(equation.lastIndexOf('=') + 1);
     return formattedEquation;
   }
-
   getOrCalculate(equation: string, x: number): number {
     if (this.savedYValues[x] === undefined) {
       this.savedYValues[x] = +this.calculator.countCalculation(this.formatEquation(equation, x));
@@ -336,46 +335,38 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     this.ctx.lineWidth = lineWidth;
     this.ctx.strokeStyle = strokeStyle;
     this.ctx.beginPath();
-    /*
-    I made four seperate for loops (two for both horizontal halfs, two for both vertical halfs)
-    instead of two loops (one for all horizontal lines, one for all vertical lines)
-    because I want to always start from the center of the coordinate system.
-    If I started drawing the grid from the top for example, it would be a bit harder to make sure the lines match up with
-    the coordninate system's lines. The four-for-loop solution is more robust in my opinion.
-    */
-    // Top half horizontal lines
-    for (let i = 0; i < this.canvasSides.top - this.canvasOffset.y; i += squareSizeMultiplier) {
-      const canvasCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: 0, y: i + this.canvasOffset.y });
-      this.ctx.moveTo(0, canvasCoord.y + 0.5);
-      this.ctx.lineTo(this.canvasElement.width, canvasCoord.y + 0.5);
-    }
-    // Bottom half horizontal lines
-    for (let i = 0; i > this.canvasSides.bottom - this.canvasOffset.y; i -= squareSizeMultiplier) {
-      const canvasCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: 0, y: i + this.canvasOffset.y });
-      this.ctx.moveTo(0, canvasCoord.y + 0.5);
-      this.ctx.lineTo(this.canvasElement.width, canvasCoord.y + 0.5);
-    }
-    // Left half vertical lines
-    for (let i = 0; i > this.canvasSides.left - this.canvasOffset.x; i -= squareSizeMultiplier) {
-      const canvasCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: i + this.canvasOffset.x, y: 0 });
-      this.ctx.moveTo(canvasCoord.x + 0.5, 0);
-      this.ctx.lineTo(canvasCoord.x + 0.5, this.canvasElement.height);
-    }
-    // Right half vertical lines
-    for (let i = 0; i < this.canvasSides.right - this.canvasOffset.x; i += squareSizeMultiplier) {
-      const canvasCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: i + this.canvasOffset.x, y: 0 });
-      this.ctx.moveTo(canvasCoord.x + 0.5, 0);
-      this.ctx.lineTo(canvasCoord.x + 0.5, this.canvasElement.height);
-    }
+
+    // The halves of the horizontal and vertical sides are drawn seperately to ensure that they start from the center
+    this.drawGridOnSide(squareSizeMultiplier, 'x', this.canvasSides.top);
+    this.drawGridOnSide(squareSizeMultiplier, 'y', this.canvasSides.right);
+    this.drawGridOnSide(-squareSizeMultiplier, 'x', this.canvasSides.bottom);
+    this.drawGridOnSide(-squareSizeMultiplier, 'y', this.canvasSides.left);
+
     this.ctx.stroke();
   }
 
+  drawGridOnSide(stepBetweenLines: number, xOrY: 'x' | 'y', side: number): void {
+    const canvasOffset = xOrY === 'x' ? this.canvasOffset.y : this.canvasOffset.x;
+    for (let i = 0; side >= 0 ? i < side - canvasOffset : i > side - canvasOffset - 1; i += stepBetweenLines) {
+      const canvasCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({
+        x: i + this.canvasOffset.x, y: i + this.canvasOffset.y
+      });
+      if (xOrY === 'x') {
+        this.ctx.moveTo(0, canvasCoord.y + 0.5);
+        this.ctx.lineTo(this.canvasElement.width, canvasCoord.y + 0.5);
+      } else {
+        this.ctx.moveTo(canvasCoord.x + 0.5, 0);
+        this.ctx.lineTo(canvasCoord.x + 0.5, this.canvasElement.height);
+      }
+    }
+  }
+
   drawCoordinateSystem(): void {
-    this.ctx.lineWidth = this.squareBorderWidth * 2.5;
-    this.ctx.strokeStyle = this.coordinateSystemColor;
     const canvasMidCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({
       x: this.canvasOffset.x, y: this.canvasOffset.y
     });
+    this.ctx.lineWidth = this.squareBorderWidth * 2.5;
+    this.ctx.strokeStyle = this.coordinateSystemColor;
     // x-axis
     this.ctx.beginPath();
     this.ctx.moveTo(0, canvasMidCoord.y + 0.5);
@@ -384,30 +375,33 @@ export class GraphingCalculatorPage implements OnInit, OnDestroy, AfterViewInit,
     this.ctx.moveTo(canvasMidCoord.x + 0.5, 0);
     this.ctx.lineTo(canvasMidCoord.x + 0.5, this.canvasElement.height);
     this.ctx.stroke();
+    this.drawNumbersAlongAxes();
+  }
 
-    // Numbers along axes
+  drawNumbersAlongAxes(): void {
     this.ctx.fillStyle = this.coordinateSystemColor;
-    // x-axis
     this.ctx.textAlign = 'center';
-    for (let i = 1 + this.canvasOffset.x; i < this.canvasSides.right; i += 1) {
-      const x: number = this.convertCoordinatesToCanvasCoordinates({ x: i, y: 0 }).x;
-      this.ctx.fillText(Math.round(i - this.canvasOffset.x).toString(), x, canvasMidCoord.y + this.squareSize * 0.4);
-    }
-    for (let i = -1 + this.canvasOffset.x; i > this.canvasSides.left; i -= 1) {
-      const x: number = this.convertCoordinatesToCanvasCoordinates({ x: i, y: 0 }).x;
-      this.ctx.fillText((Math.round(i - this.canvasOffset.x)).toString(), x, canvasMidCoord.y + this.squareSize * 0.4);
-    }
-    // y-axis
-    this.ctx.textAlign = 'right';
-    for (let i = 1 + this.canvasOffset.y; i < this.canvasSides.top; i += 1) {
-      const y: number = this.convertCoordinatesToCanvasCoordinates({ x: 0, y: i }).y;
-      this.ctx.fillText(Math.round(i - this.canvasOffset.y).toString(), canvasMidCoord.x - this.squareSize * 0.225,
-        y + this.squareSize * 0.075);
-    }
-    for (let i = -1 + this.canvasOffset.y; i > this.canvasSides.bottom; i -= 1) {
-      const y: number = this.convertCoordinatesToCanvasCoordinates({ x: 0, y: i }).y;
-      this.ctx.fillText((Math.round(i - this.canvasOffset.y)).toString(), canvasMidCoord.x - this.squareSize * 0.225,
-        y + this.squareSize * 0.075);
+
+    this.drawNumbersAlongAxesOnSide(1, 'y', this.canvasSides.top);
+    this.drawNumbersAlongAxesOnSide(1, 'x', this.canvasSides.right);
+    this.drawNumbersAlongAxesOnSide(-1, 'y', this.canvasSides.bottom);
+    this.drawNumbersAlongAxesOnSide(-1, 'x', this.canvasSides.left);
+  }
+
+  drawNumbersAlongAxesOnSide(numberStep: number, xOrY: 'x' | 'y', side: number): void {
+    const canvasMidCoord: Coordinate = this.convertCoordinatesToCanvasCoordinates({
+      x: this.canvasOffset.x, y: this.canvasOffset.y
+    });
+    const canvasOffset = (xOrY === 'x' ? this.canvasOffset.x : this.canvasOffset.y);
+    for (let i = numberStep + canvasOffset; side >= 0 ? i < side + 1 : i > side - 1; i += numberStep) {
+      const coord: Coordinate = this.convertCoordinatesToCanvasCoordinates({ x: i, y: i });
+      if (xOrY === 'x') {
+        this.ctx.fillText(Math.round(i - canvasOffset).toString(), coord.x,
+          canvasMidCoord.y + this.squareSize * 0.4);
+      } else {
+        this.ctx.fillText(Math.round(i - canvasOffset).toString(), canvasMidCoord.x - this.squareSize * 0.225,
+          coord.y + this.squareSize * 0.075);
+      }
     }
   }
 
