@@ -1,9 +1,9 @@
 <div
-  (panstart)="onPan($event)"
-  (panmove)="onPan($event)"
-  (pinchin)="zoom(1.1)"
-  (pinchout)="zoom(0.9)"
-  [style.height]="inputContainerOpen ? '60vh' : '95vh'"
+  (panstart)="canvasCtrl.pan($event); drawingCtrl.handleDraw()"
+  (panmove)="canvasCtrl.pan($event); drawingCtrl.handleDraw()"
+  (pinchin)="canvasCtrl.zoom(1.1); drawingCtrl.handleDraw()"
+  (pinchout)="canvasCtrl.zoom(0.9); drawingCtrl.handleDraw()"
+  [style.height]="isInputContainerOpen ? '60vh' : '95vh'"
   class="graph-container"
   #canvascontainer
 >
@@ -12,16 +12,16 @@
 
 <div
   class="input-container"
-  [style.bottom]="inputContainerOpen ? '0' : '-40vh'"
+  [style.bottom]="isInputContainerOpen ? '0' : '-40vh'"
 >
   <div
-    (click)="inputContainerOpen = !inputContainerOpen; handleSetCanvasSize(500)"
-    (swipeup)="inputContainerOpen = true; handleSetCanvasSize(500)"
-    (swipedown)="inputContainerOpen = false; handleSetCanvasSize(500)"
+    (click)="isInputContainerOpen = !isInputContainerOpen; canvasCtrl.handleSetCanvasSize(500)"
+    (swipeup)="isInputContainerOpen = true; canvasCtrl.handleSetCanvasSize(500)"
+    (swipedown)="isInputContainerOpen = false; canvasCtrl.handleSetCanvasSize(500)"
     class="swipe-container"
   >
     <i
-      [style.transform]="inputContainerOpen ? 'rotate(0deg)' : 'rotate(180deg)'"
+      [style.transform]="isInputContainerOpen ? 'rotate(0deg)' : 'rotate(180deg)'"
       class="material-icons"
       >expand_more</i
     >
@@ -43,7 +43,7 @@
         </ion-buttons>
         <ion-input
           type="text"
-          (input)="changeEquation(i, $event.target.value); drawEquations(); caretPosition = $event.target.selectionStart"
+          (input)="changeEquation(i, $event.target.value); drawingCtrl.handleDraw(); caretPosition = $event.target.selectionStart"
           (ionFocus)="onEquationInputFocus(i, $event.target)"
           (ionBlur)="caretPosition = $event.target.firstChild.selectionStart"
           [value]="equation"
