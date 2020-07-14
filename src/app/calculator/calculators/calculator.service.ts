@@ -10,28 +10,51 @@ import Decimal from 'decimal.js';
 })
 export class CalculatorService {
   isDeg = false; // Default is radians but can be changed to degrees
-  /**
-   * Counts the calculation by calling other functions and formatting the given calculation.
-   * @param calculation A string representing the calculation to count. For example, 2x(3+7)
-   */
+
   countCalculation(calculation: string): number {
     try {
-      /*
-      Replace calculation symbols with working code math operators (*, / etc.) instead of x and ÷ etc.
-    Each of these "commands" has to be one symbol long, so some names are a bit random like the logarithm names.
-    */
-      const realCalculation = calculation.replace(/x/g, '*').replace(/÷/g, '/').replace(/mod/g, 'm') // multiply, divide, modulo
-        .replace(/sin/g, 's').replace(/cos/g, 'c').replace(/tan/g, 't') // sin, cos, tan
-        .replace(/log/g, 'f').replace(/ln/g, 'g').replace(/lg/g, 'h') // log base 10, log base e, log base 2 (the letters are random)
-        .replace(/([0-9πe])π/g, '$1*π').replace(/([0-9πe])e/g, '$1*e') // Replace ππ and ee with π*π and e*e
-        .replace(/(\))([\(0-9πe])/g, '$1*$2') // Replace calculations like (5+5)2 and (5+5)(1+1) with (5+5)*2 and (5+5)*(1+1)
-        .replace(/([0-9πe])(\()/g, '$1*$2') // Replace calculations like 3(5+5) with 3*(5+5)
-        .replace(/(\))([%])/g, '$1/100'); // Replace calculations like (2+3)% with (2+3)/100;
-      const result: number = this.countPlus(realCalculation);
+      this.checkForInvalidMathFunctions(calculation);
+      const formattedCalculation = this.formatCalculation(calculation);
+      this.checkIfAllParenthesesClosed(formattedCalculation);
+      const result: number = this.countPlus(formattedCalculation);
       return result;
     } catch {
       return NaN;
     }
+  }
+
+  /**
+   * Checks if the calculation given by the user includes the one letter versions of the mathematical functions.
+   * If yes, it should throw an error.
+   */
+  checkForInvalidMathFunctions(calculation: string): void | Error {
+    const invalidFunctions = ['a', 'b', 'c', 'd', 'f', 'h', 'm'];
+    if (invalidFunctions.some(mathFunc => calculation.includes(mathFunc + '(')) && calculation) {
+      throw new Error('Incorrect math function name.');
+    }
+  }
+
+  checkIfAllParenthesesClosed(calculation: string): void | Error {
+    if (calculation.replace(/[^(]/g, '').length !== calculation.replace(/[^)]/g, '').length) {
+      throw new Error('All parentheses must be closed.');
+    }
+  }
+
+  /**
+   * Replaces calculation symbols with working code math operators (*, / etc.) instead of x and ÷ etc.
+   * Each of these "commands" has to be one symbol long, so the letters for sin, cos, tan, log, ln and lg are alphabetically chosen,
+   * but some letters (like e) were skipped to avoid problems where the letter was already in use.
+   */
+  formatCalculation(calculation: string): string {
+    return calculation
+      .replace(/x/g, '*').replace(/÷/g, '/').replace(/mod/g, 'm') // multiply, divide, modulo
+      .replace(/sin/g, 'a').replace(/cos/g, 'b').replace(/tan/g, 'c') // sin, cos, tan
+      .replace(/log/g, 'd').replace(/ln/g, 'f').replace(/lg/g, 'h') // log base 10, log base e, log base 2 (the letters are random)
+      .replace(/sqrt/g, '√').replace(/pi/g, 'π')
+      .replace(/([0-9πe])π/g, '$1*π').replace(/([0-9πe])e/g, '$1*e') // Replace ππ and ee with π*π and e*e
+      .replace(/(\))([\(0-9πe])/g, '$1*$2') // Replace calculations like (5+5)2 and (5+5)(1+1) with (5+5)*2 and (5+5)*(1+1)
+      .replace(/([0-9πe])(\()/g, '$1*$2') // Replace calculations like 3(5+5) with 3*(5+5)
+      .replace(/(\))([%])/g, '$1/100'); // Replace calculations like (2+3)% with (2+3)/100;
   }
 
   split(calculation: string, operator: string): string[] {
@@ -120,21 +143,21 @@ export class CalculatorService {
         switch (numberString[0]) {
           case '√': // square root
             return Math.sqrt(calculatedStringAfterMathFunction);
-          case 's': // sin
+          case 'a': // sin
             return this.isDeg
               ? Math.sin(this.convertToRadians(calculatedStringAfterMathFunction))
               : Math.sin(calculatedStringAfterMathFunction);
-          case 'c': // cos
+          case 'b': // cos
             return this.isDeg ?
               Math.cos(this.convertToRadians(calculatedStringAfterMathFunction))
               : Math.cos(calculatedStringAfterMathFunction);
-          case 't': // tan
+          case 'c': // tan
             return this.isDeg
               ? Math.tan(this.convertToRadians(calculatedStringAfterMathFunction))
               : Math.tan(calculatedStringAfterMathFunction);
-          case 'f': // log
+          case 'd': // log
             return Math.log10(calculatedStringAfterMathFunction);
-          case 'g': // ln
+          case 'f': // ln
             return Math.log(calculatedStringAfterMathFunction);
           case 'h': // lg
             return Math.log2(calculatedStringAfterMathFunction);

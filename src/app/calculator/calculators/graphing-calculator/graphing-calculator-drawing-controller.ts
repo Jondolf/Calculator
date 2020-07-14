@@ -133,7 +133,7 @@ export class GraphingCalculatorDrawingController {
     this.ctx.lineWidth = this.contextStyles.squareBorderWidth * 1.5;
     this.ctx.strokeStyle = this.contextStyles.coordinateSystemColor;
     // Functions that can create curves or other complex shapes
-    const complexMathFunctions = ['xx', '^', '√', 'sin', 'cos', 'tan', 'log', 'ln', 'lg'];
+    const complexMathFunctions = ['xx', '^', '√', 'sqrt', 'sin', 'cos', 'tan', 'log', 'ln', 'lg'];
     const veryComplexMathFunctions = ['tan(xx)'];
     // Does it have curves or other complex shapes or is it a very simple line/shape
     const isComplex: boolean = complexMathFunctions.some((value: string) => equation.includes(value));
@@ -178,6 +178,23 @@ export class GraphingCalculatorDrawingController {
           }
         }
       }
+      if (!isNaN(this.previousY) && isNaN(y)) {
+        for (
+          let i = x - numberStep;
+          side >= 0 ? i < x : i > x;
+          i += numberStep * 0.1) {
+          const y2: number = this.getOrCalculate(equation, i);
+          if (!isNaN(y2)) {
+            const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
+              x: i + this.canvasCtrl.canvasOffset.x, y: y2 + this.canvasCtrl.canvasOffset.y
+            });
+            this.ctx.lineTo(
+              newCoord.x,
+              newCoord.y
+            );
+          }
+        }
+      }
       if (!isNaN(y)) {
         const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
           x: x + this.canvasCtrl.canvasOffset.x, y: y + this.canvasCtrl.canvasOffset.y
@@ -195,16 +212,17 @@ export class GraphingCalculatorDrawingController {
     }
   }
 
-  formatEquation(equation: string, replaceWith: any): string {
-    const formattedEquation: string = equation.replace(/x/g, '(' + replaceWith + ')').slice(equation.lastIndexOf('=') + 1);
-    return formattedEquation;
-  }
-
   getOrCalculate(equation: string, x: number): number {
     if (this.savedYValues[x] === undefined) {
       this.savedYValues[x] = +this.calculator.countCalculation(this.formatEquation(equation, x));
     }
     return this.savedYValues[x];
+  }
+
+  formatEquation(equation: string, replaceWith: any): string {
+    const replacedValue: string = replaceWith[0] === '(' && replaceWith[replaceWith.toString().length - 1] === ')' ? replaceWith : `(${replaceWith})`;
+    const formattedEquation: string = equation.replace(/x/g, replacedValue).slice(equation.lastIndexOf('=') + 1);
+    return formattedEquation;
   }
 
   drawDotAtCoordinate(coordinate: Coordinate): void {
