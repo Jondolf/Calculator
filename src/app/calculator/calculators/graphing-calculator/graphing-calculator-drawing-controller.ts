@@ -161,39 +161,15 @@ export class GraphingCalculatorDrawingController {
       x += numberStep
     ) {
       const y = this.getOrCalculate(equation, x);
-      if (isNaN(this.previousY) && !isNaN(y)) {
-        for (
-          let i = x - numberStep;
-          side >= 0 ? i < x : i > x;
-          i += numberStep * 0.1) {
-          const y2: number = this.getOrCalculate(equation, i);
-          if (!isNaN(y2)) {
-            const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
-              x: i + this.canvasCtrl.canvasOffset.x, y: y2 + this.canvasCtrl.canvasOffset.y
-            });
-            this.ctx.lineTo(
-              newCoord.x,
-              newCoord.y
-            );
-          }
-        }
-      }
-      if (!isNaN(this.previousY) && isNaN(y)) {
-        for (
-          let i = x - numberStep;
-          side >= 0 ? i < x : i > x;
-          i += numberStep * 0.1) {
-          const y2: number = this.getOrCalculate(equation, i);
-          if (!isNaN(y2)) {
-            const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
-              x: i + this.canvasCtrl.canvasOffset.x, y: y2 + this.canvasCtrl.canvasOffset.y
-            });
-            this.ctx.lineTo(
-              newCoord.x,
-              newCoord.y
-            );
-          }
-        }
+      if ((isNaN(this.previousY) && !isNaN(y)) || !isNaN(this.previousY) && isNaN(y)) {
+        const valueClosestToNaN: Coordinate = this.findValueClosestToNaN(x - numberStep, x, this.previousY, y, equation);
+        const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
+          x: valueClosestToNaN.x + this.canvasCtrl.canvasOffset.x, y: valueClosestToNaN.y + this.canvasCtrl.canvasOffset.y
+        });
+        this.ctx.lineTo(
+          newCoord.x,
+          newCoord.y
+        );
       }
       if (!isNaN(y)) {
         const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
@@ -209,6 +185,29 @@ export class GraphingCalculatorDrawingController {
         }
       }
       this.previousY = y;
+    }
+  }
+
+  /**
+   * Finds the number closest to NaN by using a binary-search-like algorithm
+   */
+  findValueClosestToNaN(start: number, end: number, startValue: number, endValue: number, equation: string): Coordinate {
+    const middle = (start + end) / 2;
+    const middleValue = this.getOrCalculate(equation, middle);
+    if (Math.abs(end - start) < 0.00000000000000001 || middle === start || middle === end) {
+      return { x: middle, y: middleValue };
+    }
+    if (isNaN(startValue) && isNaN(middleValue)) {
+      return this.findValueClosestToNaN(middle, end, middleValue, endValue, equation);
+    }
+    if (isNaN(startValue) && !isNaN(middleValue)) {
+      return this.findValueClosestToNaN(start, middle, startValue, middleValue, equation);
+    }
+    if (isNaN(endValue) && isNaN(middleValue)) {
+      return this.findValueClosestToNaN(start, middle, startValue, middleValue, equation);
+    }
+    if (isNaN(endValue) && !isNaN(middleValue)) {
+      return this.findValueClosestToNaN(middle, end, middleValue, endValue, equation);
     }
   }
 

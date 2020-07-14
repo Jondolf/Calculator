@@ -80,6 +80,9 @@ export class GraphingCalculatorCanvasController {
       x: this.canvasHalf.x + (coordinate.x * this.squareSize),
       y: this.canvasHalf.y - (coordinate.y * this.squareSize)
     };
+    if (Math.abs(convertedCoordinate.y) === Infinity) {
+      convertedCoordinate.y = convertedCoordinate.y < 0 ? -Number.MAX_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
+    }
     return convertedCoordinate;
   }
 
