@@ -60,7 +60,6 @@ export class TemperatureConverterPage {
   convertUnit(unitName: string): string {
     if (this.amount) {
       const unitAsKelvin: Decimal = this.convertUnitToKelvin(this.currentUnitName, new Decimal(this.amount.toString()));
-      console.log(this.amount, unitAsKelvin.toString());
       return this.convertUnitFromKelvin(unitAsKelvin, unitName).toDP(2).toFixed();
     } else {
       return '0';
