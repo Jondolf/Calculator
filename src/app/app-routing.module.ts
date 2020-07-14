@@ -9,19 +9,24 @@ const routes: Routes = [
     component: BasicCalculatorPage
   },
   {
-    path: 'currency-converter',
-    loadChildren: () => import('./calculator/calculators/converters/currency-converter/currency-converter.module')
-      .then(m => m.CurrencyConverterPageModule)
-  },
-  {
     path: 'length-converter',
     loadChildren: () => import('./calculator/calculators/converters/length-converter/length-converter.module')
       .then(m => m.LengthConverterPageModule)
   },
   {
+    path: 'temperature-converter',
+    loadChildren: () => import('./calculator/calculators/converters/temperature-converter/temperature-converter.module')
+      .then(m => m.TemperatureConverterPageModule)
+  },
+  {
     path: 'mass-converter',
     loadChildren: () => import('./calculator/calculators/converters/mass-converter/mass-converter.module')
       .then(m => m.MassConverterPageModule)
+  },
+  {
+    path: 'currency-converter',
+    loadChildren: () => import('./calculator/calculators/converters/currency-converter/currency-converter.module')
+      .then(m => m.CurrencyConverterPageModule)
   },
   {
     path: 'charts',

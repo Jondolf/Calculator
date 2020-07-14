@@ -27,6 +27,13 @@ export class CalculatorMenuComponent {
       }
     },
     {
+      buttonName: 'Temperature converter',
+      icon: {
+        iconName: 'thermometer-outline',
+        iconPack: 'Ionicons'
+      }
+    },
+    {
       buttonName: 'Currency converter',
       icon: {
         iconName: 'cash-outline',

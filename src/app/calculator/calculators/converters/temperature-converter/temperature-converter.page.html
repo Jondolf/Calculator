@@ -1,0 +1,46 @@
+<div>
+  <div class="unit-selection-container">
+    <ion-label>Choose a unit</ion-label>
+    <ion-select
+      value="meter"
+      okText="Confirm"
+      cancelText="Cancel"
+      placeholder="Choose the unit"
+      [(ngModel)]="currentUnitName"
+      (ionChange)="
+        currentUnit = unitConverter.findUnitByName(currentUnit.name, temperatureUnits)
+      "
+    >
+      <ion-select-option
+        *ngFor="let unit of temperatureUnits.units"
+        [value]="unit.name"
+        >{{ unit.name }} ({{ unit.abbreviation }})</ion-select-option
+      >
+    </ion-select>
+  </div>
+  <div class="amount-input-container">
+    <ion-label>Choose amount</ion-label>
+    <ion-input
+      (ionChange)="amount = $event.target.value.toString()"
+      [value]="amount"
+      type="number"
+      inputmode="numeric"
+      placeholder="Type input"
+    ></ion-input>
+  </div>
+
+  <div class="results-container">
+    <ion-list>
+      <div class="header-container">
+        <ion-list-header>Unit</ion-list-header>
+        <ion-list-header>Value</ion-list-header>
+      </div>
+      <ion-item *ngFor="let unit of temperatureUnits.units">
+        <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
+        <ion-label
+          >{{ convertUnit(unit.name) }} {{ unit.abbreviation }}</ion-label
+        >
+      </ion-item>
+    </ion-list>
+  </div>
+</div>
