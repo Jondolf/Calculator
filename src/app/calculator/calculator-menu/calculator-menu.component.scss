@@ -22,6 +22,9 @@ ion-menu {
           color: var(--ion-color-light-contrast);
         }
       }
+      app-accordion-list ion-item {
+        padding-left: 10px;
+      }
     }
   }
 }
