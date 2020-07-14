@@ -15,6 +15,26 @@
         <ion-label>Basic calculator</ion-label>
       </ion-item>
 
+      <ion-item
+        button
+        [routerLink]="['/charts']"
+        (click)="changeCalculator.emit({ calculatorName: 'Charts' })"
+      >
+        <ion-icon [name]="'bar-chart-outline'"></ion-icon>
+        <ion-label>Charts</ion-label>
+      </ion-item>
+
+      <ion-item
+        button
+        [routerLink]="['/graphing-calculator']"
+        (click)="
+          changeCalculator.emit({ calculatorName: 'Graphing calculator' })
+        "
+      >
+        <i class="material-icons">grid_on</i>
+        <ion-label>Graphing calculator</ion-label>
+      </ion-item>
+
       <app-accordion-list
         [isCollapsedByDefault]="true"
         [listName]="'Converters'"
@@ -44,26 +64,6 @@
           <ion-label>{{ converter.buttonName }}</ion-label>
         </ion-item>
       </app-accordion-list>
-
-      <ion-item
-        button
-        [routerLink]="['/charts']"
-        (click)="changeCalculator.emit({ calculatorName: 'Charts' })"
-      >
-        <ion-icon [name]="'bar-chart-outline'"></ion-icon>
-        <ion-label>Charts</ion-label>
-      </ion-item>
-
-      <ion-item
-        button
-        [routerLink]="['/graphing-calculator']"
-        (click)="
-          changeCalculator.emit({ calculatorName: 'Graphing calculator' })
-        "
-      >
-        <i class="material-icons">grid_on</i>
-        <ion-label>Graphing calculator</ion-label>
-      </ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
