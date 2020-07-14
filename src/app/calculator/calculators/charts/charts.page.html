@@ -36,6 +36,16 @@
 
 <div class="input-container">
   <ion-list>
+    <ion-item>
+      <ion-input
+        type="text"
+        inputmode="numeric"
+        (input)="handleChartLabelsInputChange($event.target.value)"
+        [value]="chartLabels.join(',')"
+        placeholder="Type in a comma seperated list of labels for the chart"
+        class="chart-labels-input"
+      ></ion-input>
+    </ion-item>
     <ion-item *ngFor="let chartData of chartDataSets">
       <ion-buttons slot="start">
         <ion-button (click)="removeDataSet(chartData)">

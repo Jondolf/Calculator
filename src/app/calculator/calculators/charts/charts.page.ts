@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Chart, ChartDataSets } from 'chart.js';
+import { Chart, ChartDataSets, ChartData } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 
@@ -40,6 +40,7 @@ export class ChartsPage implements OnInit, OnDestroy {
   constructor(private globals: GlobalVarsService) { }
 
   ngOnInit(): void {
+    Chart.defaults.global.maintainAspectRatio = true;
     this.themeSubscription = this.globals.currentThemeChange.subscribe((value) => {
       if (value.includes('light')) {
         Chart.defaults.global.defaultFontColor = 'black';
@@ -100,15 +101,36 @@ export class ChartsPage implements OnInit, OnDestroy {
     this.chartDataSets.splice(indexOfDataSet, 1);
   }
 
+  handleChartLabelsInputChange(value: string): void {
+    this.chartLabels = this.parseChartLabelsStringToArray(value);
+    this.updateChart();
+  }
+
+  parseChartLabelsStringToArray(str: string): string[] {
+    return str.split(',').map((dataString: string) => dataString);
+  }
+
   handleDataInputChange(chartData: ChartDataSets, event: KeyboardEvent, target: HTMLInputElement): void {
     const isBackspaceEvent = event.key === null ? true : false;
-    target.value = isBackspaceEvent ? target.value : target.value.toString().replace(/[^0-9.,]/g, '');
-    this.parseChartDataStringToArray(
-      chartData,
-      isBackspaceEvent ? target.value.toString() : target.value.toString().replace(/[^0-9.,]/g, '')
-    );
-    this.updateChartLabels();
+    const newValue: string = isBackspaceEvent ? target.value.toString() : target.value.toString().replace(/[^0-9.,]/g, '');
+    const parsedString = this.parseChartDataStringToArray(newValue);
+    chartData.data = parsedString;
+    if (parsedString.length > this.chartLabels.length) {
+      this.chartLabels.push((this.chartLabels.length + 1).toString());
+    }
     this.updateChart();
+  }
+
+  parseChartDataStringToArray(str: string): number[] {
+    return str.split(',').map((dataString: string) => +dataString);
+  }
+
+  getBiggestChartDataLength(): number {
+    const chartDataSetLengths: number[] = [];
+    for (const dataSet of this.chartDataSets) {
+      chartDataSetLengths.push(dataSet.data.length);
+    }
+    return Math.max(...chartDataSetLengths);
   }
 
   handleDataLabelInputChange(chartData: ChartDataSets, str: string): void {
@@ -137,26 +159,5 @@ export class ChartsPage implements OnInit, OnDestroy {
       default:
         this.currentChartName = 'Line chart';
     }
-  }
-
-  parseChartDataStringToArray(chartData: ChartDataSets, str: string): void {
-    chartData.data = str.split(',').map((dataString: string) => +dataString);
-  }
-
-  updateChartLabels(): void {
-    const chartLabelArray: string[] = [];
-    const biggestChartDataLength = this.getBiggestChartDataLength();
-    for (let i = 0; i < biggestChartDataLength; i++) {
-      chartLabelArray.push((i + 1).toString());
-    }
-    this.chartLabels = chartLabelArray;
-  }
-
-  getBiggestChartDataLength(): number {
-    const chartDataSetLengths: number[] = [];
-    for (const dataSet of this.chartDataSets) {
-      chartDataSetLengths.push(dataSet.data.length);
-    }
-    return Math.max(...chartDataSetLengths);
   }
 }
