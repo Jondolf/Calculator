@@ -28,7 +28,7 @@ export class PreciseCalculatorService {
    * If yes, it should throw an error.
    */
   checkForInvalidMathFunctions(calculation: string): void | Error {
-    const invalidFunctions = ['a', 'b', 'c', 'd', 'f', 'h', 'm'];
+    const invalidFunctions = ['a', 'b', 'c', 'd', 'f', 'h', 'i', 'm'];
     if (invalidFunctions.some(mathFunc => calculation.includes(mathFunc + '(')) && calculation) {
       throw new Error('Incorrect math function name.');
     }
@@ -50,6 +50,7 @@ export class PreciseCalculatorService {
       .replace(/x/g, '*').replace(/÷/g, '/').replace(/mod/g, 'm') // multiply, divide, modulo
       .replace(/sin/g, 'a').replace(/cos/g, 'b').replace(/tan/g, 'c') // sin, cos, tan
       .replace(/log/g, 'd').replace(/ln/g, 'f').replace(/lg/g, 'h') // log base 10, log base e, log base 2 (the letters are random)
+      .replace(/abs/g, 'i') // abs
       .replace(/sqrt/g, '√').replace(/pi/g, 'π')
       .replace(/([0-9πe])π/g, '$1*π').replace(/([0-9πe])e/g, '$1*e') // Replace ππ and ee with π*π and e*e
       .replace(/(\))([\(0-9πe])/g, '$1*$2') // Replace calculations like (5+5)2 and (5+5)(1+1) with (5+5)*2 and (5+5)*(1+1)
@@ -161,6 +162,8 @@ export class PreciseCalculatorService {
             return Decimal.ln(calculatedStringAfterMathFunction);
           case 'h': // lg
             return Decimal.log2(calculatedStringAfterMathFunction);
+          case 'i': // abs
+            return Decimal.abs(calculatedStringAfterMathFunction);
         }
       }
       // Mathematical functions where the function is after the number, like 25% or 10!
