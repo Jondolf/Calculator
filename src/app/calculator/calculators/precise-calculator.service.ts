@@ -144,18 +144,23 @@ export class PreciseCalculatorService {
         switch (numberString[0]) {
           case '√': // square root
             return Decimal.sqrt(calculatedStringAfterMathFunction);
+          /*
+          sin, cos and tan have the "new Decimal(new Decimal(...).toFixed(50).toFixed())" to avoid problems with pi.
+          For example, with a calculation like sin(π) the result would be very, very close to zero but not quite.
+          I round the result at 50 decimals to avoid this problem. It's a bit ugly, but the only properly working solution I could find.
+          */
           case 'a': // sin
-            return this.isDeg
-              ? Decimal.sin(this.convertToRadians(calculatedStringAfterMathFunction))
-              : Decimal.sin(calculatedStringAfterMathFunction);
+            return new Decimal(new Decimal(this.isDeg
+              ? Decimal.sin(this.convertToRadians(calculatedStringAfterMathFunction)).toFixed(50)
+              : Decimal.sin(calculatedStringAfterMathFunction).toFixed(50)).toFixed());
           case 'b': // cos
-            return this.isDeg ?
-              Decimal.cos(this.convertToRadians(calculatedStringAfterMathFunction))
-              : Decimal.cos(calculatedStringAfterMathFunction);
+            return new Decimal(new Decimal(this.isDeg ?
+              Decimal.cos(this.convertToRadians(calculatedStringAfterMathFunction)).toFixed(50)
+              : Decimal.cos(calculatedStringAfterMathFunction).toFixed(50)).toFixed());
           case 'c': // tan
-            return this.isDeg
-              ? Decimal.tan(this.convertToRadians(calculatedStringAfterMathFunction))
-              : Decimal.tan(calculatedStringAfterMathFunction);
+            return new Decimal(new Decimal(this.isDeg
+              ? Decimal.tan(this.convertToRadians(calculatedStringAfterMathFunction)).toFixed(50)
+              : Decimal.tan(calculatedStringAfterMathFunction).toFixed(50)).toFixed());
           case 'd': // log
             return Decimal.log10(calculatedStringAfterMathFunction);
           case 'f': // ln
