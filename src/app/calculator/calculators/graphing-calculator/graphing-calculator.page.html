@@ -1,8 +1,8 @@
 <div
   (panstart)="canvasCtrl.pan($event); drawingCtrl.handleDraw()"
   (panmove)="canvasCtrl.pan($event); drawingCtrl.handleDraw()"
-  (pinchin)="canvasCtrl.zoom(1.1); drawingCtrl.handleDraw()"
-  (pinchout)="canvasCtrl.zoom(0.9); drawingCtrl.handleDraw()"
+  (pinchin)="canvasCtrl.zoom(0.5); drawingCtrl.handleDraw()"
+  (pinchout)="canvasCtrl.zoom(-0.5); drawingCtrl.handleDraw()"
   [style.height]="isInputContainerOpen ? '60vh' : '95vh'"
   class="graph-container"
   #canvascontainer
@@ -15,9 +15,9 @@
   [style.bottom]="isInputContainerOpen ? '0' : '-40vh'"
 >
   <div
-    (click)="isInputContainerOpen = !isInputContainerOpen; canvasCtrl.handleSetCanvasSize(500)"
-    (swipeup)="isInputContainerOpen = true; canvasCtrl.handleSetCanvasSize(500)"
-    (swipedown)="isInputContainerOpen = false; canvasCtrl.handleSetCanvasSize(500)"
+    (click)="isInputContainerOpen = !isInputContainerOpen; onResize()"
+    (swipeup)="isInputContainerOpen = true; onResize()"
+    (swipedown)="isInputContainerOpen = false; onResize()"
     class="swipe-container"
   >
     <i

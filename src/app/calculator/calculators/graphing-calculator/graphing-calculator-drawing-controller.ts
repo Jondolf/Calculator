@@ -2,15 +2,16 @@ import { GraphingCalculatorCanvasController } from './graphing-calculator-canvas
 import { CalculatorService } from '../calculator.service';
 import { Coordinate } from 'src/app/models/coordinate.interface';
 import { ContextStyles } from 'src/app/models/canvas-context-styles.interface';
+import Decimal from 'decimal.js';
 
 interface GraphValues {
   [x: string]: number;
 }
 
 export class GraphingCalculatorDrawingController {
-  previousY: number;
+  private previousY: number;
+  private ctx = this.canvasElement.getContext('2d');
   savedYValues: GraphValues;
-  ctx = this.canvasElement.getContext('2d');
 
   constructor(
     private canvasElement: HTMLCanvasElement,
@@ -41,25 +42,25 @@ export class GraphingCalculatorDrawingController {
     this.ctx.restore();
   }
 
-  drawGrid(squareSizeMultiplier: number, lineWidth: number, strokeStyle: string): void {
+  private drawGrid(squareSizeMultiplier: number, lineWidth: number, strokeStyle: string): void {
     this.ctx.lineWidth = lineWidth;
     this.ctx.strokeStyle = strokeStyle;
     this.ctx.beginPath();
 
     // The halves of the horizontal and vertical sides are drawn seperately to ensure that they start from the center
-    this.drawGridOnSide(squareSizeMultiplier, 'x', this.canvasCtrl.canvasSides.top);
-    this.drawGridOnSide(squareSizeMultiplier, 'y', this.canvasCtrl.canvasSides.right);
-    this.drawGridOnSide(-squareSizeMultiplier, 'x', this.canvasCtrl.canvasSides.bottom);
-    this.drawGridOnSide(-squareSizeMultiplier, 'y', this.canvasCtrl.canvasSides.left);
+    this.drawGridOnSide(squareSizeMultiplier, 'x', this.canvasCtrl.canvasSidesWithStep.top);
+    this.drawGridOnSide(squareSizeMultiplier, 'y', this.canvasCtrl.canvasSidesWithStep.right);
+    this.drawGridOnSide(-squareSizeMultiplier, 'x', this.canvasCtrl.canvasSidesWithStep.bottom);
+    this.drawGridOnSide(-squareSizeMultiplier, 'y', this.canvasCtrl.canvasSidesWithStep.left);
 
     this.ctx.stroke();
   }
 
-  drawGridOnSide(stepBetweenLines: number, xOrY: 'x' | 'y', side: number): void {
-    const canvasOffset = xOrY === 'x' ? this.canvasCtrl.canvasOffset.y : this.canvasCtrl.canvasOffset.x;
+  private drawGridOnSide(stepBetweenLines: number, xOrY: 'x' | 'y', side: number): void {
+    const canvasOffset = xOrY === 'x' ? this.canvasCtrl.canvasOffsetWithStep.y : this.canvasCtrl.canvasOffsetWithStep.x;
     for (let i = 0; side >= 0 ? i < side - canvasOffset : i > side - canvasOffset - 1; i += stepBetweenLines) {
-      const canvasCoord: Coordinate = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
-        x: i + this.canvasCtrl.canvasOffset.x, y: i + this.canvasCtrl.canvasOffset.y
+      const canvasCoord: Coordinate = this.canvasCtrl.convertCoordinatesToCanvasCoordinatesWithStep({
+        x: i + this.canvasCtrl.canvasOffsetWithStep.x, y: i + this.canvasCtrl.canvasOffsetWithStep.y
       });
       if (xOrY === 'x') {
         this.ctx.moveTo(0, canvasCoord.y + 0.5);
@@ -71,9 +72,9 @@ export class GraphingCalculatorDrawingController {
     }
   }
 
-  drawCoordinateSystem(): void {
-    const canvasMidCoord: Coordinate = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
-      x: this.canvasCtrl.canvasOffset.x, y: this.canvasCtrl.canvasOffset.y
+  private drawCoordinateSystem(): void {
+    const canvasMidCoord: Coordinate = this.canvasCtrl.convertCoordinatesToCanvasCoordinatesWithStep({
+      x: this.canvasCtrl.canvasOffsetWithStep.x, y: this.canvasCtrl.canvasOffsetWithStep.y
     });
     this.ctx.lineWidth = this.contextStyles.squareBorderWidth * 2.5;
     this.ctx.strokeStyle = this.contextStyles.coordinateSystemColor;
@@ -88,34 +89,34 @@ export class GraphingCalculatorDrawingController {
     this.drawNumbersAlongAxes();
   }
 
-  drawNumbersAlongAxes(): void {
-    this.ctx.font = `${this.canvasCtrl.squareSize * 0.25}px 'Nunito Sans'`;
+  private drawNumbersAlongAxes(): void {
+    this.ctx.font = `${this.canvasCtrl.squareSizeWithStep * 0.25}px 'Nunito Sans'`;
     this.ctx.fillStyle = this.contextStyles.coordinateSystemColor;
     this.ctx.textAlign = 'center';
-    this.drawNumbersAlongAxesOnSide(1, 'y', this.canvasCtrl.canvasSides.top);
-    this.drawNumbersAlongAxesOnSide(1, 'x', this.canvasCtrl.canvasSides.right);
-    this.drawNumbersAlongAxesOnSide(-1, 'y', this.canvasCtrl.canvasSides.bottom);
-    this.drawNumbersAlongAxesOnSide(-1, 'x', this.canvasCtrl.canvasSides.left);
+    this.drawNumbersAlongAxesOnSide(1, 'y', this.canvasCtrl.canvasSidesWithStep.top);
+    this.drawNumbersAlongAxesOnSide(1, 'x', this.canvasCtrl.canvasSidesWithStep.right);
+    this.drawNumbersAlongAxesOnSide(-1, 'y', this.canvasCtrl.canvasSidesWithStep.bottom);
+    this.drawNumbersAlongAxesOnSide(-1, 'x', this.canvasCtrl.canvasSidesWithStep.left);
   }
 
-  drawNumbersAlongAxesOnSide(numberStep: number, xOrY: 'x' | 'y', side: number): void {
-    const canvasMidCoord: Coordinate = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
-      x: this.canvasCtrl.canvasOffset.x, y: this.canvasCtrl.canvasOffset.y
+  private drawNumbersAlongAxesOnSide(numberStep: number, xOrY: 'x' | 'y', side: number): void {
+    const canvasMidCoord: Coordinate = this.canvasCtrl.convertCoordinatesToCanvasCoordinatesWithStep({
+      x: this.canvasCtrl.canvasOffsetWithStep.x, y: this.canvasCtrl.canvasOffsetWithStep.y
     });
-    const canvasOffset = (xOrY === 'x' ? this.canvasCtrl.canvasOffset.x : this.canvasCtrl.canvasOffset.y);
+    const canvasOffset = (xOrY === 'x' ? this.canvasCtrl.canvasOffsetWithStep.x : this.canvasCtrl.canvasOffsetWithStep.y);
     for (let i = numberStep + canvasOffset; side >= 0 ? i < side + 1 : i > side - 1; i += numberStep) {
-      const coord: Coordinate = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({ x: i, y: i });
+      const coord: Coordinate = this.canvasCtrl.convertCoordinatesToCanvasCoordinatesWithStep({ x: i, y: i });
+      const num = new Decimal(i - canvasOffset).round().mul(this.canvasCtrl.stepBetweenCoordinates).toFixed();
       if (xOrY === 'x') {
-        this.ctx.fillText(Math.round(i - canvasOffset).toString(), coord.x,
-          canvasMidCoord.y + this.canvasCtrl.squareSize * 0.4);
+        this.ctx.fillText(num, coord.x, canvasMidCoord.y + this.canvasCtrl.squareSizeWithStep * 0.4);
       } else {
-        this.ctx.fillText(Math.round(i - canvasOffset).toString(), canvasMidCoord.x - this.canvasCtrl.squareSize * 0.225,
-          coord.y + this.canvasCtrl.squareSize * 0.075);
+        this.ctx.fillText(
+          num, canvasMidCoord.x - this.canvasCtrl.squareSizeWithStep * 0.225, coord.y + this.canvasCtrl.squareSizeWithStep * 0.075);
       }
     }
   }
 
-  drawEquations(): void {
+  private drawEquations(): void {
     for (let equation of this.equations) {
       equation = equation.replace(/ /g, '');
       if (equation.includes('y=') && equation.split('=').length === 2) {
@@ -129,8 +130,8 @@ export class GraphingCalculatorDrawingController {
     }
   }
 
-  drawLineFromEquation(equation: string): void {
-    this.ctx.lineWidth = this.contextStyles.squareBorderWidth * 1.5;
+  private drawLineFromEquation(equation: string): void {
+    this.ctx.lineWidth = this.contextStyles.squareBorderWidth * 2;
     this.ctx.strokeStyle = this.contextStyles.coordinateSystemColor;
     // Functions that can create curves or other complex shapes
     const complexMathFunctions = ['xx', '^', '√', 'sqrt', 'sin', 'cos', 'tan', 'log', 'ln', 'lg'];
@@ -152,12 +153,14 @@ export class GraphingCalculatorDrawingController {
    * @param numberStep How large the gap between each x-coordinate is (how often to calculate and draw a line)
    * @param equation The equation that will be used for calculating the y-coord at the current x-coord
    */
-  drawLineEquationHalf(side: number, numberStep: number, equation: string) {
+  private drawLineEquationHalf(side: number, numberStep: number, equation: string) {
     this.previousY = 0;
     const pannedSide = side - this.canvasCtrl.canvasOffset.x; // The side, but it also adds the correct offset
     for (
       let x = 0;
-      side >= 0 ? x <= pannedSide + 1 : x >= pannedSide - 1;
+      side >= 0
+        ? x <= pannedSide + 1
+        : x >= pannedSide - 1;
       x += numberStep
     ) {
       const y = this.getOrCalculate(equation, x);
@@ -173,7 +176,8 @@ export class GraphingCalculatorDrawingController {
       }
       if (!isNaN(y)) {
         const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
-          x: x + this.canvasCtrl.canvasOffset.x, y: y + this.canvasCtrl.canvasOffset.y
+          x: x + this.canvasCtrl.canvasOffset.x,
+          y: y + this.canvasCtrl.canvasOffset.y
         });
         if (x === 0) {
           this.ctx.moveTo(newCoord.x, newCoord.y);
@@ -191,7 +195,7 @@ export class GraphingCalculatorDrawingController {
   /**
    * Finds the number closest to NaN by using a binary-search-like algorithm
    */
-  findValueClosestToNaN(start: number, end: number, startValue: number, endValue: number, equation: string): Coordinate {
+  private findValueClosestToNaN(start: number, end: number, startValue: number, endValue: number, equation: string): Coordinate {
     const middle = (start + end) / 2;
     const middleValue = this.getOrCalculate(equation, middle);
     if (Math.abs(end - start) < 0.00000000000000001 || middle === start || middle === end) {
@@ -211,20 +215,20 @@ export class GraphingCalculatorDrawingController {
     }
   }
 
-  getOrCalculate(equation: string, x: number): number {
+  private getOrCalculate(equation: string, x: number): number {
     if (this.savedYValues[x] === undefined) {
       this.savedYValues[x] = +this.calculator.countCalculation(this.formatEquation(equation, x));
     }
     return this.savedYValues[x];
   }
 
-  formatEquation(equation: string, replaceWith: any): string {
+  private formatEquation(equation: string, replaceWith: any): string {
     const replacedValue: string = replaceWith[0] === '(' && replaceWith[replaceWith.toString().length - 1] === ')' ? replaceWith : `(${replaceWith})`;
     const formattedEquation: string = equation.replace(/x/g, replacedValue).slice(equation.lastIndexOf('=') + 1);
     return formattedEquation;
   }
 
-  drawDotAtCoordinate(coordinate: Coordinate): void {
+  private drawDotAtCoordinate(coordinate: Coordinate): void {
     this.ctx.fillStyle = this.contextStyles.coordinateSystemColor;
     this.ctx.beginPath();
     this.ctx.arc(coordinate.x, coordinate.y, 20, 0, 2 * Math.PI, true);

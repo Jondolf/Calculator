@@ -58,7 +58,7 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
         this.subscribeToResizeEvent();
 
         this.canvasContainerElement.addEventListener('wheel',
-          (e: WheelEvent) => { this.canvasCtrl.zoom(e.deltaY < 0 ? 0.9 : 1.1); this.drawingCtrl.handleDraw(); }, { passive: false });
+          (e: WheelEvent) => { this.canvasCtrl.zoom(e.deltaY < 0 ? -0.5 : 0.5); this.drawingCtrl.handleDraw(); }, { passive: false });
 
         this.isFirstLoad = false;
       }
@@ -85,9 +85,16 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
 
   subscribeToResizeEvent() {
     this.resizeSubscription = this.resizeObserveble.subscribe(() => {
-      this.canvasCtrl.handleSetCanvasSize(500);
-      this.drawingCtrl.handleDraw();
+      this.onResize();
     });
+  }
+
+  onResize() {
+    // Set timeout for both to make sure they are called at the right time
+    setTimeout(() => {
+      this.canvasCtrl.handleSetCanvasSize();
+      this.drawingCtrl.handleDraw();
+    }, 500);
   }
 
   setGraphColors(): void {
