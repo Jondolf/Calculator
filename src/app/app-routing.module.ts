@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { BasicCalculatorPage } from './calculator/calculators/basic-calculator/basic-calculator.page';
+import { CalculatorPage } from './calculator/calculators/calculator/calculator.page';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'basic-calculator', pathMatch: 'full' },
+  { path: '', redirectTo: 'calculator', pathMatch: 'full' },
   {
-    path: 'basic-calculator',
-    component: BasicCalculatorPage
+    path: 'calculator',
+    component: CalculatorPage
   },
   {
     path: 'length-converter',

@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { BasicCalculatorCustomStyles } from 'src/app/models/basic-calculator-custom-styles.interface';
+import { CalculatorCustomStyles } from 'src/app/models/calculator-custom-styles.interface';
 import { ModalController } from '@ionic/angular';
-import { BasicCalculatorService } from '../basic-calculator.service';
+import { CalculatorService } from '../calculator.service';
 import { Storage } from '@ionic/storage';
 
 @Component({
@@ -10,7 +10,7 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./customize-buttons-modal.component.scss'],
 })
 export class CustomizeButtonsModalComponent implements OnInit, OnChanges {
-  styles: BasicCalculatorCustomStyles = {
+  styles: CalculatorCustomStyles = {
     gridSize: 'small',
     gridGap: '0px',
     buttonStyles: {
@@ -21,13 +21,13 @@ export class CustomizeButtonsModalComponent implements OnInit, OnChanges {
 
   constructor(
     public modalController: ModalController,
-    public basicCalculator: BasicCalculatorService,
+    public calculator: CalculatorService,
     private storage: Storage) {
 
   }
 
   ngOnInit() {
-    this.styles = this.basicCalculator.buttonStyles;
+    this.styles = this.calculator.buttonStyles;
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes.currentStyles.previousValue !== changes.currentStyles.currentValue) {
@@ -40,9 +40,9 @@ export class CustomizeButtonsModalComponent implements OnInit, OnChanges {
   }
 
   updateStyles(): void {
-    this.basicCalculator.buttonStyles = this.styles;
-    this.styles = this.basicCalculator.buttonStyles;
-    this.storage.set('basicCalculatorCustomStyles', this.basicCalculator.buttonStyles);
+    this.calculator.buttonStyles = this.styles;
+    this.styles = this.calculator.buttonStyles;
+    this.storage.set('calculatorCustomStyles', this.calculator.buttonStyles);
   }
 
   pixelsToNumber(pixelString: string): number {

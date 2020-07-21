@@ -3,27 +3,27 @@ import {
   OnInit,
   OnDestroy
 } from '@angular/core';
-import { BasicCalculatorService } from './basic-calculator.service';
+import { CalculatorService } from './calculator.service';
 import { PreciseCalculatorService } from '../precise-calculator.service';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 
 @Component({
-  selector: 'app-basic-calculator',
-  templateUrl: './basic-calculator.page.html',
-  styleUrls: ['./basic-calculator.page.scss'],
+  selector: 'app-calculator',
+  templateUrl: './calculator.page.html',
+  styleUrls: ['./calculator.page.scss'],
 })
-export class BasicCalculatorPage implements OnInit, OnDestroy {
+export class CalculatorPage implements OnInit, OnDestroy {
   calculation = '0';
   currentResult = '';
 
   constructor(
-    public basicCalculator: BasicCalculatorService,
+    public calculator: CalculatorService,
     public preciseCalculator: PreciseCalculatorService,
     public globals: GlobalVarsService) { }
 
   ngOnInit() {
     document.body.addEventListener('keydown', this.handleEvent);
-    this.globals.currentCalculator = 'Basic calculator';
+    this.globals.currentCalculator = 'Calculator';
   }
   ngOnDestroy(): void {
     document.body.removeEventListener('keydown', this.handleEvent);
@@ -120,7 +120,7 @@ export class BasicCalculatorPage implements OnInit, OnDestroy {
     If route has changed, remove keydown eventlistener. ngOnDestroy doesn't really work anymore, because Ionic keeps previous pages running.
     This made typing into other pages' inputs (on keyboard) impossible because the event listener with preventDefault() was still there.
     */
-    if (this.globals.currentCalculator !== 'Basic calculator') {
+    if (this.globals.currentCalculator !== 'Calculator') {
       document.body.removeEventListener('keydown', this.handleEvent);
       return;
     }

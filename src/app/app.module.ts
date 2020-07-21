@@ -16,10 +16,10 @@ import { CalculatorMenuComponent } from './calculator/calculator-menu/calculator
 // Settings
 import { SettingsModalComponent } from './calculator/settings/settings-modal.component';
 import { ThemesModalComponent } from './calculator/settings/themes/themes-modal.component';
-// Basic calculator
-import { BasicCalculatorPage } from './calculator/calculators/basic-calculator/basic-calculator.page';
-import { CustomizeButtonsModalComponent } from './calculator/calculators/basic-calculator/customize-buttons-modal/customize-buttons-modal.component';
-import { MoreCommandsMenuComponent } from './calculator/calculators/basic-calculator/more-commands-menu/more-commands-menu.component';
+// Calculator
+import { CalculatorPage } from './calculator/calculators/calculator/calculator.page';
+import { CustomizeButtonsModalComponent } from './calculator/calculators/calculator/customize-buttons-modal/customize-buttons-modal.component';
+import { MoreCommandsMenuComponent } from './calculator/calculators/calculator/more-commands-menu/more-commands-menu.component';
 // Common
 import { FullscreenContainerComponent } from './common/fullscreen-container/fullscreen-container.component';
 import { CircleButtonComponent } from './common/circle-button/circle-button.component';
@@ -43,7 +43,7 @@ export class HammerConfig extends HammerGestureConfig {
 @NgModule({
   declarations: [
     AppComponent, TopBarComponent, OptionsPopoverComponent, CalculatorMenuComponent,
-    BasicCalculatorPage, CustomizeButtonsModalComponent, MoreCommandsMenuComponent,
+    CalculatorPage, CustomizeButtonsModalComponent, MoreCommandsMenuComponent,
     SettingsModalComponent, ThemesModalComponent,
     FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent
   ],

@@ -1,4 +1,4 @@
-export interface BasicCalculatorCustomStyles {
+export interface CalculatorCustomStyles {
   gridSize: string;
   gridGap: string;
   buttonStyles: {

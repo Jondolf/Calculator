@@ -12,7 +12,7 @@ ion-header {
 
 ion-list {
   background-color: transparent !important;
-  width: 85%;
+  width: 100%;
   margin: auto;
   ion-item-divider {
     background-color: transparent;
@@ -20,9 +20,8 @@ ion-list {
     border: none;
   }
   ion-item {
-    border-radius: 5px;
     margin-bottom: 10px;
-    --background: var(--ion-color-light-tint);
+    --background: transparent;
     --color: var(--ion-color-light-contrast);
     --inner-border-width: 0;
     ion-icon {

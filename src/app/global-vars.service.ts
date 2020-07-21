@@ -8,7 +8,7 @@ export class GlobalVarsService {
   currentCalculator: string;
   currentTheme = 'light default light';
   currentThemeChange = new Subject<string>();
-  isBasicCalculatorButtonSettingsMenuOpen = false;
+  isCalculatorButtonSettingsMenuOpen = false;
   isInSettings = false;
 
   changeCurrentCalculator(calculatorName: string): void {

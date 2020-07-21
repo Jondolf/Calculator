@@ -32,7 +32,7 @@ export class TopBarComponent {
 
   getCalculatorNameFromRoute() {
     if (this.router.url === '/') {
-      return 'Basic calculator';
+      return 'Calculator';
     }
     // Replace slashes and hyphens
     let calculatorName = this.router.url.replace('/', '').replace(/-/g, ' ');

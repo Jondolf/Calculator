@@ -9,14 +9,14 @@
 </ion-button>
 
 <ion-button
-  *ngIf="globals.currentCalculator === 'Basic calculator'"
-  (click)="presentCustomizeBasicCalculatorButtonsModal(); closePopover()"
+  *ngIf="globals.currentCalculator === 'Calculator'"
+  (click)="presentCustomizeCalculatorButtonsModal(); closePopover()"
   color="light"
   expand="full"
   fill="clear"
   class="ion-text-capitalize"
 >
-  Basic calculator layout
+  Calculator layout
 </ion-button>
 
 <ion-button

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { GlobalVarsService } from 'src/app/global-vars.service';
-import { BasicCalculatorService } from '../../calculators/basic-calculator/basic-calculator.service';
+import { CalculatorService } from '../../calculators/calculator/calculator.service';
 
 import { SettingsModalComponent } from '../../settings/settings-modal.component';
-import { CustomizeButtonsModalComponent } from '../../calculators/basic-calculator/customize-buttons-modal/customize-buttons-modal.component';
+import { CustomizeButtonsModalComponent } from '../../calculators/calculator/customize-buttons-modal/customize-buttons-modal.component';
 
 @Component({
   selector: 'app-options-popover',
@@ -16,7 +16,7 @@ export class OptionsPopoverComponent {
     private popoverController: PopoverController,
     private modalController: ModalController,
     public globals: GlobalVarsService,
-    public basicCalculator: BasicCalculatorService
+    public calculator: CalculatorService
   ) { }
 
   emitMessage(message: string): void {
@@ -33,10 +33,10 @@ export class OptionsPopoverComponent {
     });
     return await modal.present();
   }
-  async presentCustomizeBasicCalculatorButtonsModal() {
+  async presentCustomizeCalculatorButtonsModal() {
     const modal = await this.modalController.create({
       component: CustomizeButtonsModalComponent,
-      cssClass: 'basic-calculator-customize-buttons-modal'
+      cssClass: 'calculator-customize-buttons-modal'
     });
     return await modal.present();
   }

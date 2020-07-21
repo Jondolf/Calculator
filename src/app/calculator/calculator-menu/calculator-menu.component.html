@@ -8,11 +8,11 @@
     <ion-list>
       <ion-item
         button
-        [routerLink]="['/basic-calculator']"
-        (click)="changeCalculator.emit({ calculatorName: 'Basic calculator' })"
+        [routerLink]="['/calculator']"
+        (click)="changeCalculator.emit({ calculatorName: 'Calculator' })"
       >
         <ion-icon [name]="'calculator-outline'"></ion-icon>
-        <ion-label>Basic calculator</ion-label>
+        <ion-label>Calculator</ion-label>
       </ion-item>
 
       <ion-item
