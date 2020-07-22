@@ -9,6 +9,14 @@
     --color: var(--ion-color-primary-contrast);
   }
 
+  ion-searchbar {
+    --border-radius: 5px;
+    --box-shadow: 0;
+    ion-input {
+      border: 1px solid var(--ion-color-dark);
+    }
+  }
+
   ion-list {
     background-color: var(--ion-color-light-tint);
     padding: 0;
