@@ -23,11 +23,11 @@ export class UnitConverterService {
   }
 
   // Finds unit from objects by name
-  findUnitByName(unitName: string, unitObject: any): Unit {
+  findUnitByName(unitName: string, unitObject: any) {
     // Object.keys gets the names of the sub-objects
     for (const unitCategoryName of Object.keys(unitObject)) {
       // foundUnit stores the found unit if it exists in the object
-      const foundUnit: Unit = unitObject[unitCategoryName].find((lengthUnit: Unit) => lengthUnit.name === unitName
+      const foundUnit = unitObject[unitCategoryName].find(lengthUnit => lengthUnit.name === unitName
         || /* For currency converter */ lengthUnit.isoCode === unitName);
       if (foundUnit) {
         return foundUnit;

@@ -1,8 +1,8 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
+    <ion-buttons slot="primary">
       <ion-button (click)="dismissModal()">
-        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>Settings</ion-title>
@@ -11,7 +11,7 @@
 
 <ion-list>
   <ion-item button (click)="presentThemesModal()">
-    <ion-icon name="color-palette-outline" slot="start"></ion-icon>
+    <i class="material-icons" slot="start">palette</i>
     <ion-label>Themes</ion-label>
   </ion-item>
 </ion-list>

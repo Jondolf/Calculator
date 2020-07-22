@@ -1,12 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Platform } from '@ionic/angular';
+import { Platform, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import Decimal from 'decimal.js';
 import { GlobalVarsService } from './global-vars.service';
+import { CalculatorMenuModalComponent } from './calculator/calculator-menu-modal/calculator-menu-modal.component';
 
 
 Decimal.set({ precision: 100, rounding: 4 });
@@ -18,8 +19,6 @@ Decimal.set({ precision: 100, rounding: 4 });
   providers: [ScreenOrientation]
 })
 export class AppComponent {
-  @ViewChild('calculatormenu') calculatorMenu;
-
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -27,7 +26,8 @@ export class AppComponent {
     private screenOrientation: ScreenOrientation,
     public globals: GlobalVarsService,
     public router: Router,
-    private storage: Storage
+    private storage: Storage,
+    private modalCtrl: ModalController
   ) {
     this.initializeApp();
   }
@@ -75,5 +75,26 @@ export class AppComponent {
         this.statusBar.styleLightContent();
       }
     }
+  }
+
+  async presentCalculatorMenuModal() {
+    const modal = await this.modalCtrl.create({
+      component: CalculatorMenuModalComponent,
+      cssClass: 'calculator-menu-modal'
+    });
+    await modal.present();
+    this.globals.isCalculatorMenuOpen = true;
+    this.globals.isCalculatorMenuOpenChange.next(this.globals.isCalculatorMenuOpen);
+    return modal.onDidDismiss().then(
+      (calculatorName: any) => {
+        if (calculatorName && calculatorName.data) {
+          const message: string = calculatorName.data.message;
+          const route = '/' + message.toLowerCase().replace(/ /, '-');
+          this.router.navigate([route]);
+          this.globals.currentCalculator = message;
+        }
+        this.globals.isCalculatorMenuOpen = false;
+        this.globals.isCalculatorMenuOpenChange.next(this.globals.isCalculatorMenuOpen);
+      });
   }
 }

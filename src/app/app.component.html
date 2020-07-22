@@ -1,9 +1,7 @@
 <ion-app>
-  <app-calculator-menu
-    #calculatormenu
-    (changeCalculator)="globals.changeCurrentCalculator($event.calculatorName)"
-  ></app-calculator-menu>
-  <app-top-bar (openCalculatorMenu)="calculatorMenu.openFirst()"></app-top-bar>
+  <app-top-bar
+    (openCalculatorMenu)="presentCalculatorMenuModal()"
+  ></app-top-bar>
 
   <ion-content id="content">
     <ion-router-outlet></ion-router-outlet>

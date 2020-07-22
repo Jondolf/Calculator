@@ -6,6 +6,7 @@ import {
 import { CalculatorService } from './calculator.service';
 import { PreciseCalculatorService } from '../precise-calculator.service';
 import { GlobalVarsService } from 'src/app/global-vars.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-calculator',
@@ -16,17 +17,25 @@ export class CalculatorPage implements OnInit, OnDestroy {
   calculation = '0';
   currentResult = '';
 
+  isCalculatorMenuVisibleSubscription: Subscription;
+
   constructor(
     public calculator: CalculatorService,
     public preciseCalculator: PreciseCalculatorService,
     public globals: GlobalVarsService) { }
 
   ngOnInit() {
-    document.body.addEventListener('keydown', this.handleEvent);
+    document.addEventListener('keydown', this.handleEvent);
     this.globals.currentCalculator = 'Calculator';
+    this.isCalculatorMenuVisibleSubscription = this.globals.isCalculatorMenuOpenChange.subscribe((isOpen: boolean) => {
+      isOpen
+        ? document.removeEventListener('keydown', this.handleEvent)
+        : document.addEventListener('keydown', this.handleEvent);
+    });
   }
   ngOnDestroy(): void {
-    document.body.removeEventListener('keydown', this.handleEvent);
+    document.removeEventListener('keydown', this.handleEvent);
+    this.isCalculatorMenuVisibleSubscription.unsubscribe();
   }
 
   addSymbolToCalculation(symbol: string | number): void {
@@ -120,8 +129,8 @@ export class CalculatorPage implements OnInit, OnDestroy {
     If route has changed, remove keydown eventlistener. ngOnDestroy doesn't really work anymore, because Ionic keeps previous pages running.
     This made typing into other pages' inputs (on keyboard) impossible because the event listener with preventDefault() was still there.
     */
-    if (this.globals.currentCalculator !== 'Calculator') {
-      document.body.removeEventListener('keydown', this.handleEvent);
+    if (this.globals.currentCalculator !== 'Calculator' || this.globals.isCalculatorMenuOpen) {
+      document.removeEventListener('keydown', this.handleEvent);
       return;
     }
     e.preventDefault();
