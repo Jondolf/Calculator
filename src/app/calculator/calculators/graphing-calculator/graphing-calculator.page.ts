@@ -70,9 +70,9 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
     this.drawingCtrl = new GraphingCalculatorDrawingController(
       this.canvasElement,
       this.canvasCtrl,
-      { squareBorderWidth: 5, squareBorderColor: 'rgba(175, 175, 175, 0.5)', coordinateSystemColor: 'black' },
+      this.calculator,
       this.equations,
-      this.calculator
+      { squareBorderWidth: 5, squareBorderColor: 'rgba(175, 175, 175, 0.5)', coordinateSystemColor: 'black' }
     );
   }
 
@@ -108,7 +108,7 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
   changeEquation(index: number, newEquation: string): void {
     this.equations[index] = newEquation;
     this.drawingCtrl.equations = this.equations;
-    this.drawingCtrl.savedYValues = {};
+    this.drawingCtrl.savedYValuesForEquation = {};
   }
 
   async onEquationInputFocus(equationIndex: number, eventTarget: IonInput): Promise<void> {
