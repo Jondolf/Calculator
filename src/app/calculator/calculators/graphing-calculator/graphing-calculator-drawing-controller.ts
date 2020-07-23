@@ -225,7 +225,6 @@ export class GraphingCalculatorDrawingController {
     }
     if (this.savedYValuesForEquation[equation][x] === undefined) {
       this.savedYValuesForEquation[equation][x] = +this.calculator.countCalculation(this.formatEquation(equation, x));
-      console.log('save', equation, x);
     }
     return this.savedYValuesForEquation[equation][x];
   }
