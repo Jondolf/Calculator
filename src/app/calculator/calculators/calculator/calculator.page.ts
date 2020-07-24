@@ -1,7 +1,7 @@
 import {
   Component,
   OnInit,
-  OnDestroy
+  OnDestroy,
 } from '@angular/core';
 import { CalculatorService } from './calculator.service';
 import { PreciseCalculatorService } from '../precise-calculator.service';
@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./calculator.page.scss'],
 })
 export class CalculatorPage implements OnInit, OnDestroy {
-  calculation = '0';
+  calculation = '';
   currentResult = '';
 
   isCalculatorMenuVisibleSubscription: Subscription;
@@ -33,7 +33,7 @@ export class CalculatorPage implements OnInit, OnDestroy {
         : document.addEventListener('keydown', this.handleEvent);
     });
   }
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     document.removeEventListener('keydown', this.handleEvent);
     this.isCalculatorMenuVisibleSubscription.unsubscribe();
   }
@@ -48,15 +48,19 @@ export class CalculatorPage implements OnInit, OnDestroy {
     const lastSymbolOfCalc = this.calculation[this.calculation.length - 1];
 
     // Don't allow two operators in a row
-    if (operators.includes(symbol.toString()) && operators.includes(lastSymbolOfCalc.toString())) {
+    if (this.calculation !== '' && operators.includes(symbol.toString()) && operators.includes(lastSymbolOfCalc)) {
+      return;
+    }
+    // Don't allow two decimal separators in a row
+    if (symbol.toString() === '.' && lastSymbolOfCalc === '.') {
       return;
     }
     // Don't allow operator as first symbol (except minus symbol)
-    if (operators.includes(symbol.toString()) && this.calculation === '0' && symbol !== '-') {
+    if (operators.includes(symbol.toString()) && this.calculation === '' && symbol !== '-') {
       return;
     }
     // Parentheses restrictions
-    if (symbol === '(' && (numberSymbols.includes(lastSymbolOfCalc.toString()) || lastSymbolOfCalc === ')') && this.calculation !== '0') {
+    if (symbol === '(' && (numberSymbols.includes(lastSymbolOfCalc) || lastSymbolOfCalc === ')') && this.calculation !== '') {
       return;
     } else if (symbol === ')' && operators.includes(lastSymbolOfCalc)) {
       return;
@@ -69,7 +73,9 @@ export class CalculatorPage implements OnInit, OnDestroy {
     }
     // Calculate calculation and clear current result field if equals symbol is pressed
     if (symbol.toString() === '=') {
-      this.calculation = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
+      if (this.calculation[0] !== '=') {
+        this.calculation = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
+      }
       this.currentResult = '';
       return;
     }
@@ -77,51 +83,10 @@ export class CalculatorPage implements OnInit, OnDestroy {
     if (this.calculation[0] === '=') {
       this.resetCalculation();
     }
-    // Remove initial zero before first symbol is added
-    if (this.calculation === '0') {
-      this.calculation = '';
-    }
     this.calculation += symbol.toString();
-    this.currentResult = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
-  }
-
-  removeLastChar(str: string): string {
-    return str.substring(0, str.length - 1);
-  }
-
-  backspaceEventHandler() {
-    if (this.calculation.length === 1 || this.calculation[0] === '=') {
-      this.resetCalculation();
-    } else if (this.checkIfTwoCharMathFunction()) {
-      this.calculation = this.calculation.slice(0, this.calculation.length - 2);
-      this.calculation === '' ? this.resetCalculation() : this.calculation = this.calculation;
-    } else if (this.checkIfThreeCharMathFunction()) {
-      this.calculation = this.calculation.slice(0, this.calculation.length - 3);
-      this.calculation === '' ? this.resetCalculation() : this.calculation = this.calculation;
-    } else {
-      this.calculation = this.removeLastChar(this.calculation);
-    }
-    if (this.calculation !== '0') {
+    if (this.calculation[0] !== '=') {
       this.currentResult = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
     }
-  }
-
-  resetCalculation() {
-    this.calculation = '0';
-    this.currentResult = '';
-  }
-
-  // Used for deleting entire words
-  checkIfTwoCharMathFunction(): boolean {
-    const twoCharMathFunctions = 'ln lg';
-    const twoLastLettersOfCalculation = this.calculation.slice(this.calculation.length - 2);
-    return twoCharMathFunctions.includes(twoLastLettersOfCalculation);
-  }
-  // Used for deleting entire words
-  checkIfThreeCharMathFunction(): boolean {
-    const threeCharMathFunctions = 'mod sin cos tan log';
-    const threeLastLettersOfCalculation = this.calculation.slice(this.calculation.length - 3);
-    return threeCharMathFunctions.includes(threeLastLettersOfCalculation);
   }
 
   handleEvent = (e: KeyboardEvent): void => {
@@ -141,13 +106,17 @@ export class CalculatorPage implements OnInit, OnDestroy {
     if (+e.key >= 0 && +e.key <= 9) {
       this.addSymbolToCalculation(e.key);
     }
-    // Plus and minus
-    if (e.key === '+' || e.key === '-') {
+    // Plus, minus, pow, percent, factorial
+    if ('+-^%!'.includes(e.key)) {
       this.addSymbolToCalculation(e.key);
     }
     // Multiply and divide
     if (e.key === '*' || e.key === '/') {
       this.addSymbolToCalculation(e.key === '*' ? 'x' : '÷');
+    }
+    // Decimal separator
+    if (e.key === '.') {
+      this.addSymbolToCalculation(e.key);
     }
     // Parentheses
     if (e.key === '(' || e.key === ')') {
@@ -155,12 +124,53 @@ export class CalculatorPage implements OnInit, OnDestroy {
     }
     // Get result
     if (this.calculation[0] !== '=' && (e.key === 'Enter' || e.key === '=')) {
-      this.calculation = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
+      if (this.calculation[0] !== '=') {
+        this.calculation = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
+      }
       this.currentResult = '';
     }
     // Remove
     if (e.key === 'Backspace') {
       this.backspaceEventHandler();
     }
+  }
+
+  backspaceEventHandler(): void {
+    if (this.calculation.length === 1 || this.calculation[0] === '=') {
+      this.resetCalculation();
+    } else if (this.checkIfTwoCharMathFunction()) {
+      this.calculation = this.calculation.slice(0, this.calculation.length - 2);
+      this.calculation === '' ? this.resetCalculation() : this.calculation = this.calculation;
+    } else if (this.checkIfThreeCharMathFunction()) {
+      this.calculation = this.calculation.slice(0, this.calculation.length - 3);
+      this.calculation === '' ? this.resetCalculation() : this.calculation = this.calculation;
+    } else {
+      this.calculation = this.removeLastChar(this.calculation);
+    }
+    if (this.calculation !== '') {
+      this.currentResult = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
+    }
+  }
+
+  removeLastChar(str: string): string {
+    return str.slice(0, str.length - 1);
+  }
+
+  resetCalculation(): void {
+    this.calculation = '';
+    this.currentResult = '';
+  }
+
+  // Used for deleting entire words
+  checkIfTwoCharMathFunction(): boolean {
+    const twoCharMathFunctions = 'ln lg';
+    const twoLastLettersOfCalculation = this.calculation.slice(this.calculation.length - 2);
+    return twoCharMathFunctions.includes(twoLastLettersOfCalculation);
+  }
+  // Used for deleting entire words
+  checkIfThreeCharMathFunction(): boolean {
+    const threeCharMathFunctions = 'mod sin cos tan log';
+    const threeLastLettersOfCalculation = this.calculation.slice(this.calculation.length - 3);
+    return threeCharMathFunctions.includes(threeLastLettersOfCalculation);
   }
 }

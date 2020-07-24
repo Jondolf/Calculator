@@ -30,12 +30,16 @@
     flex-direction: column;
     justify-content: center;
     align-items: left;
-    p,
-    input {
+    p {
       margin: 0;
       transition: 0.2s ease-out;
+      outline: none;
+      border: 0;
+      -webkit-user-drag: none;
       &.calculation {
         color: var(--ion-color-light-contrast);
+        background-color: transparent;
+        caret-color: var(--ion-color-primary);
         font-size: 7vh;
       }
       &.current-result {
