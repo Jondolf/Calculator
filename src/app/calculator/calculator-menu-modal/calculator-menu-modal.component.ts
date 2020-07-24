@@ -14,14 +14,14 @@ export class CalculatorMenuModalComponent {
       {
         buttonName: 'Calculator',
         icon: {
-          iconName: 'calculator-outline',
+          iconName: 'calculator',
           iconPack: 'Ionicons'
         }
       },
       {
         buttonName: 'Charts',
         icon: {
-          iconName: 'bar-chart-outline',
+          iconName: 'bar-chart',
           iconPack: 'Ionicons'
         }
       },
@@ -58,8 +58,8 @@ export class CalculatorMenuModalComponent {
       {
         buttonName: 'Currency converter',
         icon: {
-          iconName: 'cash-outline',
-          iconPack: 'Ionicons'
+          iconName: 'euro',
+          iconPack: 'Material Design'
         }
       }
     ] as Button[]
