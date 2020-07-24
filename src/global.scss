@@ -58,6 +58,10 @@ input {
   outline: none;
 }
 
+ion-button {
+  text-transform: none;
+}
+
 // To avoid white on white and black on black
 .light.pure-white app-customize-buttons-modal,
 .dark.pure-black app-customize-buttons-modal {
