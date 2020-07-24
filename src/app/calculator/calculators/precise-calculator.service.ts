@@ -145,8 +145,9 @@ export class PreciseCalculatorService {
           case '√': // square root
             return Decimal.sqrt(calculatedStringAfterMathFunction);
           /*
-          sin, cos and tan have the "new Decimal(new Decimal(...).toFixed(50).toFixed())" to avoid problems with pi.
+          sin, cos, tan, log, ln and lg have the "new Decimal(new Decimal(...).toFixed(50).toFixed())" to avoid problems with pi and euler.
           For example, with a calculation like sin(π) the result would be very, very close to zero but not quite.
+          The same thing happens with ln(e). It returns 0.9999999999999999999...
           I round the result at 50 decimals to avoid this problem. It's a bit ugly, but the only properly working solution I could find.
           */
           case 'a': // sin
@@ -162,13 +163,13 @@ export class PreciseCalculatorService {
               ? Decimal.tan(this.convertToRadians(calculatedStringAfterMathFunction)).toFixed(50)
               : Decimal.tan(calculatedStringAfterMathFunction).toFixed(50)).toFixed());
           case 'd': // log
-            return Decimal.log10(calculatedStringAfterMathFunction);
+            return new Decimal(new Decimal(Decimal.log10(calculatedStringAfterMathFunction).toFixed(50)).toFixed());
           case 'f': // ln
-            return Decimal.ln(calculatedStringAfterMathFunction);
+            return new Decimal(new Decimal(Decimal.ln(calculatedStringAfterMathFunction).toFixed(50)).toFixed());
           case 'h': // lg
-            return Decimal.log2(calculatedStringAfterMathFunction);
+            return new Decimal(new Decimal(Decimal.log2(calculatedStringAfterMathFunction).toFixed(50)).toFixed());
           case 'i': // abs
-            return Decimal.abs(calculatedStringAfterMathFunction);
+            return new Decimal(new Decimal(Decimal.abs(calculatedStringAfterMathFunction).toFixed(50)).toFixed());
         }
       }
       // Mathematical functions where the function is after the number, like 25% or 10!
