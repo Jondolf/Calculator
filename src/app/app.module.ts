@@ -6,8 +6,9 @@ import { FormsModule } from '@angular/forms';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { HeaderColor } from '@ionic-native/header-color/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './calculator/top-bar/top-bar.component';
@@ -53,6 +54,7 @@ export class HammerConfig extends HammerGestureConfig {
     AppRoutingModule, FormsModule, HammerModule, AccordionListModule],
   providers: [
     StatusBar,
+    HeaderColor,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: HAMMER_GESTURE_CONFIG, useClass: HammerConfig }

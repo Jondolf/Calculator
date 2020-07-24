@@ -1,9 +1,10 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { Storage } from '@ionic/storage';
+import { HeaderColor } from '@ionic-native/header-color/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { ModalController, Platform } from '@ionic/angular';
 import { Button } from 'src/app/models/button.interface';
 import { GlobalVarsService } from 'src/app/global-vars.service';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Storage } from '@ionic/storage';
-import { ModalController, Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-themes-modal',
@@ -91,6 +92,7 @@ export class ThemesModalComponent {
   constructor(
     public globals: GlobalVarsService,
     private platform: Platform,
+    private headerColor: HeaderColor,
     private statusBar: StatusBar,
     private storage: Storage,
     private modalController: ModalController) { }
@@ -100,19 +102,25 @@ export class ThemesModalComponent {
     this.globals.currentTheme = themeClassName;
     this.storage.set('theme', this.globals.currentTheme);
     this.globals.currentThemeChange.next(this.globals.currentTheme);
-    this.setStatusBarColors();
+    this.setHeaderColor();
   }
 
-  setStatusBarColors() {
+  // The "multitasking view" app header on Android
+  setHeaderColor() {
     if (this.platform.is('cordova') || this.platform.is('capacitor')) {
-      if (document.body.className.includes('light')) {
-        this.statusBar.backgroundColorByName('white');
-        this.statusBar.styleDefault();
+      // At least on my phone if the header color is pure white or pure black, it doesn't work
+      if (document.body.className.includes('pure-white')) {
+        this.headerColor.tint('#fefefe');
+      } else if (document.body.className.includes('pure-black')) {
+        this.headerColor.tint('#010101');
       } else {
-        this.statusBar.backgroundColorByName('black');
-        this.statusBar.styleLightContent();
+        this.headerColor.tint(this.getCSSVar('--ion-color-primary'));
       }
     }
+  }
+
+  getCSSVar(varName: string): string {
+    return getComputedStyle(document.body).getPropertyValue(varName);
   }
 
   dismissModal(message?): void {
