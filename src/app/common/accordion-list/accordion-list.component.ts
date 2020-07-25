@@ -15,10 +15,10 @@ export class AccordionListComponent implements AfterViewInit {
   @Input() textColor: string;
 
   @ViewChild('accordionlist', { read: ElementRef }) accordionListRef: ElementRef;
+  accordionListElement: HTMLElement;
 
   isCollapsed = false;
   listItems: HTMLElement[];
-  listHeight = '0px';
 
   // Set in ngAfterViewInit
   styles = {
@@ -26,18 +26,51 @@ export class AccordionListComponent implements AfterViewInit {
     color: ''
   };
 
-  constructor(public cd: ChangeDetectorRef) {
-
-  }
+  constructor(public cd: ChangeDetectorRef) { }
 
   ngAfterViewInit() {
+    this.accordionListElement = this.accordionListRef.nativeElement;
+
     this.styles.background = this.background;
     this.styles.color = this.textColor;
 
-    this.listItems = this.getChildren();
-    this.listHeight = (this.listItems.length - 1) * 48 + 'px';
     this.isCollapsed = this.isCollapsedByDefault ? this.isCollapsedByDefault : false;
-    this.cd.detectChanges(); // A!void lifecycle problem
+    this.accordionListElement.style.height = this.isCollapsed ? '0px' : 'auto';
+    this.cd.detectChanges(); // Avoid lifecycle problem
+  }
+
+  collapse() {
+    const elementHeight = this.accordionListElement.scrollHeight;
+    const elementTransition = this.accordionListElement.style.transition;
+    this.accordionListElement.style.transition = '';
+    // On the next frame set the pixel height and transition
+    requestAnimationFrame(() => {
+      this.accordionListElement.style.height = elementHeight + 'px';
+      this.accordionListElement.style.transition = elementTransition;
+
+      // On the next frame set height to 0px with the previously set transition.
+      requestAnimationFrame(() => {
+        this.accordionListElement.style.height = '0px';
+      });
+    });
+
+    this.isCollapsed = true;
+  }
+
+  expand() {
+    const elementHeight = this.accordionListElement.scrollHeight;
+    this.accordionListElement.style.height = elementHeight + 'px';
+
+    this.accordionListElement.addEventListener('transitionend', function onTransitionEnd(e: TransitionEvent) {
+      const eventTarget = e.target as HTMLElement;
+      // Remove to make it trigger once
+      eventTarget.removeEventListener('transitionend', onTransitionEnd);
+
+      // Remove "height" from the element's inline styles, so it can return to its initial value
+      eventTarget.style.height = null;
+    });
+
+    this.isCollapsed = false;
   }
 
   getChildren(): HTMLElement[] {

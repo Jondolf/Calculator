@@ -1,7 +1,7 @@
 <ion-list>
   <ion-item
     button
-    (click)="isCollapsed = !isCollapsed"
+    (click)="isCollapsed ? expand() : collapse()"
     class="toggle-collapse-button"
     [style.--background]="styles.background"
     [style.--color]="styles.color"
@@ -21,9 +21,6 @@
   <div
     class="list-item-container"
     [style.--background]="styles.background"
-    [ngStyle]="{
-      height: !isCollapsed ? listHeight : '0px'
-    }"
     #accordionlist
   >
     <ng-content></ng-content>
