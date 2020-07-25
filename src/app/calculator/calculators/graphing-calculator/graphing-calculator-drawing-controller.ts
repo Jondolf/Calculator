@@ -13,7 +13,7 @@ interface GraphValues {
 export class GraphingCalculatorDrawingController {
   private previousY: number;
   private ctx = this.canvasElement.getContext('2d');
-  savedYValuesForEquation: GraphValues;
+  savedYValuesForEquation: GraphValues = {};
 
   constructor(
     private canvasElement: HTMLCanvasElement,

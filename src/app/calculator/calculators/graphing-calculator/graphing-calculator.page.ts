@@ -20,7 +20,7 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
 
   canvasElement: HTMLCanvasElement;
   canvasContainerElement: HTMLDivElement;
-  equations = [''];
+  equations = ['y=x'];
 
   isFirstLoad = true; // Used in ngAfterViewChecked to make sure it gets called once
   isInputContainerOpen = true;
