@@ -2,7 +2,9 @@
   <ion-button
     (click)="
     preciseCalculator.isDeg = !preciseCalculator.isDeg;
-    calculation === '0' ? resetCalculation() : currentResult = '=' + preciseCalculator.countCalculation(calculation).toString()
+    calculation === '' || calculation[0] === '='
+      ? resetCalculation()
+      : currentResult = '=' + preciseCalculator.countCalculation(calculation).toString()
     "
     fill="clear"
     [color]="globals.currentTheme.includes('pure-white') || globals.currentTheme.includes('pure-black') ? 'dark' : 'tertiary'"
@@ -10,7 +12,7 @@
   >
   <div class="calculation-container">
     <p class="calculation">{{ calculation }}</p>
-    <p class="current-result">{{ currentResult }}</p>
+    <p class="current-result">{{ formatNumber(currentResult) }}</p>
   </div>
 </div>
 

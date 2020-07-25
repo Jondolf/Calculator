@@ -33,13 +33,10 @@
     p {
       margin: 0;
       transition: 0.2s ease-out;
-      outline: none;
-      border: 0;
+      white-space: nowrap;
       -webkit-user-drag: none;
       &.calculation {
         color: var(--ion-color-light-contrast);
-        background-color: transparent;
-        caret-color: var(--ion-color-primary);
         font-size: 7vh;
       }
       &.current-result {
