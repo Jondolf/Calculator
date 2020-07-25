@@ -82,7 +82,8 @@
             >
             <ion-label>
               {{ currency.multiplier && currency.multiplier !== '-1' ?
-              unitConverter.convertUnit(currency, currentUnit, amount) : '' }}
+              unitConverter.formatUnit(unitConverter.convertUnit(currency,
+              currentUnit, amount)) : '' }} {{ currency.abbreviation }}
               <ion-skeleton-text
                 *ngIf="currency.multiplier === '-1'"
                 animated

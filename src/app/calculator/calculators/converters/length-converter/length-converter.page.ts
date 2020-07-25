@@ -22,26 +22,6 @@ export class LengthConverterPage {
   lengthUnits = {
     metric: [
       {
-        name: 'Yoctometer',
-        abbreviation: 'ym',
-        multiplier: '1000000000000000000000000'
-      },
-      {
-        name: 'Zeptometer',
-        abbreviation: 'zm',
-        multiplier: '1000000000000000000000'
-      },
-      {
-        name: 'Attometer',
-        abbreviation: 'am',
-        multiplier: '1000000000000000000'
-      },
-      {
-        name: 'Femtometer',
-        abbreviation: 'fm',
-        multiplier: '1000000000000000'
-      },
-      {
         name: 'Picometer',
         abbreviation: 'pm',
         multiplier: '1000000000000'
@@ -90,41 +70,6 @@ export class LengthConverterPage {
         name: 'Kilometer',
         abbreviation: 'km',
         multiplier: '0.001'
-      },
-      {
-        name: 'Megameter',
-        abbreviation: 'Mm',
-        multiplier: '0.000001'
-      },
-      {
-        name: 'Gigameter',
-        abbreviation: 'Gm',
-        multiplier: '0.000000001'
-      },
-      {
-        name: 'Terameter',
-        abbreviation: 'Tm',
-        multiplier: '0.000000000001'
-      },
-      {
-        name: 'Petameter',
-        abbreviation: 'Pm',
-        multiplier: '0.000000000000001'
-      },
-      {
-        name: 'Exameter',
-        abbreviation: 'Em',
-        multiplier: '0.000000000000000001'
-      },
-      {
-        name: 'Zettameter',
-        abbreviation: 'Zm',
-        multiplier: '0.000000000000000000001'
-      },
-      {
-        name: 'Yottameter',
-        abbreviation: 'Ym',
-        multiplier: '0.000000000000000000000001'
       }
     ] as Unit[],
     us: [

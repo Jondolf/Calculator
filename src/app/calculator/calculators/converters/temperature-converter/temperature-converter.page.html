@@ -38,7 +38,8 @@
       <ion-item *ngFor="let unit of temperatureUnits.units">
         <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
         <ion-label
-          >{{ convertUnit(unit.name) }} {{ unit.abbreviation }}</ion-label
+          >{{ unitConverter.formatUnit(convertUnit(unit.name)) }} {{
+          unit.abbreviation }}</ion-label
         >
       </ion-item>
     </ion-list>

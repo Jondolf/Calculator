@@ -14,11 +14,16 @@ export class UnitConverterService {
     const bigAmount = amount ? new Decimal(amount) : 0;
 
     if (bigAmount) {
-      // Count the length presicely and round it at ten decimals
-      const length = new Decimal(bigFirstUnitMultiplier.div(bigSecondUnitMultiplier).times(bigAmount)).toFixed();
-      return `${length.toString()} ${firstUnit.abbreviation}`;
+      // Convert the amount presicely
+      const convertedAmount: Decimal = bigFirstUnitMultiplier.div(bigSecondUnitMultiplier).times(bigAmount);
+      const significantDigits = 10;
+      const amountOfDigits: number = convertedAmount.toString().replace(/\./g, '').length;
+      const roundedConvertedAmount = amountOfDigits > significantDigits
+        ? convertedAmount.toPrecision(significantDigits) // If there are more digits than significantDigits, use scientific notation
+        : convertedAmount.toFixed(); // Else just remove leftover zeroes
+      return roundedConvertedAmount;
     } else {
-      return `0 ${firstUnit.abbreviation}`;
+      return '0';
     }
   }
 
@@ -33,5 +38,19 @@ export class UnitConverterService {
         return foundUnit;
       }
     }
+  }
+
+  formatUnit(amount: number | string | Decimal): string {
+    const amountSplitAtDot = amount.toString().includes('.') ? amount.toString().split('.') : [amount.toString()];
+    // Add spaces between digits, but not to the digits e.g. 1 250 010.12504
+    const formattedNum = amountSplitAtDot.length === 1
+      ? this.addSpacesToNumber(amountSplitAtDot[0])
+      : `${this.addSpacesToNumber(amountSplitAtDot[0])}.${amountSplitAtDot[1]}`;
+    return formattedNum;
+  }
+
+  addSpacesToNumber(num: number | string | Decimal): string {
+    // First remove all spaces, then add the correct spaces
+    return num.toString().replace(/ /, '').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 }

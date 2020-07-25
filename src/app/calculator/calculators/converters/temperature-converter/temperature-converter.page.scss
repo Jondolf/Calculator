@@ -6,6 +6,11 @@
   top: 0;
   bottom: 0;
   width: 100%;
+
+  ion-label {
+    white-space: normal;
+  }
+
   & > div {
     position: absolute;
     top: 56px;

@@ -46,9 +46,10 @@
         >
           <ion-item *ngFor="let unit of massUnits.metric">
             <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
-            <ion-label>{{
-              unitConverter.convertUnit(unit, currentUnit, amount)
-            }}</ion-label>
+            <ion-label
+              >{{ unitConverter.formatUnit(unitConverter.convertUnit(unit,
+              currentUnit, amount)) }} {{ unit.abbreviation }}</ion-label
+            >
           </ion-item>
         </app-accordion-list>
       </ion-item-group>
@@ -61,9 +62,10 @@
         >
           <ion-item *ngFor="let unit of massUnits.us">
             <ion-label>{{ unit.name }} ({{ unit.abbreviation }})</ion-label>
-            <ion-label>{{
-              unitConverter.convertUnit(unit, currentUnit, amount)
-            }}</ion-label>
+            <ion-label
+              >{{ unitConverter.formatUnit(unitConverter.convertUnit(unit,
+              currentUnit, amount)) }} {{ unit.abbreviation }}</ion-label
+            >
           </ion-item>
         </app-accordion-list>
       </ion-item-group>

@@ -22,26 +22,6 @@ export class MassConverterPage {
   massUnits = {
     metric: [
       {
-        name: 'Yoctogram',
-        abbreviation: 'yg',
-        multiplier: '1000000000000000000000'
-      },
-      {
-        name: 'Zeptogram',
-        abbreviation: 'zg',
-        multiplier: '1000000000000000000'
-      },
-      {
-        name: 'Attogram',
-        abbreviation: 'ag',
-        multiplier: '1000000000000000'
-      },
-      {
-        name: 'Femtogram',
-        abbreviation: 'fg',
-        multiplier: '1000000000000'
-      },
-      {
         name: 'Picogram',
         abbreviation: 'pg',
         multiplier: '1000000000'
@@ -95,36 +75,6 @@ export class MassConverterPage {
         name: 'Megagram',
         abbreviation: 'Mg',
         multiplier: '0.000001'
-      },
-      {
-        name: 'Gigagram',
-        abbreviation: 'Gg',
-        multiplier: '0.000000001'
-      },
-      {
-        name: 'Teragram',
-        abbreviation: 'Tg',
-        multiplier: '0.000000000001'
-      },
-      {
-        name: 'Petagram',
-        abbreviation: 'Pg',
-        multiplier: '0.000000000000001'
-      },
-      {
-        name: 'Exagram',
-        abbreviation: 'Eg',
-        multiplier: '0.000000000000000001'
-      },
-      {
-        name: 'Zettagram',
-        abbreviation: 'Zg',
-        multiplier: '0.000000000000000000001'
-      },
-      {
-        name: 'Yottagram',
-        abbreviation: 'Yg',
-        multiplier: '0.000000000000000000000001'
       }
     ] as Unit[],
     us: [
