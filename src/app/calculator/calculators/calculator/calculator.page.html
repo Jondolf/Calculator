@@ -1,6 +1,6 @@
 <div class="calculator-input">
   <ion-button
-    (click)="
+    (tap)="
     preciseCalculator.isDeg = !preciseCalculator.isDeg;
     calculation === '' || calculation[0] === '='
       ? resetCalculation()
@@ -34,7 +34,7 @@
 >
   <button
     button
-    (click)="addSymbolToCalculation(1)"
+    (tap)="addSymbolToCalculation(1)"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable number one"
   >
@@ -42,7 +42,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation(2)"
+    (tap)="addSymbolToCalculation(2)"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable number two"
   >
@@ -50,7 +50,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation(3)"
+    (tap)="addSymbolToCalculation(3)"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable number three"
   >
@@ -58,7 +58,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation(4)"
+    (tap)="addSymbolToCalculation(4)"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable number four"
   >
@@ -66,7 +66,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation(5)"
+    (tap)="addSymbolToCalculation(5)"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable number five"
   >
@@ -74,7 +74,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation(6)"
+    (tap)="addSymbolToCalculation(6)"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable number six"
   >
@@ -82,7 +82,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation(7)"
+    (tap)="addSymbolToCalculation(7)"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable number seven"
   >
@@ -90,7 +90,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation(8)"
+    (tap)="addSymbolToCalculation(8)"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable number eight"
   >
@@ -98,7 +98,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation(9)"
+    (tap)="addSymbolToCalculation(9)"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable number nine"
   >
@@ -106,7 +106,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation(0)"
+    (tap)="addSymbolToCalculation(0)"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable number zero"
   >
@@ -114,7 +114,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('.')"
+    (tap)="addSymbolToCalculation('.')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable number dot"
   >
@@ -131,7 +131,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('(')"
+    (tap)="addSymbolToCalculation('(')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command opening-parentheses"
   >
@@ -139,7 +139,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation(')')"
+    (tap)="addSymbolToCalculation(')')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command closing-parentheses"
   >
@@ -147,7 +147,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="backspaceEventHandler()"
+    (tap)="backspaceEventHandler()"
     (press)="resetCalculation()"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command backspace"
@@ -156,7 +156,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('+')"
+    (tap)="addSymbolToCalculation('+')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command plus"
   >
@@ -164,7 +164,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('-')"
+    (tap)="addSymbolToCalculation('-')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command minus"
   >
@@ -172,7 +172,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('x')"
+    (tap)="addSymbolToCalculation('x')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command multiply"
   >
@@ -180,7 +180,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('÷')"
+    (tap)="addSymbolToCalculation('÷')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command divide"
   >
@@ -188,7 +188,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('=')"
+    (tap)="addSymbolToCalculation('=')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command equals"
   >
@@ -198,7 +198,7 @@
 
   <!-- These will be in the more-commands menu if the grid size is set to small -->
   <button
-    (click)="addSymbolToCalculation('√')"
+    (tap)="addSymbolToCalculation('√')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command sqrt medium-grid-button"
   >
@@ -206,7 +206,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('^')"
+    (tap)="addSymbolToCalculation('^')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command pow medium-grid-button"
   >
@@ -214,7 +214,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('π')"
+    (tap)="addSymbolToCalculation('π')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command pi medium-grid-button"
   >
@@ -222,7 +222,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('e')"
+    (tap)="addSymbolToCalculation('e')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command euler medium-grid-button"
   >
@@ -232,7 +232,7 @@
 
   <!-- These will be in the more-commands menu if the grid size is set to small or medium -->
   <button
-    (click)="addSymbolToCalculation('mod')"
+    (tap)="addSymbolToCalculation('mod')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command mod large-grid-button"
   >
@@ -240,7 +240,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('%')"
+    (tap)="addSymbolToCalculation('%')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command percent large-grid-button"
   >
@@ -248,7 +248,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('!')"
+    (tap)="addSymbolToCalculation('!')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command factorial large-grid-button"
   >
@@ -256,7 +256,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('sin(')"
+    (tap)="addSymbolToCalculation('sin(')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command sin large-grid-button"
   >
@@ -264,7 +264,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('cos(')"
+    (tap)="addSymbolToCalculation('cos(')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command cos large-grid-button"
   >
@@ -272,7 +272,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('tan(')"
+    (tap)="addSymbolToCalculation('tan(')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command tan large-grid-button"
   >
@@ -280,7 +280,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('log(')"
+    (tap)="addSymbolToCalculation('log(')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command log large-grid-button"
   >
@@ -288,7 +288,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('ln(')"
+    (tap)="addSymbolToCalculation('ln(')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command ln large-grid-button"
   >
@@ -296,7 +296,7 @@
     <ion-ripple-effect></ion-ripple-effect>
   </button>
   <button
-    (click)="addSymbolToCalculation('lg(')"
+    (tap)="addSymbolToCalculation('lg(')"
     [ngStyle]="calculator.buttonStyles.buttonStyles"
     class="ion-activatable command lg large-grid-button"
   >

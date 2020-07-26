@@ -8,7 +8,7 @@
   <div class="button-container">
     <button
       *ngIf="gridSize === 'small'"
-      (click)="addSymbolToCalculation.emit({ symbol: '√' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: '√' })"
       class="ion-activatable command"
     >
       √
@@ -16,7 +16,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small'"
-      (click)="addSymbolToCalculation.emit({ symbol: '^' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: '^' })"
       class="ion-activatable command"
     >
       ^
@@ -24,7 +24,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small'"
-      (click)="addSymbolToCalculation.emit({ symbol: 'π' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: 'π' })"
       class="ion-activatable command"
     >
       π
@@ -32,7 +32,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small'"
-      (click)="addSymbolToCalculation.emit({ symbol: 'e' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: 'e' })"
       class="ion-activatable command"
     >
       e
@@ -40,7 +40,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small' || gridSize === 'medium'"
-      (click)="addSymbolToCalculation.emit({ symbol: '(' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: '(' })"
       class="ion-activatable command"
     >
       (
@@ -48,7 +48,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small' || gridSize === 'medium'"
-      (click)="addSymbolToCalculation.emit({ symbol: ')' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: ')' })"
       class="ion-activatable command"
     >
       )
@@ -56,7 +56,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small' || gridSize === 'medium'"
-      (click)="addSymbolToCalculation.emit({ symbol: 'mod' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: 'mod' })"
       class="ion-activatable command"
     >
       mod
@@ -64,7 +64,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small' || gridSize === 'medium'"
-      (click)="addSymbolToCalculation.emit({ symbol: '%' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: '%' })"
       class="ion-activatable command"
     >
       %
@@ -72,7 +72,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small' || gridSize === 'medium'"
-      (click)="addSymbolToCalculation.emit({ symbol: '!' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: '!' })"
       class="ion-activatable command"
     >
       n!
@@ -80,7 +80,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small' || gridSize === 'medium'"
-      (click)="addSymbolToCalculation.emit({ symbol: 'sin(' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: 'sin(' })"
       class="ion-activatable command"
     >
       sin
@@ -88,7 +88,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small' || gridSize === 'medium'"
-      (click)="addSymbolToCalculation.emit({ symbol: 'cos(' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: 'cos(' })"
       class="ion-activatable cos"
     >
       cos
@@ -96,7 +96,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small' || gridSize === 'medium'"
-      (click)="addSymbolToCalculation.emit({ symbol: 'tan(' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: 'tan(' })"
       class="ion-activatable command"
     >
       tan
@@ -104,7 +104,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small' || gridSize === 'medium'"
-      (click)="addSymbolToCalculation.emit({ symbol: 'log(' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: 'log(' })"
       class="ion-activatable command"
     >
       log
@@ -112,7 +112,7 @@
     </button>
     <button
       *ngIf="gridSize === 'small' || gridSize === 'medium'"
-      (click)="addSymbolToCalculation.emit({ symbol: 'ln(' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: 'ln(' })"
       class="ion-activatable command"
     >
       ln
@@ -120,14 +120,14 @@
     </button>
     <button
       *ngIf="gridSize === 'small' || gridSize === 'medium'"
-      (click)="addSymbolToCalculation.emit({ symbol: 'lg(' })"
+      (tap)="addSymbolToCalculation.emit({ symbol: 'lg(' })"
       class="ion-activatable command"
     >
       lg
       <ion-ripple-effect></ion-ripple-effect>
     </button>
   </div>
-  <div (click)="menuOpen = !menuOpen" class="swipe-container">
+  <div (tap)="menuOpen = !menuOpen" class="swipe-container">
     <i
       [style.transform]="menuOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
       class="material-icons"
