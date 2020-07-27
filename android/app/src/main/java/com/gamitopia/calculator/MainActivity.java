@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.gamitopia.calculator;
 
 import android.os.Bundle;
 

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Calculator</string>
-    <string name="title_activity_main">Calculator</string>
+    <string name="app_name">calculator</string>
+    <string name="title_activity_main">calculator</string>
     <string name="package_name">com.gamitopia.calculator</string>
     <string name="custom_url_scheme">com.gamitopia.calculator</string>
 </resources>
