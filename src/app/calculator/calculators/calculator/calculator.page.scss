@@ -4,7 +4,7 @@
   transition: 0.2s;
   box-sizing: border-box;
   padding: 0 60px 0 0;
-  height: 25vh;
+  height: 25%;
   position: absolute;
   top: 0;
   right: 0;
@@ -50,8 +50,11 @@
 :host > .calculator-container {
   background-color: var(--ion-color-light);
   display: grid;
-  margin-top: 30vh;
-  height: 70vh;
+  position: absolute;
+  top: 30%;
+  right: 0;
+  bottom: 0;
+  left: 0;
   transition: 0.2s ease-out;
   box-sizing: border-box;
   button {
@@ -313,8 +316,11 @@
 :host > .calculator-container.large {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
-  margin-top: 25vh;
-  height: 75vh;
+  position: absolute;
+  top: 25%;
+  right: 0;
+  bottom: 0;
+  left: 0;
 
   button {
     font-size: 24px;

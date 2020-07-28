@@ -3,6 +3,7 @@
   (panmove)="canvasCtrl.pan($event); drawingCtrl.handleDraw()"
   (pinchin)="canvasCtrl.zoom(0.5); drawingCtrl.handleDraw()"
   (pinchout)="canvasCtrl.zoom(-0.5); drawingCtrl.handleDraw()"
+  (tap)="onTap($event.tapCount)"
   [style.height]="isInputContainerOpen ? '60vh' : '95vh'"
   class="graph-container"
   #canvascontainer

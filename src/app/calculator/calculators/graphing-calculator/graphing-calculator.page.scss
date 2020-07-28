@@ -5,7 +5,7 @@
 .graph-container {
   position: absolute;
   width: 100%;
-  height: 60vh;
+  height: 60%;
   transition: height 0.5s ease;
   canvas {
     width: 100%;
@@ -18,20 +18,20 @@
 
 .input-container {
   background-color: var(--ion-color-light-tint);
-  height: 45vh;
+  height: 45%;
   position: absolute;
   left: 0;
   bottom: 0;
   right: 0;
-  border-top-left-radius: 5vh;
-  border-top-right-radius: 5vh;
+  border-top-left-radius: 5%;
+  border-top-right-radius: 5%;
   transition: bottom 0.5s ease;
   overflow: hidden;
 
   .swipe-container {
     background-color: rgba(var(--ion-color-light-shade-rgb), 0.25);
     width: 100%;
-    height: 5vh;
+    height: 5%;
     display: flex;
     justify-content: center;
     align-items: center;

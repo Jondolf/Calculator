@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Platform, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { HeaderColor } from '@ionic-native/header-color/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
@@ -20,8 +21,13 @@ Decimal.set({ precision: 100, rounding: 4 });
   providers: [ScreenOrientation]
 })
 export class AppComponent {
+  @ViewChild('routeroutlet', { read: ElementRef }) routerOutletRef;
+
+  keyboardHeight = '0px';
+
   constructor(
     private platform: Platform,
+    private keyboard: Keyboard,
     private splashScreen: SplashScreen,
     private headerColor: HeaderColor,
     private statusBar: StatusBar,
@@ -35,18 +41,33 @@ export class AppComponent {
   }
 
   initializeApp() {
-    console.log('Init app', new Date());
     this.platform.ready().then(() => {
-      console.log('Platform ready', new Date());
       this.setTheme().then(() => {
         if (this.platform.is('cordova') || this.platform.is('capacitor')) {
           this.statusBar.hide();
           this.setHeaderColor();
           this.screenOrientation.lock('portrait');
           this.splashScreen.hide();
+          this.keyboard.disableScroll(false)
+          this.listenForKeyboardEventsAndSetContentOffset();
         }
       }
       );
+    }).catch(error => console.error(error));
+  }
+
+  /*
+  Ionic didn't push up content when keyboard was open (which hid content) and I couldn't find a way to fix it, so I implemented it manually.
+  I tried to set the bottom offset by binding the style to the element, like: [style.bottom]="keyboardHeight" but the UI wasn't updating
+  until I started typing, so I explicitly set the offset here.
+  */
+  listenForKeyboardEventsAndSetContentOffset(): void {
+    const routerOutletElement: HTMLElement = this.routerOutletRef.nativeElement;
+    window.addEventListener('keyboardWillShow', (e: any) => {
+      this.keyboardHeight = e.keyboardHeight + 'px'; routerOutletElement.style.bottom = this.keyboardHeight;
+    });
+    window.addEventListener('keyboardWillHide', () => {
+      this.keyboardHeight = '0px'; routerOutletElement.style.bottom = this.keyboardHeight;
     });
   }
 
@@ -69,7 +90,7 @@ export class AppComponent {
   }
 
   // The "multitasking view" app header on Android
-  setHeaderColor() {
+  setHeaderColor(): void {
     if (this.platform.is('cordova') || this.platform.is('capacitor')) {
       // At least on my phone if the header color is pure white or pure black, it doesn't work
       if (document.body.className.includes('pure-white')) {

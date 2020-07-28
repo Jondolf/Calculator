@@ -22,6 +22,9 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
   canvasContainerElement: HTMLDivElement;
   equations = ['y=x'];
 
+  mc: HammerManager;
+
+
   isFirstLoad = true; // Used in ngAfterViewChecked to make sure it gets called once
   isInputContainerOpen = true;
   isMouseDownOnCanvas = false;
@@ -39,6 +42,7 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
   ngOnDestroy(): void {
     this.resizeSubscription.unsubscribe();
     this.themeSubscription.unsubscribe();
+    this.mc.off('pan');
   }
   ngAfterViewInit(): void {
     this.canvasElement = this.canvasRef.nativeElement;
@@ -53,6 +57,9 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
         this.canvasCtrl.handleSetCanvasSize();
         this.setGraphColors();
         this.drawingCtrl.handleDraw();
+
+        this.mc = new Hammer(this.canvasElement);
+        this.mc.on('pan', (e) => { this.canvasCtrl.pan(e); this.drawingCtrl.handleDraw(); });
 
         this.subscribeToThemeChanges();
         this.subscribeToResizeEvent();
@@ -83,18 +90,26 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
     });
   }
 
-  subscribeToResizeEvent() {
+  subscribeToResizeEvent(): void {
     this.resizeSubscription = this.resizeObserveble.subscribe(() => {
       this.onResize();
     });
   }
 
-  onResize() {
+  onResize(): void {
     // Set timeout for both to make sure they are called at the right time
     setTimeout(() => {
       this.canvasCtrl.handleSetCanvasSize();
       this.drawingCtrl.handleDraw();
     }, 500);
+  }
+
+  onTap(tapCount: number): void {
+    console.log(tapCount);
+    if (tapCount === 2) {
+      this.canvasCtrl.zoom(-2);
+      this.drawingCtrl.handleDraw();
+    }
   }
 
   setGraphColors(): void {
