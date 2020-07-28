@@ -41,6 +41,7 @@
         type="text"
         inputmode="numeric"
         (input)="handleChartLabelsInputChange($event.target.value)"
+        (keyup.enter)="$event.target.blur()"
         [value]="chartLabels.join(',')"
         placeholder="Type in a comma seperated list of labels for the chart"
         class="chart-labels-input"

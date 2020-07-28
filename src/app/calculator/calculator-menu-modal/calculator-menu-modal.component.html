@@ -11,6 +11,7 @@
 
 <ion-searchbar
   (ionInput)="filterItems($event)"
+  (keyup.enter)="$event.target.blur()"
   animated
   color="light"
   placeholder="Search calculators"

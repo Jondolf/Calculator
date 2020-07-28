@@ -22,6 +22,7 @@
     <ion-label>Choose amount</ion-label>
     <ion-input
       (ionChange)="amount = $event.target.value.toString()"
+      (keyup.enter)="$event.target.blur()"
       [value]="amount"
       type="number"
       inputmode="numeric"

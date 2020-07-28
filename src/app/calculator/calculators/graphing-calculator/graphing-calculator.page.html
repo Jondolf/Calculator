@@ -47,6 +47,7 @@
           (input)="changeEquation(i, $event.target.value); drawingCtrl.handleDraw(); caretPosition = $event.target.selectionStart"
           (ionFocus)="onEquationInputFocus(i, $event.target)"
           (ionBlur)="caretPosition = $event.target.firstChild.selectionStart"
+          (keyup.enter)="$event.target.blur()"
           [value]="equation"
           placeholder="Type in an equation or coordinates"
         ></ion-input>

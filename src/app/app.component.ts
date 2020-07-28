@@ -48,7 +48,7 @@ export class AppComponent {
           this.setHeaderColor();
           this.screenOrientation.lock('portrait');
           this.splashScreen.hide();
-          this.keyboard.disableScroll(false)
+          this.keyboard.disableScroll(false);
           this.listenForKeyboardEventsAndSetContentOffset();
         }
       }
