@@ -22,9 +22,6 @@ import { CalculatorPage } from './calculator/calculators/calculator/calculator.p
 import { CustomizeButtonsModalComponent } from './calculator/calculators/calculator/customize-buttons-modal/customize-buttons-modal.component';
 import { MoreCommandsMenuComponent } from './calculator/calculators/calculator/more-commands-menu/more-commands-menu.component';
 // Common
-import { FullscreenContainerComponent } from './common/fullscreen-container/fullscreen-container.component';
-import { CircleButtonComponent } from './common/circle-button/circle-button.component';
-import { WideButtonComponent } from './common/wide-button/wide-button.component';
 import { AccordionListModule } from './common/accordion-list/accordion-list.module';
 
 import * as Hammer from 'hammerjs';
@@ -46,8 +43,7 @@ export class HammerConfig extends HammerGestureConfig {
   declarations: [
     AppComponent, TopBarComponent, OptionsPopoverComponent, CalculatorMenuModalComponent,
     CalculatorPage, CustomizeButtonsModalComponent, MoreCommandsMenuComponent,
-    SettingsModalComponent, ThemesModalComponent,
-    FullscreenContainerComponent, CircleButtonComponent, WideButtonComponent
+    SettingsModalComponent, ThemesModalComponent
   ],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(
