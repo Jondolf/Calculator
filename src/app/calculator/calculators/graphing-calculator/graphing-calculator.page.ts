@@ -105,7 +105,6 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
   }
 
   onTap(tapCount: number): void {
-    console.log(tapCount);
     if (tapCount === 2) {
       this.canvasCtrl.zoom(-2);
       this.drawingCtrl.handleDraw();
