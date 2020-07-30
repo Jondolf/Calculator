@@ -30,6 +30,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: left;
+    position: absolute;
+    left: 74px;
+    right: 10px;
     p {
       margin: 0;
       transition: 0.2s ease-out;
@@ -38,6 +41,9 @@
       &.calculation {
         color: var(--ion-color-light-contrast);
         font-size: 7vh;
+        padding-right: 7vh;
+        width: 100%;
+        overflow: auto;
       }
       &.current-result {
         color: rgba(var(--ion-color-light-contrast-rgb), 0.5);

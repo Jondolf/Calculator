@@ -2,6 +2,9 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
 } from '@angular/core';
 import { CalculatorService } from './calculator.service';
 import { PreciseCalculatorService } from '../precise-calculator.service';
@@ -14,7 +17,10 @@ import Decimal from 'decimal.js';
   templateUrl: './calculator.page.html',
   styleUrls: ['./calculator.page.scss'],
 })
-export class CalculatorPage implements OnInit, OnDestroy {
+export class CalculatorPage implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('calculationRef') calculationRef: ElementRef;
+  calculationElement: HTMLElement;
+
   calculation = '';
   currentResult = '';
 
@@ -37,6 +43,9 @@ export class CalculatorPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     document.removeEventListener('keydown', this.handleEvent);
     this.isCalculatorMenuVisibleSubscription.unsubscribe();
+  }
+  ngAfterViewInit() {
+    this.calculationElement = this.calculationRef.nativeElement;
   }
 
   handleEvent = (e: KeyboardEvent): void => {
@@ -124,6 +133,7 @@ export class CalculatorPage implements OnInit, OnDestroy {
         this.calculation = `=${this.preciseCalculator.countCalculation(this.calculation).toString()}`;
       }
       this.currentResult = '';
+      this.calculationElement.scrollLeft = 0;
       return;
     }
     // Reset calculation to defaults if first symbol of calculation is equals but equals symbol isn't pressed
@@ -133,6 +143,9 @@ export class CalculatorPage implements OnInit, OnDestroy {
     this.calculation = this.calculation + symbol.toString();
     if (this.calculation[0] !== '=') {
       this.currentResult = `=${this.countCalculation()}`;
+    }
+    if (this.calculationElement) {
+      this.calculationElement.scrollLeft = this.calculationElement.scrollWidth;
     }
   }
 
@@ -150,6 +163,9 @@ export class CalculatorPage implements OnInit, OnDestroy {
     }
     if (this.calculation !== '') {
       this.currentResult = `=${this.countCalculation()}`;
+    }
+    if (this.calculationElement) {
+      this.calculationElement.scrollLeft = this.calculationElement.scrollWidth;
     }
   }
 

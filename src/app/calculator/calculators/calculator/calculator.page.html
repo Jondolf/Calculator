@@ -11,7 +11,7 @@
     >{{ preciseCalculator.isDeg ? 'DEG': 'RAD' }}</ion-button
   >
   <div class="calculation-container">
-    <p class="calculation">{{ calculation }}</p>
+    <p class="calculation" #calculationRef>{{ calculation }}</p>
     <p class="current-result">{{ formatNumber(currentResult) }}</p>
   </div>
 </div>
