@@ -39,7 +39,7 @@ export class GraphingCalculatorCanvasController {
   }
 
   private setStepBetweenCoordinates(): void {
-    const stepAsString: string = this.stepBetweenCoordinates.toString();
+    const stepAsString: string = this.stepBetweenCoordinates.toFixed();
     const stepNumber: number = +stepAsString.replace(/0/g, '').replace(/\./g, ''); // The number without the zeroes, can be 1, 2 or 5
     const stepSplitAtDot: string[] = stepAsString.split('.'); // Used for checking if the value includes decimals
     const stepMultiplier = new Decimal(stepSplitAtDot.length === 1

@@ -108,12 +108,14 @@ export class GraphingCalculatorDrawingController {
     const canvasOffset = (xOrY === 'x' ? this.canvasCtrl.canvasOffset.x : this.canvasCtrl.canvasOffset.y);
     for (let i = numberStep + canvasOffset; side >= 0 ? i < side + 1 : i > side - 1; i += numberStep) {
       const coord: Coordinate = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({ x: i, y: i });
-      const num = new Decimal(i - canvasOffset).round().mul(this.canvasCtrl.stepBetweenCoordinates).toFixed();
+      const num: Decimal = new Decimal(i - canvasOffset).round().mul(this.canvasCtrl.stepBetweenCoordinates);
+      const roundedNum = +this.canvasCtrl.stepBetweenCoordinates >= 100000 || +this.canvasCtrl.stepBetweenCoordinates <= 0.00005
+        ? num.toExponential() : num.toFixed();
       if (xOrY === 'x') {
-        this.ctx.fillText(num, coord.x, canvasMidCoord.y + this.canvasCtrl.squareSize * 0.4);
+        this.ctx.fillText(roundedNum, coord.x, canvasMidCoord.y + this.canvasCtrl.squareSize * 0.4);
       } else {
         this.ctx.fillText(
-          num, canvasMidCoord.x - this.canvasCtrl.squareSize * 0.225, coord.y + this.canvasCtrl.squareSize * 0.075);
+          roundedNum, canvasMidCoord.x - this.canvasCtrl.squareSize * 0.225, coord.y + this.canvasCtrl.squareSize * 0.075);
       }
     }
   }
@@ -142,7 +144,7 @@ export class GraphingCalculatorDrawingController {
     // Does it have curves or other complex shapes or is it a very simple line/shape
     const isComplex: boolean = complexMathFunctions.some((value: string) => equation.includes(value));
     const isVeryComplex: boolean = veryComplexMathFunctions.some((value: string) => equation.includes(value));
-    const stepBetweenX = isVeryComplex ? 0.025 : (isComplex ? 0.1 : 1);
+    const stepBetweenX = isVeryComplex ? 0.02 : (isComplex ? 0.1 : 1);
     this.previousY = 0;
     this.ctx.beginPath();
     this.drawLineEquationHalf(this.canvasCtrl.canvasSides.left, -stepBetweenX, equation);
@@ -159,40 +161,54 @@ export class GraphingCalculatorDrawingController {
   private drawLineEquationHalf(side: number, numberStep: number, equation: string) {
     this.previousY = 0;
     const pannedSide = (side - this.canvasCtrl.canvasOffset.x) * +this.canvasCtrl.stepBetweenCoordinates;
+    const step = numberStep * +this.canvasCtrl.stepBetweenCoordinates * 0.2;
     for (
       let x = 0;
       side >= 0
         ? x <= pannedSide + +this.canvasCtrl.stepBetweenCoordinates
         : x >= pannedSide - +this.canvasCtrl.stepBetweenCoordinates;
-      x += +this.canvasCtrl.stepBetweenCoordinates >= 1 ? numberStep : numberStep * +this.canvasCtrl.stepBetweenCoordinates
+      x += step
     ) {
       const y = this.getOrCalculate(equation, x);
       if ((isNaN(this.previousY) && !isNaN(y)) || !isNaN(this.previousY) && isNaN(y)) {
-        const valueClosestToNaN: Coordinate = this.findValueClosestToNaN(x - numberStep, x, this.previousY, y, equation);
-        const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
-          x: valueClosestToNaN.x / +this.canvasCtrl.stepBetweenCoordinates + this.canvasCtrl.canvasOffset.x,
-          y: valueClosestToNaN.y / +this.canvasCtrl.stepBetweenCoordinates + this.canvasCtrl.canvasOffset.y
-        });
-        this.ctx.lineTo(
-          newCoord.x,
-          newCoord.y
-        );
+        this.drawLineSectionForNumbersCloseToNaN(x, y, step, equation);
       }
       if (!isNaN(y)) {
-        const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
-          x: x / +this.canvasCtrl.stepBetweenCoordinates + this.canvasCtrl.canvasOffset.x,
-          y: y / +this.canvasCtrl.stepBetweenCoordinates + this.canvasCtrl.canvasOffset.y
-        });
-        if (x === 0) {
-          this.ctx.moveTo(newCoord.x, newCoord.y);
-        } else {
-          this.ctx.lineTo(
-            newCoord.x,
-            newCoord.y
-          );
-        }
+        this.drawLineForNextX(x, y);
       }
       this.previousY = y;
+    }
+  }
+
+  /**
+   * Goes back one step, finds the closest value that isn't NaN and draws a line to it.
+   * Used when either the current or previous y value was NaN.
+   * This fixes bugs with things like y=sqrt(x+1) or y=ln(x).
+   */
+  drawLineSectionForNumbersCloseToNaN(x: number, y: number, stepBetweenX: number, equation: string): void {
+    const valueClosestToNaN: Coordinate = this.findValueClosestToNaN(x - stepBetweenX, x, this.previousY, y, equation);
+    const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
+      x: valueClosestToNaN.x / +this.canvasCtrl.stepBetweenCoordinates + this.canvasCtrl.canvasOffset.x,
+      y: valueClosestToNaN.y / +this.canvasCtrl.stepBetweenCoordinates + this.canvasCtrl.canvasOffset.y
+    });
+    this.ctx.lineTo(
+      newCoord.x,
+      newCoord.y
+    );
+  }
+
+  drawLineForNextX(x: number, y: number): void {
+    const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
+      x: x / +this.canvasCtrl.stepBetweenCoordinates + this.canvasCtrl.canvasOffset.x,
+      y: y / +this.canvasCtrl.stepBetweenCoordinates + this.canvasCtrl.canvasOffset.y
+    });
+    if (x === 0) {
+      this.ctx.moveTo(newCoord.x, newCoord.y);
+    } else {
+      this.ctx.lineTo(
+        newCoord.x,
+        newCoord.y
+      );
     }
   }
 
@@ -229,8 +245,8 @@ export class GraphingCalculatorDrawingController {
     return this.savedYValuesForEquation[equation][x];
   }
 
-  private formatEquation(equation: string, replaceWith: any): string {
-    const replacedValue: string = replaceWith[0] === '(' && replaceWith[replaceWith.toString().length - 1] === ')' ? replaceWith : `(${replaceWith})`;
+  private formatEquation(equation: string, replaceWith: number): string {
+    const replacedValue = `(${new Decimal(replaceWith).toFixed()})`;
     const formattedEquation: string = equation.replace(/x/g, replacedValue).slice(equation.lastIndexOf('=') + 1);
     return formattedEquation;
   }
