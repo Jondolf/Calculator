@@ -1,6 +1,6 @@
 {
   "appId": "com.gamitopia.calculator",
-  "appName": "calculator",
+  "appName": "Calculator",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
