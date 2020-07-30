@@ -37,8 +37,10 @@
       <ion-item
         *ngFor="let equation of equations; let i = index; trackBy: trackBy"
       >
-        <ion-buttons slot="primary">
-          <ion-button (click)="equations.splice(equation, 1)">
+        <ion-buttons slot="start">
+          <ion-button
+            (click)="equations.splice(i, 1); drawingCtrl.handleDraw()"
+          >
             <ion-icon slot="icon-only" name="remove"></ion-icon>
           </ion-button>
         </ion-buttons>
