@@ -2,19 +2,9 @@
 
 <img src="./resources/icon.png" alt="Calculator icon" width="350" height="350">
 
-## Used versions (updated 10.6.2020)
+## Description
 
-Only the most important info is mentioned here.  
-For the current exact versions, check package.json.
-
-Ionic CLI 6.9.2  
-@ionic/angular 5.1.1  
-@angular/cli 9.1.7
-
-Capacitor CLI 2.1.2  
-@capacitor/core 2.1.2
-
-I used HTML, SCSS and TypeScript with Ionic Angular.
+Calculator is a mobile app made for Android with Ionic Angular. It includes a calculator, many unit converters, a tool for creating charts, a graphing calculator and more. It is customizable yet simple and has many light and dark color themes.
 
 ## Project structure
 
@@ -23,8 +13,8 @@ Below is a quick overview of some of the most important folders and files (exclu
 ### src/app/
 
 **app/** contains all components, logic and data. Each component has it's own folder with four to six files (.component.html, .component.scss, .component.spec.ts, .service.spec.ts, .service.ts).  
-**app/calculator/** contains the actual components and logic of the calculator.  
-**app/common/** contains easily reusable components, such as different kinds of buttons.  
+**app/calculator/** contains the actual components and logic of the app.  
+**app/common/** contains commonly used components.  
 **app/models/** contains custom interfaces and types.
 
 ### src/
