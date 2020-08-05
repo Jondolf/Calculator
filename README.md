@@ -1,10 +1,12 @@
-# Calculator
+# [Calculator](https://play.google.com/store/apps/details?id=com.gamitopia.calculator)
 
 <img src="./resources/icon.png" alt="Calculator icon" width="350" height="350">
 
 ## Description
 
-Calculator is a mobile app made for Android with Ionic Angular. It includes a calculator, many unit converters, a tool for creating charts, a graphing calculator and more. It is customizable yet simple and has many light and dark color themes.
+[Calculator](https://play.google.com/store/apps/details?id=com.gamitopia.calculator) is a mobile app made for Android with Ionic Angular. It includes a calculator, many unit converters, a tool for creating charts, a graphing calculator and more. It is customizable yet simple and has many light and dark color themes.
+
+[You can download Calculator from the Google Play store here](https://play.google.com/store/apps/details?id=com.gamitopia.calculator)
 
 ## Project structure
 
