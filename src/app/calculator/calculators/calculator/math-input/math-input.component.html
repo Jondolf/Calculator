@@ -1,0 +1,10 @@
+<input
+  autofocus
+  class="math-input"
+  inputmode="none"
+  [value]="expr"
+  (keydown)="onKeyDown($event)"
+  (paste)="onPaste($event)"
+  (mouseup)="onCalculationMouseUp()"
+  #mathInput
+/>

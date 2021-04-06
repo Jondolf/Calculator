@@ -1,306 +1,35 @@
-<div class="calculator-input">
-  <ion-button
-    (tap)="
-    preciseCalculator.isDeg = !preciseCalculator.isDeg;
-    calculation === '' || calculation[0] === '='
-      ? resetCalculation()
-      : currentResult = '=' + preciseCalculator.countCalculation(calculation).toString()
+<div class="calculator" (click)="mathInput.mathInput.focus()">
+  <div class="calculator-input">
+    <ion-button
+      (tap)="
+    forceDeg = !forceDeg;
+    onExprChange(expr);
     "
-    fill="clear"
-    [color]="globals.currentTheme.includes('pure-white') || globals.currentTheme.includes('pure-black') ? 'dark' : 'tertiary'"
-    >{{ preciseCalculator.isDeg ? 'DEG': 'RAD' }}</ion-button
-  >
-  <div class="calculation-container">
-    <p class="calculation" #calculationRef>{{ calculation }}</p>
-    <p class="current-result">{{ formatNumber(currentResult) }}</p>
+      fill="clear"
+      [color]="globals.currentTheme.includes('pure-white') || globals.currentTheme.includes('pure-black') ? 'dark' : 'tertiary'"
+      >{{ forceDeg ? 'DEG': 'RAD' }}</ion-button
+    >
+    <div class="calculation-container">
+      <app-math-input
+        [eval]="mathEvaluator.evaluateAndFormat.bind(mathEvaluator)"
+        (exprChange)="onExprChange($event)"
+        #mathInput
+      ></app-math-input>
+      <p class="current-result">{{ formatNumber(currentResult) }}</p>
+    </div>
   </div>
-</div>
 
-<app-more-commands-menu
-  *ngIf="calculator.buttonStyles.gridSize !== 'large'"
-  [gridSize]="calculator.buttonStyles.gridSize"
-  (addSymbolToCalculation)="addSymbolToCalculation($event['symbol'])"
-></app-more-commands-menu>
+  <app-more-commands-menu
+    *ngIf="calculator.gridStyles.gridSize !== 'large'"
+    [gridSize]="calculator.gridStyles.gridSize"
+    [addSymbolToCalculation]="mathInput.addSymbolToCalculation.bind(mathInput)"
+  ></app-more-commands-menu>
 
-<div
-  [ngClass]="[
-    'calculator-container',
-    calculator.buttonStyles.gridSize ? calculator.buttonStyles.gridSize : 'small'
-    ]"
-  [ngStyle]="{
-    'grid-gap': calculator.buttonStyles.gridGap,
-    padding: calculator.buttonStyles.gridGap
-  }"
->
-  <button
-    button
-    (tap)="addSymbolToCalculation(1)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable number one"
-  >
-    1
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation(2)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable number two"
-  >
-    2
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation(3)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable number three"
-  >
-    3
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation(4)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable number four"
-  >
-    4
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation(5)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable number five"
-  >
-    5
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation(6)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable number six"
-  >
-    6
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation(7)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable number seven"
-  >
-    7
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation(8)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable number eight"
-  >
-    8
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation(9)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable number nine"
-  >
-    9
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation(0)"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable number zero"
-  >
-    0
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('.')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable number dot"
-  >
-    .
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-
-  <button
-    (click)="resetCalculation()"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command clear"
-  >
-    C
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command opening-parentheses"
-  >
-    (
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation(')')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command closing-parentheses"
-  >
-    )
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="backspaceEventHandler()"
-    (press)="resetCalculation()"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command backspace"
-  >
-    <i class="material-icons">backspace</i>
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('+')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command plus"
-  >
-    +
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('-')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command minus"
-  >
-    -
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('x')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command multiply"
-  >
-    x
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('÷')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command divide"
-  >
-    ÷
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('=')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command equals"
-  >
-    =
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-
-  <!-- These will be in the more-commands menu if the grid size is set to small -->
-  <button
-    (tap)="addSymbolToCalculation('√')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command sqrt medium-grid-button"
-  >
-    √
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('^')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command pow medium-grid-button"
-  >
-    ^
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('π')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command pi medium-grid-button"
-  >
-    π
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('e')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command euler medium-grid-button"
-  >
-    e
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-
-  <!-- These will be in the more-commands menu if the grid size is set to small or medium -->
-  <button
-    (tap)="addSymbolToCalculation('mod')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command mod large-grid-button"
-  >
-    mod
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('%')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command percent large-grid-button"
-  >
-    %
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('!')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command factorial large-grid-button"
-  >
-    n!
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('sin(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command sin large-grid-button"
-  >
-    sin
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('cos(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command cos large-grid-button"
-  >
-    cos
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('tan(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command tan large-grid-button"
-  >
-    tan
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('log(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command log large-grid-button"
-  >
-    log
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('ln(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command ln large-grid-button"
-  >
-    ln
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
-  <button
-    (tap)="addSymbolToCalculation('lg(')"
-    [ngStyle]="calculator.buttonStyles.buttonStyles"
-    class="ion-activatable command lg large-grid-button"
-  >
-    lg
-    <ion-ripple-effect></ion-ripple-effect>
-  </button>
+  <app-math-buttons
+    [grid]="calculator.gridStyles.gridSize === 'small'
+      ? smallMathBtnGrid
+      : (calculator.gridStyles.gridSize === 'medium' ? mediumMathBtnGrid : largeMathBtnGrid)"
+    [gridStyles]="calculator.gridStyles"
+    [ngStyle]="{ top: calculator.gridStyles.gridSize === 'large' ? '25%' : '30%' }"
+  ></app-math-buttons>
 </div>

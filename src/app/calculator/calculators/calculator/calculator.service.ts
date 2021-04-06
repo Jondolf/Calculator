@@ -7,12 +7,12 @@ import { CalculatorCustomStyles } from 'src/app/models/calculator-custom-styles.
 })
 export class CalculatorService {
   isCalculatorButtonSettingsMenuOpen: boolean;
-  buttonStyles = this.getDefaultStyles();
+  gridStyles = this.getDefaultStyles();
 
   constructor(private storage: Storage) {
     this.storage.get('calculatorCustomStyles').then(val => {
       if (val) {
-        this.buttonStyles = val;
+        this.gridStyles = val;
       }
     });
   }

@@ -1,0 +1,12 @@
+[package]
+name = "math-evaluator"
+version = "0.1.0"
+authors = ["Jondolf"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+meval = { git = "https://github.com/rekka/meval-rs" } # The repo has factorial and log10 support, the crates.io crate doesn't
+wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }

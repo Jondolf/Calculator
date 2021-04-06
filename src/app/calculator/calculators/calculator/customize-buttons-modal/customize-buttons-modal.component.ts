@@ -1,8 +1,8 @@
-import { Component, Output, EventEmitter, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { CalculatorCustomStyles } from 'src/app/models/calculator-custom-styles.interface';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { CalculatorService } from '../calculator.service';
 import { Storage } from '@ionic/storage';
+import { CalculatorCustomStyles } from 'src/app/models/calculator-custom-styles.interface';
+import { CalculatorService } from '../calculator.service';
 
 @Component({
   selector: 'app-customize-buttons-modal',
@@ -22,12 +22,10 @@ export class CustomizeButtonsModalComponent implements OnInit, OnChanges {
   constructor(
     public modalController: ModalController,
     public calculator: CalculatorService,
-    private storage: Storage) {
-
-  }
+    private storage: Storage) { }
 
   ngOnInit() {
-    this.styles = this.calculator.buttonStyles;
+    this.styles = this.calculator.gridStyles;
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes.currentStyles.previousValue !== changes.currentStyles.currentValue) {
@@ -40,9 +38,9 @@ export class CustomizeButtonsModalComponent implements OnInit, OnChanges {
   }
 
   updateStyles(): void {
-    this.calculator.buttonStyles = this.styles;
-    this.styles = this.calculator.buttonStyles;
-    this.storage.set('calculatorCustomStyles', this.calculator.buttonStyles);
+    this.calculator.gridStyles = this.styles;
+    this.styles = this.calculator.gridStyles;
+    this.storage.set('calculatorCustomStyles', this.calculator.gridStyles);
   }
 
   pixelsToNumber(pixelString: string): number {

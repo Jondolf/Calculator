@@ -1,0 +1,27 @@
+<div
+  class="math-buttons"
+  *ngIf="grid"
+  [ngStyle]="{
+    'grid-template-rows': grid.rows,
+    'grid-template-columns': grid.columns,
+    'grid-gap': gridStyles.gridGap,
+    padding: gridStyles.gridGap
+  }"
+>
+  <button
+    *ngFor="let btn of grid.buttons; let j = index"
+    (tap)="onTap(btn)"
+    (press)="onPress(btn)"
+    [ngStyle]="{
+      'grid-row': btn.rows,
+      'grid-column': btn.columns,
+      'border-radius': gridStyles.buttonStyles['border-radius'],
+      'border-width': gridStyles.buttonStyles['border-width']
+    }"
+    [class]="'ion-activatable ' + btn.class + ' math-button-' + (btn.name ? btn.name : btn.iconName)"
+  >
+    <span *ngIf="btn.name && !btn.iconName">{{ btn.name }}</span>
+    <i class="material-icons" *ngIf="btn.iconName">{{ btn.iconName }}</i>
+    <ion-ripple-effect></ion-ripple-effect>
+  </button>
+</div>

@@ -6,27 +6,14 @@
   background-color: var(--ion-color-tertiary);
   color: var(--ion-color-tertiary-contrast);
   z-index: 1;
-  .button-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  app-math-buttons {
+    width: 100%;
     height: 93%;
-    transition: 0.2s ease-out;
-    font-size: 32px;
-    font-weight: 800;
-    button {
-      background-color: transparent;
-      color: var(--ion-color-tertiary-contrast);
-      border: 1px solid rgba(var(--ion-color-primary-rgb), 0.25);
-      transition: 0.2s ease-out;
-      font-size: 32px;
-      font-weight: 800;
-      position: relative;
-      overflow: hidden;
-      ion-ripple-effect {
-        color: var(--ion-color-light-tint);
-      }
-    }
+    background-color: var(--ion-color-tertiary);
+    color: var(--ion-color-tertiary-contrast);
   }
+
   .swipe-container {
     height: 7%;
     border-top: 2px solid var(--ion-color-tertiary-contrast);
@@ -37,6 +24,7 @@
     bottom: 0;
     left: 0;
     right: 0;
+
     i {
       transition: 0.5s ease;
     }
