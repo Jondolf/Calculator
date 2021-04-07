@@ -3,16 +3,16 @@ import { CalculatorCustomStyles } from 'src/app/models/calculator-custom-styles.
 
 type MathButton = {
   name?: string;
+  displayName?: string;
   iconName?: string;
   class: string;
   onTap?: (arg1?: any, arg2?: any) => any;
   onTapArgs?: Array<number | string>;
   onPress?: (arg1?: any, arg2?: any) => any;
   onPressArgs?: Array<number | string>;
-  rows?: string;
-  columns?: string;
 };
 export type MathButtonGrid = {
+  gridAreas?: string;
   rows?: string;
   columns?: string;
   buttons: MathButton[];

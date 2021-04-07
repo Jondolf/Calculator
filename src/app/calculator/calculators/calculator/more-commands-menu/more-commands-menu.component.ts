@@ -29,13 +29,15 @@ export class MoreCommandsMenuComponent implements AfterViewInit {
       columns: '1fr 1fr 1fr 1fr',
       buttons: [
         {
-          name: '(',
+          name: 'opening-parenthesis',
+          displayName: '(',
           class: 'math-button-tertiary lg-text',
           onTap: this.addSymbolToCalculation,
           onTapArgs: ['('],
         },
         {
-          name: ')',
+          name: 'closing-parenthesis',
+          displayName: ')',
           class: 'math-button-tertiary lg-text',
           onTap: this.addSymbolToCalculation,
           onTapArgs: [')'],
@@ -47,13 +49,15 @@ export class MoreCommandsMenuComponent implements AfterViewInit {
           onTapArgs: ['mod'],
         },
         {
-          name: 'n%',
+          name: 'percent',
+          displayName: 'n%',
           class: 'math-button-tertiary lg-text',
           onTap: this.addSymbolToCalculation,
           onTapArgs: ['%'],
         },
         {
-          name: 'n!',
+          name: 'factorial',
+          displayName: 'n!',
           class: 'math-button-tertiary lg-text',
           onTap: this.addSymbolToCalculation,
           onTapArgs: ['!'],
@@ -100,19 +104,22 @@ export class MoreCommandsMenuComponent implements AfterViewInit {
       columns: '1fr 1fr 1fr 1fr',
       buttons: [
         {
-          name: '√',
+          name: 'sqrt',
+          displayName: '√',
           class: 'math-button-tertiary lg-text',
           onTap: this.addSymbolToCalculation,
           onTapArgs: ['√'],
         },
         {
-          name: '^',
+          name: 'pow',
+          displayName: '^',
           class: 'math-button-tertiary lg-text',
           onTap: this.addSymbolToCalculation,
           onTapArgs: ['^'],
         },
         {
-          name: 'π',
+          name: 'pi',
+          displayName: 'π',
           class: 'math-button-tertiary lg-text',
           onTap: this.addSymbolToCalculation,
           onTapArgs: ['π'],
