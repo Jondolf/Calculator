@@ -1,8 +1,9 @@
-import { Component, ViewChild, ElementRef, OnDestroy, AfterViewInit, AfterViewChecked } from '@angular/core';
-import { Subscription, Observable, fromEvent } from 'rxjs';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { IonInput } from '@ionic/angular';
-import { CalculatorService } from '../calculator.service';
+import ResizeObserverPolyfill from 'resize-observer-polyfill'; // Normal resize observer gave errors
+import { Subscription } from 'rxjs';
 import { GlobalVarsService } from 'src/app/global-vars.service';
+import { MathEvaluatorService } from '../../math-evaluator/mathEvaluator.service';
 import { GraphingCalculatorCanvasController } from './graphing-calculator-canvas-controller';
 import { GraphingCalculatorDrawingController } from './graphing-calculator-drawing-controller';
 
@@ -11,7 +12,7 @@ import { GraphingCalculatorDrawingController } from './graphing-calculator-drawi
   templateUrl: './graphing-calculator.page.html',
   styleUrls: ['./graphing-calculator.page.scss'],
 })
-export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterViewChecked {
+export class GraphingCalculatorPage implements AfterViewInit, AfterViewChecked, OnDestroy {
   @ViewChild('canvas') canvasRef: ElementRef;
   @ViewChild('canvascontainer') canvasContainerRef: ElementRef;
 
@@ -24,7 +25,6 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
 
   mc: HammerManager;
 
-
   isFirstLoad = true; // Used in ngAfterViewChecked to make sure it gets called once
   isInputContainerOpen = true;
   isMouseDownOnCanvas = false;
@@ -34,21 +34,14 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
   caretPosition: number;
 
   themeSubscription: Subscription;
-  resizeObserveble: Observable<Event>;
-  resizeSubscription: Subscription;
 
-  constructor(private calculator: CalculatorService, private globals: GlobalVarsService) { }
+  resizeObserver: ResizeObserverPolyfill;
 
-  ngOnDestroy(): void {
-    this.resizeSubscription.unsubscribe();
-    this.themeSubscription.unsubscribe();
-    this.mc.off('pan');
-  }
+  constructor(private mathEvaluator: MathEvaluatorService, private globals: GlobalVarsService) { }
+
   ngAfterViewInit(): void {
     this.canvasElement = this.canvasRef.nativeElement;
     this.canvasContainerElement = this.canvasContainerRef.nativeElement;
-
-    this.resizeObserveble = fromEvent(window, 'resize');
   }
   ngAfterViewChecked(): void {
     if (this.isFirstLoad) {
@@ -56,20 +49,34 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
         this.instantiateClasses();
         this.canvasCtrl.handleSetCanvasSize();
         this.setGraphColors();
-        this.drawingCtrl.handleDraw();
+
+        this.resizeObserver = new ResizeObserverPolyfill(() => {
+          this.canvasCtrl.handleSetCanvasSize();
+          this.drawingCtrl.handleDraw();
+        });
+
+        this.resizeObserver.observe(this.canvasContainerElement);
+
+        setTimeout(() => {
+          this.drawingCtrl.handleDraw();
+        }, 0);
 
         this.mc = new Hammer(this.canvasElement);
         this.mc.on('pan', (e) => { this.canvasCtrl.pan(e); this.drawingCtrl.handleDraw(); });
 
         this.subscribeToThemeChanges();
-        this.subscribeToResizeEvent();
 
         this.canvasContainerElement.addEventListener('wheel',
-          (e: WheelEvent) => { this.canvasCtrl.zoom(e.deltaY < 0 ? -0.5 : 0.5); this.drawingCtrl.handleDraw(); }, { passive: false });
+          (e: WheelEvent) => { this.canvasCtrl.zoom(e.deltaY < 0 ? -1 : 1); this.drawingCtrl.handleDraw(); }, { passive: false });
 
         this.isFirstLoad = false;
       }
     }
+  }
+  ngOnDestroy(): void {
+    this.themeSubscription.unsubscribe();
+    this.resizeObserver.unobserve(this.canvasContainerElement);
+    this.mc.off('pan');
   }
 
   instantiateClasses(): void {
@@ -77,7 +84,7 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
     this.drawingCtrl = new GraphingCalculatorDrawingController(
       this.canvasElement,
       this.canvasCtrl,
-      this.calculator,
+      this.mathEvaluator,
       this.equations,
       { squareBorderWidth: 5, squareBorderColor: 'rgba(175, 175, 175, 0.5)', coordinateSystemColor: 'black' }
     );
@@ -88,20 +95,6 @@ export class GraphingCalculatorPage implements OnDestroy, AfterViewInit, AfterVi
       this.setGraphColors();
       this.drawingCtrl.handleDraw();
     });
-  }
-
-  subscribeToResizeEvent(): void {
-    this.resizeSubscription = this.resizeObserveble.subscribe(() => {
-      this.onResize();
-    });
-  }
-
-  onResize(): void {
-    // Set timeout for both to make sure they are called at the right time
-    setTimeout(() => {
-      this.canvasCtrl.handleSetCanvasSize();
-      this.drawingCtrl.handleDraw();
-    }, 500);
   }
 
   onTap(tapCount: number): void {

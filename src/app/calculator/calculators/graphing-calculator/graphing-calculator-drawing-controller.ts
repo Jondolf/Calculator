@@ -1,12 +1,12 @@
-import { GraphingCalculatorCanvasController } from './graphing-calculator-canvas-controller';
-import { CalculatorService } from '../calculator.service';
-import { Coordinate } from 'src/app/models/coordinate.interface';
-import { ContextStyles } from 'src/app/models/canvas-context-styles.interface';
 import Decimal from 'decimal.js';
+import { ContextStyles } from 'src/app/models/canvas-context-styles.interface';
+import { Coordinate } from 'src/app/models/coordinate.interface';
+import { MathEvaluatorService } from '../../math-evaluator/mathEvaluator.service';
+import { GraphingCalculatorCanvasController } from './graphing-calculator-canvas-controller';
 
 interface GraphValues {
   [equation: string]: {
-    [x: string]: number
+    [x: string]: number;
   };
 }
 
@@ -18,7 +18,7 @@ export class GraphingCalculatorDrawingController {
   constructor(
     private canvasElement: HTMLCanvasElement,
     private canvasCtrl: GraphingCalculatorCanvasController,
-    private calculator: CalculatorService,
+    private mathEvaluator: MathEvaluatorService,
     public equations: string[],
     public contextStyles: ContextStyles) { }
 
@@ -122,7 +122,7 @@ export class GraphingCalculatorDrawingController {
 
   private drawEquations(): void {
     for (let equation of this.equations) {
-      equation = equation.replace(/ /g, '');
+      equation = equation.toLowerCase().replace(/ /g, '');
       if (equation.includes('y=') && equation.split('=').length === 2) {
         this.drawLineFromEquation(equation);
       } else if (equation.split(',').length === 2) {
@@ -136,7 +136,7 @@ export class GraphingCalculatorDrawingController {
   }
 
   private drawLineFromEquation(equation: string): void {
-    this.ctx.lineWidth = this.contextStyles.squareBorderWidth * 2;
+    this.ctx.lineWidth = this.contextStyles.squareBorderWidth * 1.5;
     this.ctx.strokeStyle = this.contextStyles.coordinateSystemColor;
     // Functions that can create curves or other complex shapes
     const complexMathFunctions = ['xx', '^', '√', 'sqrt', 'sin', 'cos', 'tan', 'log', 'ln', 'lg'];
@@ -144,7 +144,7 @@ export class GraphingCalculatorDrawingController {
     // Does it have curves or other complex shapes or is it a very simple line/shape
     const isComplex: boolean = complexMathFunctions.some((value: string) => equation.includes(value));
     const isVeryComplex: boolean = veryComplexMathFunctions.some((value: string) => equation.includes(value));
-    const stepBetweenX = isVeryComplex ? 0.02 : (isComplex ? 0.1 : 1);
+    const stepBetweenX = isVeryComplex ? 0.01 : (isComplex ? 0.05 : 1);
     this.previousY = 0;
     this.ctx.beginPath();
     this.drawLineEquationHalf(this.canvasCtrl.canvasSides.left, -stepBetweenX, equation);
@@ -160,8 +160,10 @@ export class GraphingCalculatorDrawingController {
    */
   private drawLineEquationHalf(side: number, numberStep: number, equation: string) {
     this.previousY = 0;
+    let prevAngle = NaN;
     const pannedSide = (side - this.canvasCtrl.canvasOffset.x) * +this.canvasCtrl.stepBetweenCoordinates;
     const step = numberStep * +this.canvasCtrl.stepBetweenCoordinates * 0.2;
+    let xCoords: number[] = [];
     for (
       let x = 0;
       side >= 0
@@ -169,14 +171,32 @@ export class GraphingCalculatorDrawingController {
         : x >= pannedSide - +this.canvasCtrl.stepBetweenCoordinates;
       x += step
     ) {
-      const y = this.getOrCalculate(equation, x);
+      xCoords.push(x);
+    }
+    const yCoords = this.mathEvaluator.evaluateYValues(equation.slice(equation.lastIndexOf('=') + 1), xCoords);
+    for (const [i, x] of xCoords.entries()) {
+      const changedHalf = (this.previousY < 0 && yCoords[i] > 0) || (this.previousY > 0 && yCoords[i] < 0);
+      const angle = this.getAngleDegrees({ x: x - step, y: this.previousY }, { x, y: yCoords[i] });
+      if (this.savedYValuesForEquation[equation] === undefined) {
+        this.savedYValuesForEquation[equation] = {};
+      }
+      if (this.savedYValuesForEquation[equation][x] === undefined) {
+        this.savedYValuesForEquation[equation][x] = yCoords[i];
+      }
+      const y = this.savedYValuesForEquation[equation][x];
       if ((isNaN(this.previousY) && !isNaN(y)) || !isNaN(this.previousY) && isNaN(y)) {
         this.drawLineSectionForNumbersCloseToNaN(x, y, step, equation);
       }
       if (!isNaN(y)) {
-        this.drawLineForNextX(x, y);
+        let shouldDraw = true;
+        if (changedHalf) {
+          const angleDiff = Math.abs(angle - prevAngle);
+          shouldDraw = angleDiff < 175;
+        }
+        this.drawLineForNextX(x, y, shouldDraw);
       }
       this.previousY = y;
+      prevAngle = angle;
     }
   }
 
@@ -197,12 +217,12 @@ export class GraphingCalculatorDrawingController {
     );
   }
 
-  drawLineForNextX(x: number, y: number): void {
+  drawLineForNextX(x: number, y: number, shouldDraw: boolean): void {
     const newCoord = this.canvasCtrl.convertCoordinatesToCanvasCoordinates({
       x: x / +this.canvasCtrl.stepBetweenCoordinates + this.canvasCtrl.canvasOffset.x,
       y: y / +this.canvasCtrl.stepBetweenCoordinates + this.canvasCtrl.canvasOffset.y
     });
-    if (x === 0) {
+    if (x === 0 || !shouldDraw) {
       this.ctx.moveTo(newCoord.x, newCoord.y);
     } else {
       this.ctx.lineTo(
@@ -235,12 +255,19 @@ export class GraphingCalculatorDrawingController {
     }
   }
 
+  private getAngleDegrees(from: Coordinate, to: Coordinate) {
+    const delta = { x: from.x - to.x, y: from.y - to.y };
+    const radians = Math.atan2(delta.y, delta.x);
+    const degrees = (((radians * 180) / Math.PI) - 180 + 360) % 360;
+    return degrees;
+  }
+
   private getOrCalculate(equation: string, x: number): number {
     if (this.savedYValuesForEquation[equation] === undefined) {
       this.savedYValuesForEquation[equation] = {};
     }
     if (this.savedYValuesForEquation[equation][x] === undefined) {
-      this.savedYValuesForEquation[equation][x] = +this.calculator.countCalculation(this.formatEquation(equation, x));
+      this.savedYValuesForEquation[equation][x] = +this.mathEvaluator.evaluate(this.formatEquation(equation, x), false);
     }
     return this.savedYValuesForEquation[equation][x];
   }

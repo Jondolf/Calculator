@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="primary">
+      <ion-menu-toggle>
+        <ion-button>
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </ion-menu-toggle>
+    </ion-buttons>
+    <ion-title>Calculators</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-searchbar
+  (ionInput)="filterItems($event)"
+  (keyup.enter)="$event.target.blur()"
+  animated
+  color="light"
+  placeholder="Search calculators"
+></ion-searchbar>
+
+<ion-list>
+  <ion-menu-toggle *ngFor="let button of filteredItems.general" [autoHide]="false">
+    <ion-item button (click)="setView(button)">
+      <ion-icon *ngIf="button.icon.iconPack === 'Ionicons'" [name]="button.icon.iconName"></ion-icon>
+      <i *ngIf="button.icon.iconPack === 'Material Design'" class="material-icons">{{ button.icon.iconName }}</i>
+      <ion-label>{{ button.buttonName }}</ion-label>
+    </ion-item>
+  </ion-menu-toggle>
+  <app-accordion-list
+    *ngIf="filteredItems.converters.length > 0"
+    [isCollapsedByDefault]="true"
+    [listName]="'Converters'"
+    [iconName]="'chevron-down-outline'"
+    [background]="'var(--ion-color-light-tint)'"
+    [textColor]="'var(--ion-color-light-contrast)'"
+  >
+    <ion-menu-toggle *ngFor="let converter of filteredItems.converters" [autoHide]="false">
+      <ion-item button (click)="setView(converter)">
+        <ion-icon *ngIf="converter.icon.iconPack === 'Ionicons'" [name]="converter.icon.iconName"></ion-icon>
+        <i *ngIf="converter.icon.iconPack === 'Material Design'" class="material-icons">{{
+          converter.icon.iconName
+        }}</i>
+        <ion-label>{{ converter.buttonName }}</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+  </app-accordion-list>
+</ion-list>

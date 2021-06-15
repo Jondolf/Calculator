@@ -1,7 +1,8 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="openCalculatorMenu.emit()" slot="start">
+      <ion-menu-button class="ion-hide-md-up" [autoHide]="false"></ion-menu-button>
+      <ion-button class="ion-hide-md-down" (click)="toggleCalculatorMenuVisibility.emit()">
         <ion-icon slot="icon-only" name="menu"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -12,10 +13,6 @@
       </ion-button>
     </ion-buttons>
 
-    <ion-title>{{
-      globals.currentCalculator
-        ? globals.currentCalculator
-        : getCalculatorNameFromRoute()
-    }}</ion-title>
+    <ion-title>{{ globals.currentCalculator ? globals.currentCalculator : getCalculatorNameFromRoute() }}</ion-title>
   </ion-toolbar>
 </ion-header>

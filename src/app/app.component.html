@@ -1,9 +1,16 @@
 <ion-app>
-  <app-top-bar
-    (openCalculatorMenu)="presentCalculatorMenuModal()"
-  ></app-top-bar>
+  <ion-split-pane contentId="content" [disabled]="globals.isCalculatorMenuHidden" when="md">
+    <ion-menu contentId="content">
+      <ion-content>
+        <app-calculator-menu></app-calculator-menu>
+      </ion-content>
+    </ion-menu>
 
-  <ion-content id="content">
-    <ion-router-outlet #routeroutlet></ion-router-outlet>
-  </ion-content>
+    <ion-content id="content">
+      <app-top-bar
+        (toggleCalculatorMenuVisibility)="globals.isCalculatorMenuHidden = !globals.isCalculatorMenuHidden"
+      ></app-top-bar>
+      <ion-router-outlet #routeroutlet></ion-router-outlet>
+    </ion-content>
+  </ion-split-pane>
 </ion-app>

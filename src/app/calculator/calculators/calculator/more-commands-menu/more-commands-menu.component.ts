@@ -9,7 +9,7 @@ import { MathButtonGrid } from '../math-buttons/math-buttons.component';
 })
 export class MoreCommandsMenuComponent implements AfterViewInit {
   @Input() gridSize: string;
-  @Input() addSymbolToCalculation: (symbol: string) => void;
+  @Input() addSymbolToExpr: (symbol: string) => void;
 
   menuOpen = false;
   smallMathBtnGrid: MathButtonGrid;
@@ -26,108 +26,108 @@ export class MoreCommandsMenuComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.mediumMathBtnGrid = {
-      columns: '1fr 1fr 1fr 1fr',
+      width: 4,
       buttons: [
         {
           name: 'opening-parenthesis',
           displayName: '(',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['('],
         },
         {
           name: 'closing-parenthesis',
           displayName: ')',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: [')'],
         },
         {
           name: 'mod',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['mod'],
         },
         {
           name: 'percent',
           displayName: 'n%',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['%'],
         },
         {
           name: 'factorial',
           displayName: 'n!',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['!'],
         },
         {
           name: 'sin',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['sin'],
         },
         {
           name: 'cos',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['cos'],
         },
         {
           name: 'tan',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['tan'],
         },
         {
           name: 'lb',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['lb'],
         },
         {
           name: 'ln',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['ln'],
         },
         {
           name: 'lg',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['lg'],
         }
       ]
     };
     this.smallMathBtnGrid = {
-      columns: '1fr 1fr 1fr 1fr',
+      width: 4,
       buttons: [
         {
           name: 'sqrt',
           displayName: '√',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['√'],
         },
         {
           name: 'pow',
           displayName: '^',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['^'],
         },
         {
           name: 'pi',
           displayName: 'π',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['π'],
         },
         {
           name: 'e',
           class: 'math-button-tertiary lg-text',
-          onTap: this.addSymbolToCalculation,
+          onTap: this.addSymbolToExpr,
           onTapArgs: ['e'],
         },
         ...this.mediumMathBtnGrid.buttons

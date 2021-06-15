@@ -2,11 +2,6 @@ import { Injectable, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule, HammerGestureConfig, HammerModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { IonicStorageModule } from '@ionic/storage';
-
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { HeaderColor } from '@ionic-native/header-color/ngx';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -14,7 +9,6 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage';
 import * as Hammer from 'hammerjs';
-import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CalculatorMenuComponent } from './calculator/calculator-menu/calculator-menu.component';
@@ -31,8 +25,6 @@ import { OptionsPopoverComponent } from './calculator/top-bar/options-popover/op
 import { TopBarComponent } from './calculator/top-bar/top-bar.component';
 // Common
 import { AccordionListModule } from './common/accordion-list/accordion-list.module';
-
-
 
 @Injectable()
 export class HammerConfig extends HammerGestureConfig {

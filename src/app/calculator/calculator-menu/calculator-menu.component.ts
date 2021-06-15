@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { Button } from '../../models/button.interface';
+import { Router } from '@angular/router';
 import { GlobalVarsService } from 'src/app/global-vars.service';
+import { Button } from '../../models/button.interface';
 
 @Component({
-  selector: 'app-calculator-menu-modal',
-  templateUrl: './calculator-menu-modal.component.html',
-  styleUrls: ['./calculator-menu-modal.component.scss'],
+  selector: 'app-calculator-menu',
+  templateUrl: './calculator-menu.component.html',
+  styleUrls: ['./calculator-menu.component.scss'],
 })
-export class CalculatorMenuModalComponent {
+export class CalculatorMenuComponent {
   items = {
     general: [
       {
@@ -67,7 +67,7 @@ export class CalculatorMenuModalComponent {
 
   filteredItems = { general: [...this.items.general], converters: [...this.items.converters] };
 
-  constructor(private modalCtrl: ModalController) { }
+  constructor(private globals: GlobalVarsService, private router: Router) { }
 
   setFilteredItems() {
     this.filteredItems = { general: [...this.items.general], converters: [...this.items.converters] };
@@ -88,7 +88,9 @@ export class CalculatorMenuModalComponent {
     }
   }
 
-  dismissModal(message?): void {
-    this.modalCtrl.dismiss(message ? { message } : null);
+  setView(button: Button) {
+    const route = '/' + button.buttonName.toLowerCase().replace(/ /, '-');
+    this.router.navigate([route]);
+    this.globals.currentCalculator = button.buttonName;
   }
 }

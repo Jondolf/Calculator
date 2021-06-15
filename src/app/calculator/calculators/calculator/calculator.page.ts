@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 import { MathEvaluatorService } from '../../math-evaluator/mathEvaluator.service';
 import { CalculatorService } from './calculator.service';
-import { MathButtonGrid } from './math-buttons/math-buttons.component';
+import { MathButton, MathButtonGrid } from './math-buttons/math-buttons.component';
 import { MathInputComponent } from './math-input/math-input.component';
 
 @Component({
@@ -26,96 +26,79 @@ export class CalculatorPage implements OnInit, AfterViewInit {
     public mathEvaluator: MathEvaluatorService,
     public globals: GlobalVarsService) { }
 
+  get currentMathButtonGrid(): MathButtonGrid {
+    if (this.calculator.gridStyles.gridSize === 'small') {
+      return this.smallMathBtnGrid;
+    } else if (this.calculator.gridStyles.gridSize === 'medium') {
+      return this.mediumMathBtnGrid;
+    } else if (this.calculator.gridStyles.gridSize === 'large') {
+      return this.largeMathBtnGrid;
+    } else {
+      return this.smallMathBtnGrid;
+    }
+  }
+
+  private get numberButtons(): MathButton[] {
+    const buttons: MathButton[] = [];
+    for (const num of [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]) {
+      buttons.push({
+        name: `num-${num}`,
+        displayName: num.toString(),
+        class: `math-button-primary ${this.calculator.gridStyles.gridSize === 'small' ? 'sm' : (this.calculator.gridStyles.gridSize === 'medium' ? 'md' : 'lg')}-text`,
+        onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
+        onTapArgs: [num]
+      });
+    }
+    return buttons;
+  }
+
+  private get trigonometricFunctionButtons(): MathButton[] {
+    const buttons: MathButton[] = [];
+    console.log(this.currentMathButtonGrid.isInversed);
+    const currentMathButtonGrid = this.currentMathButtonGrid;
+    for (const func of ['sin', 'cos', 'tan']) {
+      buttons.push(
+        {
+          name: func,
+          get displayName() {
+            return `${currentMathButtonGrid.isInversed ? 'a' : ''}${func}${currentMathButtonGrid.isHyperbolic ? 'h' : ''}`;
+          },
+          class: `math-button-secondary ${this.calculator.gridStyles.gridSize === 'small' ? 'sm' : (this.calculator.gridStyles.gridSize === 'medium' ? 'md' : 'lg')}-text`,
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
+          get onTapArgs() {
+            return [`${currentMathButtonGrid.isInversed ? 'a' : ''}${func}${currentMathButtonGrid.isHyperbolic ? 'h' : ''}`];
+          }
+        }
+      );
+    }
+    return buttons;
+  }
+
   async ngOnInit() {
     this.globals.currentCalculator = 'Calculator';
   }
 
   ngAfterViewInit() {
     this.smallMathBtnGrid = {
-      gridAreas: `
+      areas: `
       "C     opening-parenthesis  closing-parenthesis backspace"
       "num-1 num-2                num-3               plus"
       "num-4 num-5                num-6               minus"
       "num-7 num-8                num-9               multiply"
       "num-0 dot                  equals              divide"
       `,
+      width: 4,
+      height: 5,
+      isInversed: false,
+      isHyperbolic: false,
       buttons: [
-        {
-          name: 'num-1',
-          displayName: '1',
-          class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [1]
-        },
-        {
-          name: 'num-2',
-          displayName: '2',
-          class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [2]
-        },
-        {
-          name: 'num-3',
-          displayName: '3',
-          class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [3]
-        },
-        {
-          name: 'num-4',
-          displayName: '4',
-          class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [4],
-        },
-        {
-          name: 'num-5',
-          displayName: '5',
-          class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [5],
-        },
-        {
-          name: 'num-6',
-          displayName: '6',
-          class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [6],
-        },
-        {
-          name: 'num-7',
-          displayName: '7',
-          class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [7],
-        },
-        {
-          name: 'num-8',
-          displayName: '8',
-          class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [8],
-        },
-        {
-          name: 'num-9',
-          displayName: '9',
-          class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [9],
-        },
-        {
-          name: 'num-0',
-          displayName: '0',
-          class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [0],
-        },
+        ...this.numberButtons,
         {
           name: 'dot',
           displayName: '.',
           class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [0],
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
+          onTapArgs: ['.'],
         },
         {
           name: 'C',
@@ -127,14 +110,14 @@ export class CalculatorPage implements OnInit, AfterViewInit {
           name: 'opening-parenthesis',
           displayName: '(',
           class: 'math-button-secondary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['('],
         },
         {
           name: 'closing-parenthesis',
           displayName: ')',
           class: 'math-button-secondary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: [')'],
         },
         {
@@ -147,124 +130,59 @@ export class CalculatorPage implements OnInit, AfterViewInit {
           name: 'plus',
           displayName: '+',
           class: 'math-button-secondary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['+'],
         },
         {
           name: 'minus',
           displayName: '-',
           class: 'math-button-secondary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['-'],
         },
         {
           name: 'multiply',
           displayName: 'x',
           class: 'math-button-secondary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['x'],
         },
         {
           name: 'divide',
           displayName: '÷',
           class: 'math-button-secondary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['÷'],
         },
         {
           name: 'equals',
           displayName: '=',
           class: 'math-button-primary lg-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['='],
         },
       ]
     };
     this.mediumMathBtnGrid = {
-      gridAreas: `
+      areas: `
         "C     opening-parenthesis  closing-parenthesis backspace backspace"
         "num-1 num-2                num-3               plus      sqrt"
         "num-4 num-5                num-6               minus     pow"
         "num-7 num-8                num-9               multiply  pi"
         "num-0 dot                  equals              divide    e"
       `,
+      width: 5,
+      height: 5,
+      isInversed: false,
+      isHyperbolic: false,
       buttons: [
-        {
-          name: 'num-1',
-          displayName: '1',
-          class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [1],
-        },
-        {
-          name: 'num-2',
-          displayName: '2',
-          class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [2],
-        },
-        {
-          name: 'num-3',
-          displayName: '3',
-          class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [3],
-        },
-        {
-          name: 'num-4',
-          displayName: '4',
-          class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [4],
-        },
-        {
-          name: 'num-5',
-          displayName: '5',
-          class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [5],
-        },
-        {
-          name: 'num-6',
-          displayName: '6',
-          class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [6],
-        },
-        {
-          name: 'num-7',
-          displayName: '7',
-          class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [7],
-        },
-        {
-          name: 'num-8',
-          displayName: '8',
-          class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [8],
-        },
-        {
-          name: 'num-9',
-          displayName: '9',
-          class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [9],
-        },
-        {
-          name: 'num-0',
-          displayName: '0',
-          class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [0],
-        },
+        ...this.numberButtons,
         {
           name: 'dot',
           displayName: '.',
           class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [0],
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
+          onTapArgs: ['.'],
         },
         {
           name: 'C',
@@ -276,14 +194,14 @@ export class CalculatorPage implements OnInit, AfterViewInit {
           name: 'opening-parenthesis',
           displayName: '(',
           class: 'math-button-secondary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['('],
         },
         {
           name: 'closing-parenthesis',
           displayName: ')',
           class: 'math-button-secondary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: [')'],
         },
         {
@@ -296,152 +214,87 @@ export class CalculatorPage implements OnInit, AfterViewInit {
           name: 'plus',
           displayName: '+',
           class: 'math-button-secondary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['+'],
         },
         {
           name: 'minus',
           displayName: '-',
           class: 'math-button-secondary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['-'],
         },
         {
           name: 'multiply',
           displayName: 'x',
           class: 'math-button-secondary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['x'],
         },
         {
           name: 'divide',
           displayName: '÷',
           class: 'math-button-secondary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['÷'],
         },
         {
           name: 'equals',
           displayName: '=',
           class: 'math-button-primary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['='],
         },
         {
           name: 'sqrt',
           displayName: '√',
           class: 'math-button-secondary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['√'],
         },
         {
           name: 'pow',
           displayName: '^',
           class: 'math-button-secondary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['^'],
         },
         {
           name: 'pi',
           displayName: 'π',
           class: 'math-button-secondary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['π'],
         },
         {
           name: 'e',
           class: 'math-button-secondary md-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['e'],
         }
       ]
     };
     this.largeMathBtnGrid = {
-      gridAreas: `
-        "sin C       opening-parenthesis  closing-parenthesis backspace backspace"
-        "cos percent factorial            mod                 backspace backspace"
-        "tan num-1   num-2                num-3               plus      sqrt"
-        "lb  num-4   num-5                num-6               minus     pow"
-        "ln  num-7   num-8                num-9               multiply  pi"
-        "lg  num-0   dot                  equals              divide    e"
+      areas: `
+        "C   percent factorial mod    backspace backspace"
+        "Inv sin     cos       tan    opening-parenthesis closing-parenthesis"
+        "Hyp num-1   num-2     num-3  plus      sqrt"
+        "lb  num-4   num-5     num-6  minus     pow"
+        "ln  num-7   num-8     num-9  multiply  pi"
+        "lg  num-0   dot       equals divide    e"
       `,
+      width: 6,
+      height: 6,
+      isInversed: false,
+      isHyperbolic: false,
       buttons: [
-        {
-          name: 'num-1',
-          displayName: '1',
-          class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [1],
-        },
-        {
-          name: 'num-2',
-          displayName: '2',
-          class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [2],
-        },
-        {
-          name: 'num-3',
-          displayName: '3',
-          class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [3],
-        },
-        {
-          name: 'num-4',
-          displayName: '4',
-          class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [4],
-        },
-        {
-          name: 'num-5',
-          displayName: '5',
-          class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [5],
-        },
-        {
-          name: 'num-6',
-          displayName: '6',
-          class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [6],
-        },
-        {
-          name: 'num-7',
-          displayName: '7',
-          class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [7],
-        },
-        {
-          name: 'num-8',
-          displayName: '8',
-          class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [8],
-        },
-        {
-          name: 'num-9',
-          displayName: '9',
-          class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [9],
-        },
-        {
-          name: 'num-0',
-          displayName: '0',
-          class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [0],
-        },
+        ...this.numberButtons,
         {
           name: 'dot',
           displayName: '.',
           class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: [0],
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
+          onTapArgs: ['.'],
         },
         {
           name: 'C',
@@ -453,14 +306,14 @@ export class CalculatorPage implements OnInit, AfterViewInit {
           name: 'opening-parenthesis',
           displayName: '(',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['('],
         },
         {
           name: 'closing-parenthesis',
           displayName: ')',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: [')'],
         },
         {
@@ -473,118 +326,120 @@ export class CalculatorPage implements OnInit, AfterViewInit {
           name: 'plus',
           displayName: '+',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['+'],
         },
         {
           name: 'minus',
           displayName: '-',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['-'],
         },
         {
           name: 'multiply',
           displayName: 'x',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['x'],
         },
         {
           name: 'divide',
           displayName: '÷',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['÷'],
         },
         {
           name: 'equals',
           displayName: '=',
           class: 'math-button-primary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['='],
         },
         {
           name: 'sqrt',
           displayName: '√',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['√'],
         },
         {
           name: 'pow',
           displayName: '^',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['^'],
         },
         {
           name: 'pi',
           displayName: 'π',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['π'],
         },
         {
           name: 'e',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['e'],
         },
         {
           name: 'mod',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['mod'],
         },
         {
           name: 'percent',
           displayName: 'n%',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['%'],
         },
         {
           name: 'factorial',
           displayName: 'n!',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['!'],
         },
+        ...this.trigonometricFunctionButtons,
         {
-          name: 'sin',
+          name: 'Inv',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: ['sin'],
+          onTap: () => {
+            this.smallMathBtnGrid.isInversed = !this.smallMathBtnGrid.isInversed;
+            this.mediumMathBtnGrid.isInversed = !this.mediumMathBtnGrid.isInversed;
+            this.largeMathBtnGrid.isInversed = !this.largeMathBtnGrid.isInversed;
+          }
         },
         {
-          name: 'cos',
+          name: 'Hyp',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: ['cos'],
-        },
-        {
-          name: 'tan',
-          class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
-          onTapArgs: ['tan'],
+          onTap: () => {
+            this.smallMathBtnGrid.isHyperbolic = !this.smallMathBtnGrid.isHyperbolic;
+            this.mediumMathBtnGrid.isHyperbolic = !this.mediumMathBtnGrid.isHyperbolic;
+            this.largeMathBtnGrid.isHyperbolic = !this.largeMathBtnGrid.isHyperbolic;
+            console.log(this.largeMathBtnGrid.isHyperbolic);
+          }
         },
         {
           name: 'lb',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['lb'],
         },
         {
           name: 'ln',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['ln'],
         },
         {
           name: 'lg',
           class: 'math-button-secondary sm-text',
-          onTap: this.mathInput.addSymbolToCalculation.bind(this.mathInput),
+          onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['lg'],
         }
       ]
@@ -597,6 +452,10 @@ export class CalculatorPage implements OnInit, AfterViewInit {
   }
 
   formatNumber(num: number | string): string {
+    if (num.toString().includes('NaN')) {
+      console.log(num, this.mathEvaluator.evaluateAndFormat(this.expr, this.forceDeg));
+      return 'Invalid input';
+    }
     const numSplitAtDot = num.toString().includes('.') ? num.toString().split('.') : [num.toString()];
     // Add spaces between digits, but not to the decimals e.g. 1 250 010.12504
     const formattedNum = numSplitAtDot.length === 1

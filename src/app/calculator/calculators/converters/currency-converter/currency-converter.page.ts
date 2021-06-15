@@ -15,16 +15,16 @@ export interface CurrencyUnit extends Unit {
 export class CurrencyConverterPage implements OnInit {
   amount = '1';
   showOnlyMostTraded = true;
-  currentUnitName = 'Euro';
+  currentUnitName = 'US dollar';
   /*
   Multipliers are strings to avoid losing the precision with large numbers.
   Unit converter changes them into Decimals and calculates them correctly.
   */
   currentUnit: CurrencyUnit = {
-    name: 'Euro',
-    abbreviation: '€',
+    name: 'US dollar',
+    abbreviation: '$',
     multiplier: '1',
-    isoCode: 'EUR'
+    isoCode: 'USD'
   };
 
   constructor(public unitConverter: UnitConverterService, public currencyConverter: CurrencyConverterService) {
@@ -32,11 +32,11 @@ export class CurrencyConverterPage implements OnInit {
 
   async ngOnInit() {
     /*
-    Filter out currency with ISO code EUR because it's the base currency.
+    Filter out currency with ISO code USD because it's the base currency.
     The Foreign exchange rates API doesn't allow the base currency in the GET request
     */
     this.currencyConverter.isoCodes = this.currencyConverter.currencies
-      .filter((currency: CurrencyUnit) => currency.isoCode !== 'EUR')
+      .filter((currency: CurrencyUnit) => currency.isoCode !== 'USD')
       .map(({ isoCode }) => isoCode);
     if (Object.keys(this.currencyConverter.exchangeRates).length === 0) {
       this.currencyConverter.exchangeRates = await this.currencyConverter.getExchangeRates(this.currencyConverter.isoCodes);

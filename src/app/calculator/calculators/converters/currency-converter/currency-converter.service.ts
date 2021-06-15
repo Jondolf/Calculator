@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CurrencyUnit } from './currency-converter.page';
 import axios from 'axios';
 import { UnitConverterService } from '../unit-converter.service';
+import { CurrencyUnit } from './currency-converter.page';
+import { appId } from './open-exchange-rates-app-id.js';
 
 @Injectable({
   providedIn: 'root'
@@ -20,193 +21,193 @@ export class CurrencyConverterService {
     {
       name: 'Bulgarian lev',
       abbreviation: 'лв.',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'BGN'
     },
     {
       name: 'Brazilian real',
       abbreviation: 'R$',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'BRL'
     },
     {
       name: 'Canadian dollar',
       abbreviation: '$',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'CAD'
     },
     {
       name: 'Swiss franc',
       abbreviation: 'Fr.',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'CHF'
     },
     {
       name: 'Chinese yuan',
       abbreviation: '¥',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'CNY'
     },
     {
       name: 'Czech koruna',
       abbreviation: 'Kč',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'CZK'
     },
     {
       name: 'Danish krone',
       abbreviation: 'kr',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'DKK'
     },
     {
       name: 'Euro',
       abbreviation: '€',
-      multiplier: '1',
+      multiplier: 'NaN',
       isoCode: 'EUR'
     },
     {
       name: 'British pound',
       abbreviation: '£',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'GBP'
     },
     {
       name: 'Hong Kong dollar',
       abbreviation: '$',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'HKD'
     },
     {
       name: 'Croatian kuna',
       abbreviation: 'kn',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'HRK'
     },
     {
       name: 'Hungarian forint',
       abbreviation: 'Ft',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'HUF'
     },
     {
       name: 'Indonesian rupiah',
       abbreviation: 'Rp',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'IDR'
     },
     {
       name: 'Israeli shekel',
       abbreviation: '₪',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'ILS'
     },
     {
       name: 'Indian rupee',
       abbreviation: '₹',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'INR'
     },
     {
       name: 'Icelandic krona',
       abbreviation: 'kr',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'ISK'
     },
     {
       name: 'Japanese yen',
       abbreviation: '¥',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'JPY'
     },
     {
       name: 'South Korean won',
       abbreviation: '₩',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'KRW'
     },
     {
       name: 'Mexican peso',
       abbreviation: '$',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'MXN'
     },
     {
       name: 'Malaysian ringgit',
       abbreviation: 'RM',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'MYR'
     },
     {
       name: 'Norwegian krone',
       abbreviation: 'kr',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'NOK'
     },
     {
       name: 'New Zealand dollar',
       abbreviation: '$',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'NZD'
     },
     {
       name: 'Philippine peso',
       abbreviation: '₱',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'PHP'
     },
     {
       name: 'Polish zloty',
       abbreviation: 'zł',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'PLN'
     },
     {
       name: 'Romanian leu',
       abbreviation: 'lei',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'RON'
     },
     {
       name: 'Russian rouble',
       abbreviation: '₽',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'RUB'
     },
     {
       name: 'Swedish krona',
       abbreviation: 'kr',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'SEK'
     },
     {
       name: 'Singapore dollar',
       abbreviation: '$',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'SGD'
     },
     {
       name: 'Thai baht',
       abbreviation: '฿',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'THB'
     },
     {
       name: 'Turkish lira',
       abbreviation: '₺',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'TRY'
     },
     {
       name: 'US dollar',
       abbreviation: '$',
-      multiplier: '-1',
+      multiplier: '1',
       isoCode: 'USD'
     },
     {
       name: 'South African rand',
       abbreviation: 'R',
-      multiplier: '-1',
+      multiplier: 'NaN',
       isoCode: 'ZAR'
     }
   ];
@@ -228,11 +229,11 @@ export class CurrencyConverterService {
   }
 
   /**
-   * Gets exchange rates using the Foreign exchange rates API (https://exchangeratesapi.io/)
+   * Gets exchange rates using the open exchange rates API (https://openexchangerates.org/)
    */
   async getExchangeRates(isoCodes: string[]): Promise<number> {
     try {
-      const response = await axios.get(`https://api.exchangeratesapi.io/latest?symbols=${isoCodes.join(',')}`);
+      const response = await axios.get(`https://openexchangerates.org/api/latest.json?app_id=${appId}&symbols=${isoCodes.join(',')}`);
       return response.data.rates;
     } catch (error) {
       throw new Error(error);

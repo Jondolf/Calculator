@@ -1,17 +1,13 @@
 <div>
   <ion-item class="checkbox-container">
-    <ion-checkbox
-      [(ngModel)]="showOnlyMostTraded"
-      slot="start"
-      color="primary"
-    ></ion-checkbox>
+    <ion-checkbox [(ngModel)]="showOnlyMostTraded" slot="start" color="primary"></ion-checkbox>
     <ion-label>Show only most traded currencies</ion-label>
   </ion-item>
 
   <div class="unit-selection-container">
     <ion-label>Choose a currency</ion-label>
     <ion-select
-      value="euro"
+      value="US dollar"
       okText="Confirm"
       cancelText="Cancel"
       placeholder="Choose the unit"
@@ -32,17 +28,12 @@
           "
           [value]="currency.name"
         >
-          {{ currency.isoCode }} - {{ currency.name }} ({{ currency.abbreviation
-          }})
+          {{ currency.isoCode }} - {{ currency.name }} ({{ currency.abbreviation }})
         </ion-select-option>
       </ng-container>
       <ng-container *ngIf="!showOnlyMostTraded">
-        <ion-select-option
-          *ngFor="let currency of currencyConverter.currencies"
-          [value]="currency.name"
-        >
-          {{ currency.isoCode }} - {{ currency.name }} ({{ currency.abbreviation
-          }})
+        <ion-select-option *ngFor="let currency of currencyConverter.currencies" [value]="currency.name">
+          {{ currency.isoCode }} - {{ currency.name }} ({{ currency.abbreviation }})
         </ion-select-option>
       </ng-container>
     </ion-select>
@@ -68,7 +59,7 @@
       </div>
       <ion-item-group *ngIf="showOnlyMostTraded">
         <app-accordion-list
-          [listName]="'Most traded currencies (from Europian Central Bank)'"
+          [listName]="'Most traded currencies'"
           [iconName]="'chevron-down-outline'"
           [background]="'rgba(var(--ion-color-light-shade-rgb), 0.3)'"
         >
@@ -78,18 +69,12 @@
             "
           >
             <ion-label class="iso-code">{{ currency.isoCode }}</ion-label>
-            <ion-label
-              >{{ currency.name }} ({{ currency.abbreviation }})</ion-label
-            >
+            <ion-label>{{ currency.name }} ({{ currency.abbreviation }})</ion-label>
             <ion-label>
-              {{ currency.multiplier && currency.multiplier !== '-1' ?
-              unitConverter.formatUnit(unitConverter.convertUnit(currency,
-              currentUnit, amount)) : '' }} {{ currency.abbreviation }}
-              <ion-skeleton-text
-                *ngIf="currency.multiplier === '-1'"
-                animated
-                style="width: 100%;"
-              ></ion-skeleton-text>
+              {{ currency.multiplier && currency.multiplier !== 'NaN' ?
+              unitConverter.formatUnit(unitConverter.convertUnit(currency, currentUnit, amount)) : '' }} {{
+              currency.abbreviation }}
+              <ion-skeleton-text *ngIf="currency.multiplier === 'NaN'" animated style="width: 100%"></ion-skeleton-text>
             </ion-label>
           </ion-item>
         </app-accordion-list>
@@ -103,17 +88,11 @@
         >
           <ion-item *ngFor="let currency of currencyConverter.currencies">
             <ion-label class="iso-code">{{ currency.isoCode }}</ion-label>
-            <ion-label
-              >{{ currency.name }} ({{ currency.abbreviation }})</ion-label
-            >
+            <ion-label>{{ currency.name }} ({{ currency.abbreviation }})</ion-label>
             <ion-label>
-              {{ currency.multiplier && currency.multiplier !== '-1' ?
-              unitConverter.convertUnit(currency, currentUnit, amount) : '' }}
-              <ion-skeleton-text
-                *ngIf="currency.multiplier === '-1'"
-                animated
-                style="width: 100%;"
-              ></ion-skeleton-text>
+              {{ currency.multiplier && currency.multiplier !== 'NaN' ? unitConverter.convertUnit(currency, currentUnit,
+              amount) : '' }}
+              <ion-skeleton-text *ngIf="currency.multiplier === 'NaN'" animated style="width: 100%"></ion-skeleton-text>
             </ion-label>
           </ion-item>
         </app-accordion-list>

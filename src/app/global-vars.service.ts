@@ -9,12 +9,8 @@ export class GlobalVarsService {
   currentTheme = 'light default light';
   currentThemeChange = new Subject<string>();
 
-  isCalculatorMenuOpen = false;
-  isCalculatorMenuOpenChange = new Subject<boolean>();
+  isCalculatorMenuHidden = false;
+  isCalculatorMenuHiddenChange = new Subject<boolean>();
   isCalculatorButtonSettingsMenuOpen = false;
   isInSettings = false;
-
-  changeCurrentCalculator(calculatorName: string): void {
-    this.currentCalculator = calculatorName;
-  }
 }

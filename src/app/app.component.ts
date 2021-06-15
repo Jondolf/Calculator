@@ -1,15 +1,13 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { Platform, ModalController } from '@ionic/angular';
-import { Router } from '@angular/router';
-import { Keyboard } from '@ionic-native/keyboard/ngx';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { HeaderColor } from '@ionic-native/header-color/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import Decimal from 'decimal.js';
 import { GlobalVarsService } from './global-vars.service';
-import { CalculatorMenuModalComponent } from './calculator/calculator-menu-modal/calculator-menu-modal.component';
 
 
 Decimal.set({ precision: 100, rounding: 4 });
@@ -26,16 +24,14 @@ export class AppComponent {
   keyboardHeight = '0px';
 
   constructor(
+    public globals: GlobalVarsService,
     private platform: Platform,
     private keyboard: Keyboard,
     private splashScreen: SplashScreen,
     private headerColor: HeaderColor,
     private statusBar: StatusBar,
     private screenOrientation: ScreenOrientation,
-    public globals: GlobalVarsService,
-    public router: Router,
-    private storage: Storage,
-    private modalCtrl: ModalController
+    private storage: Storage
   ) {
     this.initializeApp();
   }
@@ -105,26 +101,5 @@ export class AppComponent {
 
   getCSSVar(varName: string): string {
     return getComputedStyle(document.body).getPropertyValue(varName);
-  }
-
-  async presentCalculatorMenuModal() {
-    const modal = await this.modalCtrl.create({
-      component: CalculatorMenuModalComponent,
-      cssClass: 'calculator-menu-modal'
-    });
-    await modal.present();
-    this.globals.isCalculatorMenuOpen = true;
-    this.globals.isCalculatorMenuOpenChange.next(this.globals.isCalculatorMenuOpen);
-    return modal.onDidDismiss().then(
-      (calculatorName: any) => {
-        if (calculatorName && calculatorName.data) {
-          const message: string = calculatorName.data.message;
-          const route = '/' + message.toLowerCase().replace(/ /, '-');
-          this.router.navigate([route]);
-          this.globals.currentCalculator = message;
-        }
-        this.globals.isCalculatorMenuOpen = false;
-        this.globals.isCalculatorMenuOpenChange.next(this.globals.isCalculatorMenuOpen);
-      });
   }
 }

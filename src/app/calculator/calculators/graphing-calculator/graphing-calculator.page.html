@@ -11,19 +11,14 @@
   <canvas width="4000" height="2000" id="canvas" #canvas></canvas>
 </div>
 
-<div
-  class="input-container"
-  [style.bottom]="isInputContainerOpen ? '0' : '-40vh'"
->
+<div class="input-container" [style.bottom]="isInputContainerOpen ? '0' : '-40vh'">
   <div
-    (click)="isInputContainerOpen = !isInputContainerOpen; onResize()"
-    (swipeup)="isInputContainerOpen = true; onResize()"
-    (swipedown)="isInputContainerOpen = false; onResize()"
+    (click)="isInputContainerOpen = !isInputContainerOpen"
+    (swipeup)="isInputContainerOpen = true"
+    (swipedown)="isInputContainerOpen = false"
     class="swipe-container"
   >
-    <i
-      [style.transform]="isInputContainerOpen ? 'rotate(0deg)' : 'rotate(180deg)'"
-      class="material-icons"
+    <i [style.transform]="isInputContainerOpen ? 'rotate(0deg)' : 'rotate(180deg)'" class="material-icons"
       >expand_more</i
     >
   </div>
@@ -34,13 +29,9 @@
       <ion-item button (click)="addSpecialSymbolToEquation('^')">^</ion-item>
     </ion-list>
     <ion-list class="equations-container">
-      <ion-item
-        *ngFor="let equation of equations; let i = index; trackBy: trackBy"
-      >
+      <ion-item *ngFor="let equation of equations; let i = index; trackBy: trackBy">
         <ion-buttons slot="start">
-          <ion-button
-            (click)="equations.splice(i, 1); drawingCtrl.handleDraw()"
-          >
+          <ion-button (click)="equations.splice(i, 1); drawingCtrl.handleDraw()">
             <ion-icon slot="icon-only" name="remove"></ion-icon>
           </ion-button>
         </ion-buttons>

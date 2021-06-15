@@ -12,23 +12,23 @@
     <div class="calculation-container">
       <app-math-input
         [eval]="mathEvaluator.evaluateAndFormat.bind(mathEvaluator)"
+        [isInversed]="currentMathButtonGrid ? currentMathButtonGrid.isInversed : false"
+        [isHyperbolic]="currentMathButtonGrid ? currentMathButtonGrid.isHyperbolic : false"
         (exprChange)="onExprChange($event)"
         #mathInput
       ></app-math-input>
-      <p class="current-result">{{ formatNumber(currentResult) }}</p>
+      <p class="current-result" *ngIf="expr[0] !== '=' && expr.length !== 0">{{ formatNumber(currentResult) }}</p>
     </div>
   </div>
 
   <app-more-commands-menu
     *ngIf="calculator.gridStyles.gridSize !== 'large'"
     [gridSize]="calculator.gridStyles.gridSize"
-    [addSymbolToCalculation]="mathInput.addSymbolToCalculation.bind(mathInput)"
+    [addSymbolToExpr]="mathInput.addSymbolToExpr.bind(mathInput)"
   ></app-more-commands-menu>
 
   <app-math-buttons
-    [grid]="calculator.gridStyles.gridSize === 'small'
-      ? smallMathBtnGrid
-      : (calculator.gridStyles.gridSize === 'medium' ? mediumMathBtnGrid : largeMathBtnGrid)"
+    [grid]="currentMathButtonGrid"
     [gridStyles]="calculator.gridStyles"
     [ngStyle]="{ top: calculator.gridStyles.gridSize === 'large' ? '25%' : '30%' }"
   ></app-math-buttons>

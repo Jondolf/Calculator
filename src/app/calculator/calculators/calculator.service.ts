@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import Decimal from 'decimal.js';
 
 /**
  * The normal, more performant version of the calculator's logic that doesn't use decimal.js.

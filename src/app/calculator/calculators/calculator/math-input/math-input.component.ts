@@ -9,7 +9,9 @@ export class MathInputComponent implements AfterViewInit {
   @ViewChild('mathInput') private mathInputRef: ElementRef;
   mathInput: HTMLInputElement;
 
-  @Input() eval: (expr: string) => number;
+  @Input() eval: (expr: string) => number | string;
+  @Input() isInversed: boolean;
+  @Input() isHyperbolic: boolean;
   @Output() exprChange = new EventEmitter<string>();
 
   private _expr = '';
@@ -19,16 +21,16 @@ export class MathInputComponent implements AfterViewInit {
   set expr(value) {
     this._expr = value;
     this.exprChange.emit(value);
+    console.log(value, this.eval(value));
   }
 
   private binaryOperators = ['+', '-', 'x', '÷', '%', '^', 'mod'];
-  private mathFunctions = ['sin', 'cos', 'tan', 'lb', 'ln', 'lg'];
+  private mathFunctions = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sinh', 'cosh', 'tanh', 'asinh', 'acosh', 'atanh', 'lb', 'ln', 'lg'];
 
   private selectionStart = this.expr.length;
   private selectionEnd = this.expr.length;
 
   constructor() { }
-
 
   ngAfterViewInit() {
     this.mathInput = this.mathInputRef.nativeElement;
@@ -110,30 +112,30 @@ export class MathInputComponent implements AfterViewInit {
         this.setSelection(this.selectionStart + 1, this.selectionEnd + 1);
       }
       if ('0123456789'.includes(e.key)) { // Numbers
-        this.addSymbolToCalculation(+e.key);
+        this.addSymbolToExpr(+e.key);
       } else if ('+-%^!()'.includes(e.key)) { // Plus, minus, percent, power, factorial, parentheses
-        this.addSymbolToCalculation(e.key);
+        this.addSymbolToExpr(e.key);
       } else if ('*x'.includes(e.key)) { // Multiply
-        this.addSymbolToCalculation('x');
+        this.addSymbolToExpr('x');
       } else if (e.key === '/') { // Divide
-        this.addSymbolToCalculation('÷');
+        this.addSymbolToExpr('÷');
       } else if ('.,'.includes(e.key)) { // Decimal separator
-        this.addSymbolToCalculation('.');
+        this.addSymbolToExpr('.');
       } else if (e.key.toLowerCase() === 'p') { // Pi
-        this.addSymbolToCalculation('π');
+        this.addSymbolToExpr('π');
       } else if (e.key.toLowerCase() === 'e') { // Euler
-        this.addSymbolToCalculation('e');
+        this.addSymbolToExpr('e');
       } else if (e.key.toLowerCase() === 'q') { // Square
-        this.addSymbolToCalculation('^');
-        this.addSymbolToCalculation(2);
+        this.addSymbolToExpr('^');
+        this.addSymbolToExpr(2);
       } else if ('s'.includes(e.key)) { // Sin
-        this.addSymbolToCalculation('sin');
+        this.addSymbolToExpr(`${this.isInversed ? 'a' : ''}sin${this.isHyperbolic ? 'h' : ''}`);
       } else if ('c'.includes(e.key)) { // Cos
-        this.addSymbolToCalculation('cos');
+        this.addSymbolToExpr(`${this.isInversed ? 'a' : ''}cos${this.isHyperbolic ? 'h' : ''}`);
       } else if ('t'.includes(e.key)) { // Tan
-        this.addSymbolToCalculation('tan');
+        this.addSymbolToExpr(`${this.isInversed ? 'a' : ''}tan${this.isHyperbolic ? 'h' : ''}`);
       } else if (this.expr[0] !== '=' && (e.key === 'Enter' || e.key === '=')) { // Result
-        this.addSymbolToCalculation('=');
+        this.addSymbolToExpr('=');
       } else if (e.key === 'Backspace') { // Remove previous
         this.deletePrev();
       } else if (e.key === 'Delete') { // Remove next
@@ -165,7 +167,7 @@ export class MathInputComponent implements AfterViewInit {
     } else {
       exprWithPasted = this.expr.slice(0, this.selectionStart) + text.toString() + this.expr.slice(this.selectionEnd);
     }
-    if (!isNaN(this.eval(exprWithPasted))) {
+    if (!isNaN(+this.eval(exprWithPasted))) {
       if (this.expr[0] === '=') {
         if (this.expr === '=NaN' || '0123456789πe'.includes(text)) {
           this.resetCalculation();
@@ -206,7 +208,7 @@ export class MathInputComponent implements AfterViewInit {
 
   setSelection(start: number, end: number) {
     setTimeout(() => {
-      if (this.expr[0] === '=') {
+      if (this.expr[start] === '=') {
         start++;
         end++;
       }
@@ -243,7 +245,7 @@ export class MathInputComponent implements AfterViewInit {
 
   collapseSelection(offset: number) {
     setTimeout(() => {
-      if (this.expr[0] === '=') {
+      if (this.expr[offset] === '=') {
         offset++;
       }
 
@@ -274,14 +276,10 @@ export class MathInputComponent implements AfterViewInit {
     this.collapseSelection(!isNaN(nextTermRange.end) ? nextTermRange.end : this.selectionEnd + 1);
   }
 
-  addSymbolToCalculation(symbol: string | number) {
+  addSymbolToExpr(symbol: string | number) {
     setTimeout(() => {
       this.selectionStart = this.getSelection().start;
       this.selectionEnd = this.getSelection().end;
-
-      if (symbol === 'Enter') {
-        return;
-      }
 
       const symbolBeforeCaret = this.expr[this.mathInput.selectionStart - 1] || this.expr[this.mathInput.selectionStart];
       const symbolAfterCaret = this.expr[this.mathInput.selectionEnd + 1] || this.expr[this.mathInput.selectionEnd];
@@ -322,15 +320,17 @@ export class MathInputComponent implements AfterViewInit {
         return;
       }
 
-      // Calculate expr and clear current result field if equals symbol is pressed
-      if (symbol.toString() === '=' && this.expr[0] !== '=') {
-        this.expr = `=${this.eval(this.expr)}`;
-        this.collapseSelection(this.expr.length);
+      // Calculate expr and if equals symbol is pressed
+      if (symbol.toString() === '=') {
+        if (this.expr[0] !== '=' && !isNaN(+this.eval(this.expr))) {
+          this.expr = `=${this.eval(this.expr)}`;
+          this.collapseSelection(this.expr.length);
+        }
         return;
       }
 
       if (this.expr[0] === '=') {
-        if (this.expr === '=NaN' || '0123456789πe'.includes(symbol.toString())) {
+        if ('0123456789πe'.includes(symbol.toString())) {
           this.resetCalculation();
           this.expr = this.expr.slice(0, this.selectionStart) + symbol.toString() + this.expr.slice(this.selectionEnd);
           this.collapseSelection(this.expr.length);
@@ -355,7 +355,11 @@ export class MathInputComponent implements AfterViewInit {
       }
 
       if ([...this.mathFunctions, '√'].includes(symbol.toString())) {
-        this.expr = `${this.expr.slice(0, this.selectionStart)}${symbol.toString()}(${this.expr.slice(this.selectionStart, this.selectionEnd)})${this.expr.slice(this.selectionEnd)}`;
+        if (this.selectionStart !== this.selectionEnd) {
+          this.expr = `${this.expr.slice(0, this.selectionStart)}${symbol.toString()}(${this.expr.slice(this.selectionStart, this.selectionEnd)})${this.expr.slice(this.selectionEnd)}`;
+        } else {
+          this.expr = `${this.expr.slice(0, this.selectionStart)}${symbol.toString()}(${this.expr.slice(this.selectionEnd)}`;
+        }
         this.collapseSelection(this.selectionEnd + symbol.toString().length + 1);
         return;
       }
@@ -384,8 +388,6 @@ export class MathInputComponent implements AfterViewInit {
       const isAtStart = this.selectionStart === 0;
 
       const prevTermRange = this.getPrevTermRangeForIndex(this.selectionStart);
-
-      console.log(prevTermRange);
 
       if (isCollapsed && this.expr[prevTermRange.end - 1] === '(' && this.expr[this.selectionEnd] === ')') {
         this.removeSection(prevTermRange.start, this.selectionEnd + 1);
@@ -446,28 +448,40 @@ export class MathInputComponent implements AfterViewInit {
   }
 
   getPrevTermRangeForIndex(index: number): { start: number; end: number; } {
+    const sixCharTermRange = this.getSliceRangeFromString(this.expr, ['asinh(', 'acosh(', 'atanh('], index - 6, index);
+    const fiveCharTermRange = this.getSliceRangeFromString(this.expr, ['asin(', 'acos(', 'atan(', 'sinh(', 'cosh(', 'tan('], index - 5, index);
     const fourCharTermRange = this.getSliceRangeFromString(this.expr, ['sin(', 'cos(', 'tan('], index - 4, index);
     const threeCharTermRange = this.getSliceRangeFromString(this.expr, ['lb(', 'ln(', 'lg(', 'mod'], index - 3, index);
     const twoCharTermRange = this.getSliceRangeFromString(this.expr, ['√('], index - 2, index);
-    if (!isNaN(fourCharTermRange.start) && !isNaN(fourCharTermRange.start)) {
+    if (!isNaN(sixCharTermRange.end) && !isNaN(sixCharTermRange.end)) {
+      return sixCharTermRange;
+    } else if (!isNaN(fiveCharTermRange.end) && !isNaN(fiveCharTermRange.end)) {
+      return fiveCharTermRange;
+    } else if (!isNaN(fourCharTermRange.end) && !isNaN(fourCharTermRange.end)) {
       return fourCharTermRange;
     } else if (!isNaN(threeCharTermRange.end) && !isNaN(threeCharTermRange.end)) {
       return threeCharTermRange;
-    } else if (!isNaN(twoCharTermRange.end) && !isNaN(twoCharTermRange.end)) {
+    } else if (!isNaN(twoCharTermRange.start) && !isNaN(twoCharTermRange.start)) {
       return twoCharTermRange;
     }
     return { start: NaN, end: NaN };
   }
 
   getNextTermRangeForIndex(index: number): { start: number; end: number; } {
+    const sixCharTermRange = this.getSliceRangeFromString(this.expr, ['asinh(', 'acosh(', 'atanh('], index - 5, index + 1);
+    const fiveCharTermRange = this.getSliceRangeFromString(this.expr, ['asin(', 'acos(', 'atan(', 'sinh(', 'cosh(', 'tanh('], index - 4, index + 1);
     const fourCharTermRange = this.getSliceRangeFromString(this.expr, ['sin(', 'cos(', 'tan('], index - 3, index + 1);
     const threeCharTermRange = this.getSliceRangeFromString(this.expr, ['lb(', 'ln(', 'lg(', 'mod'], index - 2, index + 1);
     const twoCharTermRange = this.getSliceRangeFromString(this.expr, ['√('], index - 1, index + 1);
-    if (!isNaN(fourCharTermRange.start) && !isNaN(fourCharTermRange.start)) {
+    if (!isNaN(sixCharTermRange.end) && !isNaN(sixCharTermRange.end)) {
+      return sixCharTermRange;
+    } else if (!isNaN(fiveCharTermRange.end) && !isNaN(fiveCharTermRange.end)) {
+      return fiveCharTermRange;
+    } else if (!isNaN(fourCharTermRange.end) && !isNaN(fourCharTermRange.end)) {
       return fourCharTermRange;
     } else if (!isNaN(threeCharTermRange.end) && !isNaN(threeCharTermRange.end)) {
       return threeCharTermRange;
-    } else if (!isNaN(twoCharTermRange.end) && !isNaN(twoCharTermRange.end)) {
+    } else if (!isNaN(twoCharTermRange.start) && !isNaN(twoCharTermRange.start)) {
       return twoCharTermRange;
     }
     return { start: NaN, end: NaN };

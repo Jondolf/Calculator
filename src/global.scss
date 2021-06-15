@@ -25,22 +25,47 @@
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
 
-body,
-html {
+$screen-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+) !default;
+
+@each $keySize, $valueSize in $screen-breakpoints {
+  [hidden-#{$keySize}] {
+    @media (min-width: $valueSize) {
+      display: none;
+    }
+  }
+}
+
+@each $keySize, $valueSize in $screen-breakpoints {
+  [visible-block-#{$keySize}] {
+    @media (min-width: $valueSize) {
+      display: block;
+    }
+  }
+}
+
+* {
   --ion-font-family: 'Nunito Sans', 'Lucida Sans', sans-serif;
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  height: 100%;
+  font-family: var(--ion-font-family);
+  caret-color: var(--ion-color-primary);
+
   ::selection {
     background-color: var(--ion-color-secondary);
   }
 }
 
-html,
-button,
-input {
-  font-family: 'Nunito Sans', 'Lucida Sans', sans-serif;
+body,
+html {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  height: 100%;
+  background-color: var(--ion-color-light);
 }
 
 h1,
@@ -54,12 +79,42 @@ h6 {
 
 button,
 input {
+  font-family: 'Nunito Sans', 'Lucida Sans', sans-serif;
   border: none;
   outline: none;
 }
 
 ion-button {
   text-transform: none;
+}
+
+app-math-buttons .math-buttons {
+  .math-button-primary {
+    background-color: rgba(var(--ion-color-light-shade-rgb), 0.7) !important;
+    color: var(--ion-color-light-contrast) !important;
+  }
+
+  .math-button-secondary {
+    background-color: rgba(var(--ion-color-secondary-rgb), 0.7) !important;
+    color: var(--ion-color-secondary-contrast) !important;
+  }
+
+  .math-button-tertiary {
+    background-color: rgba(var(--ion-color-tertiary-rgb), 0.7) !important;
+    color: var(--ion-color-tertiary-contrast) !important;
+  }
+
+  .lg-text {
+    font-size: 4.5vh !important;
+  }
+
+  .md-text {
+    font-size: 4vh !important;
+  }
+
+  .sm-text {
+    font-size: 3vh !important;
+  }
 }
 
 // To avoid white on white and black on black
@@ -98,17 +153,29 @@ ion-button {
   --background: transparent;
 }
 
-// To avoid white on white and black on black
-.light.pure-white .alert-wrapper,
-.dark.pure-black .alert-wrapper {
-  border: 1px solid var(--ion-color-light-contrast);
-  .alert-radio-icon {
-    border-color: var(--ion-color-light-contrast) !important;
+.light.pure-white,
+.dark.pure-black {
+  * {
+    caret-color: var(--ion-color-light-contrast);
   }
-  .alert-radio-inner {
-    background-color: var(--ion-color-light-contrast);
+
+  .math-buttons button {
+    border-color: rgba(var(--ion-color-light-contrast-rgb), 0.25) !important;
   }
-  .alert-button {
-    color: var(--ion-color-light-contrast);
+
+  .alert-wrapper {
+    border: 1px solid var(--ion-color-light-contrast);
+
+    .alert-radio-icon {
+      border-color: var(--ion-color-light-contrast) !important;
+    }
+
+    .alert-radio-inner {
+      background-color: var(--ion-color-light-contrast);
+    }
+
+    .alert-button {
+      color: var(--ion-color-light-contrast);
+    }
   }
 }

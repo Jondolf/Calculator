@@ -1,4 +1,6 @@
 :host {
+  display: block;
+  height: 100%;
   justify-content: flex-start;
   background-color: var(--ion-color-light-tint);
   --background: var(--ion-color-light-tint);
@@ -22,6 +24,7 @@
     padding: 0;
     ion-item {
       --background: var(--ion-color-light-tint);
+      --border-color: transparent;
       ion-icon,
       i.material-icons {
         color: var(--ion-color-light-contrast);
@@ -30,9 +33,6 @@
       ion-label {
         color: var(--ion-color-light-contrast);
       }
-    }
-    app-accordion-list ion-item {
-      padding-left: 16px;
     }
   }
 }

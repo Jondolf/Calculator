@@ -2,9 +2,9 @@
   class="math-buttons"
   *ngIf="grid"
   [ngStyle]="{
-    'grid-template-areas': grid.gridAreas,
-    'grid-template-rows': grid.rows,
-    'grid-template-columns': grid.columns,
+    'grid-template-areas': grid.areas,
+    'grid-template-rows': grid.rows || '1fr '.repeat(grid.height),
+    'grid-template-columns': grid.columns || '1fr '.repeat(grid.width),
     'grid-gap': gridStyles.gridGap,
     padding: gridStyles.gridGap
   }"
@@ -14,7 +14,7 @@
     (tap)="onTap(btn)"
     (press)="onPress(btn)"
     [ngStyle]="{
-      'grid-area': grid.gridAreas ? btn.name || btn.iconName : null,
+      'grid-area': grid.areas ? btn.name || btn.iconName : null,
       'border-radius': gridStyles.buttonStyles['border-radius'],
       'border-width': gridStyles.buttonStyles['border-width']
     }"

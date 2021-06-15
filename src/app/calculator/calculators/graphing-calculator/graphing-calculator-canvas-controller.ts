@@ -1,5 +1,5 @@
-import { Coordinate } from 'src/app/models/coordinate.interface';
 import Decimal from 'decimal.js';
+import { Coordinate } from 'src/app/models/coordinate.interface';
 
 export class GraphingCalculatorCanvasController {
   /**
@@ -14,21 +14,19 @@ export class GraphingCalculatorCanvasController {
   canvasHalf: Coordinate = { x: 0, y: 0 };
   canvasOffset: Coordinate = { x: 0, y: 0 };
   zoomLevel = 10;
-  amountOfSquares: { x: number, y: number };
+  amountOfSquares: { x: number, y: number; };
   squareSize = 0;
 
   stepBetweenCoordinates = new Decimal(1); // Decimal.js is used to avoid floating point problems
 
   //  When zoomLevel is under stepRange.min, the step decreases. When zoomLevel is over stepRange.max, the step increases.
-  private stepRange: { min: number, max: number } = { min: 10, max: 20 };
+  private stepRange: { min: number, max: number; } = { min: 10, max: 20 };
 
   constructor(private canvasElement: HTMLCanvasElement) { }
 
   pan(event): void {
-    this.canvasOffset = {
-      x: this.canvasOffset.x + event.velocityX * (this.squareSize * 0.0075),
-      y: this.canvasOffset.y - event.velocityY * (this.squareSize * 0.0075)
-    };
+    this.canvasOffset.x += event.velocityX;
+    this.canvasOffset.y -= event.velocityY;
     this.setCanvasSides();
   }
 

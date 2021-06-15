@@ -1,8 +1,8 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { PopoverController } from '@ionic/angular';
-import { OptionsPopoverComponent } from './options-popover/options-popover.component';
 import { GlobalVarsService } from 'src/app/global-vars.service';
+import { OptionsPopoverComponent } from './options-popover/options-popover.component';
 
 @Component({
   selector: 'app-top-bar',
@@ -10,7 +10,7 @@ import { GlobalVarsService } from 'src/app/global-vars.service';
   styleUrls: ['./top-bar.component.scss'],
 })
 export class TopBarComponent {
-  @Output() openCalculatorMenu = new EventEmitter();
+  @Output() toggleCalculatorMenuVisibility = new EventEmitter();
 
   constructor(public popoverController: PopoverController, public globals: GlobalVarsService, public router: Router) { }
 

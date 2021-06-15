@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CalculatorCustomStyles } from 'src/app/models/calculator-custom-styles.interface';
 
-type MathButton = {
+export type MathButton = {
   name?: string;
   displayName?: string;
   iconName?: string;
@@ -12,9 +12,13 @@ type MathButton = {
   onPressArgs?: Array<number | string>;
 };
 export type MathButtonGrid = {
-  gridAreas?: string;
+  areas?: string;
   rows?: string;
   columns?: string;
+  width?: number;
+  height?: number;
+  isInversed?: boolean;
+  isHyperbolic?: boolean;
   buttons: MathButton[];
 };
 

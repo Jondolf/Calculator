@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
-import { CurrencyConverterPageRoutingModule } from './currency-converter-routing.module';
-
-import { CurrencyConverterPage } from './currency-converter.page';
 import { AccordionListModule } from 'src/app/common/accordion-list/accordion-list.module';
+import { CurrencyConverterPageRoutingModule } from './currency-converter-routing.module';
+import { CurrencyConverterPage } from './currency-converter.page';
+
+
+
 
 @NgModule({
   imports: [
@@ -17,6 +17,8 @@ import { AccordionListModule } from 'src/app/common/accordion-list/accordion-lis
     CurrencyConverterPageRoutingModule,
     AccordionListModule
   ],
-  declarations: [CurrencyConverterPage]
+  declarations: [
+    CurrencyConverterPage
+  ]
 })
 export class CurrencyConverterPageModule { }
