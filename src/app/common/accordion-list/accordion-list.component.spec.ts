@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { AccordionListComponent } from './accordion-list.component';
@@ -7,7 +7,7 @@ describe('AccordionListComponent', () => {
   let component: AccordionListComponent;
   let fixture: ComponentFixture<AccordionListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AccordionListComponent ],
       imports: [IonicModule.forRoot()]

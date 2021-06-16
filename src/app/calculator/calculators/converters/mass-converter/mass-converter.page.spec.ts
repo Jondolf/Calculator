@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { MassConverterPage } from './mass-converter.page';
@@ -7,7 +7,7 @@ describe('MassConverterPage', () => {
   let component: MassConverterPage;
   let fixture: ComponentFixture<MassConverterPage>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [MassConverterPage],
       imports: [IonicModule.forRoot()]

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { CurrencyConverterPage } from './currency-converter.page';
@@ -7,7 +7,7 @@ describe('CurrencyConverterPage', () => {
   let component: CurrencyConverterPage;
   let fixture: ComponentFixture<CurrencyConverterPage>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [CurrencyConverterPage],
       imports: [IonicModule.forRoot()]

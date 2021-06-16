@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { CustomizeButtonsModalComponent } from './customize-buttons-modal.component';
@@ -7,7 +7,7 @@ describe('CustomizeButtonsModalComponent', () => {
   let component: CustomizeButtonsModalComponent;
   let fixture: ComponentFixture<CustomizeButtonsModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [CustomizeButtonsModalComponent],
       imports: [IonicModule.forRoot()]
