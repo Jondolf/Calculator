@@ -1,10 +1,9 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import { Storage } from '@ionic/storage';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { HeaderColor } from '@ionic-native/header-color/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ModalController, Platform } from '@ionic/angular';
-import { Button } from 'src/app/models/button.interface';
 import { GlobalVarsService } from 'src/app/global-vars.service';
+import { Button } from 'src/app/models/button.interface';
+import { StorageService } from 'src/app/storage.service';
 
 @Component({
   selector: 'app-themes-modal',
@@ -93,8 +92,7 @@ export class ThemesModalComponent {
     public globals: GlobalVarsService,
     private platform: Platform,
     private headerColor: HeaderColor,
-    private statusBar: StatusBar,
-    private storage: Storage,
+    private storage: StorageService,
     private modalController: ModalController) { }
 
   changeTheme(themeClassName: string) {

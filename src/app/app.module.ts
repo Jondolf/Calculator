@@ -7,7 +7,8 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { IonicStorageModule } from '@ionic/storage';
+import { Drivers } from '@ionic/storage';
+import { IonicStorageModule } from '@ionic/storage-angular';
 import * as Hammer from 'hammerjs';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,6 +26,7 @@ import { OptionsPopoverComponent } from './calculator/top-bar/options-popover/op
 import { TopBarComponent } from './calculator/top-bar/top-bar.component';
 // Common
 import { AccordionListModule } from './common/accordion-list/accordion-list.module';
+import { StorageService } from './storage.service';
 
 @Injectable()
 export class HammerConfig extends HammerGestureConfig {
@@ -52,7 +54,7 @@ export class HammerConfig extends HammerGestureConfig {
     IonicStorageModule.forRoot(
       {
         name: '_calculatordb',
-        driverOrder: ['indexeddb', 'sqlite', 'websql', 'localstorage']
+        driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]
       }),
     AppRoutingModule,
     FormsModule,
@@ -64,6 +66,7 @@ export class HammerConfig extends HammerGestureConfig {
     HeaderColor,
     StatusBar,
     SplashScreen,
+    StorageService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: HAMMER_GESTURE_CONFIG, useClass: HammerConfig }
   ],

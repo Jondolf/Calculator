@@ -5,9 +5,9 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Platform } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
 import Decimal from 'decimal.js';
 import { GlobalVarsService } from './global-vars.service';
+import { StorageService } from './storage.service';
 
 
 Decimal.set({ precision: 100, rounding: 4 });
@@ -31,7 +31,7 @@ export class AppComponent {
     private headerColor: HeaderColor,
     private statusBar: StatusBar,
     private screenOrientation: ScreenOrientation,
-    private storage: Storage
+    private storage: StorageService
   ) {
     this.initializeApp();
   }
@@ -70,6 +70,7 @@ export class AppComponent {
   async setTheme(): Promise<void> {
     try {
       const theme: string = await this.storage.get('theme');
+      console.log(theme);
       if (theme) {
         document.body.className = theme;
         this.globals.currentTheme = theme;

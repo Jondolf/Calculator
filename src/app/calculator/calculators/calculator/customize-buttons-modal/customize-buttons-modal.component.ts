@@ -1,7 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
 import { CalculatorCustomStyles } from 'src/app/models/calculator-custom-styles.interface';
+import { StorageService } from 'src/app/storage.service';
 import { CalculatorService } from '../calculator.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class CustomizeButtonsModalComponent implements OnInit, OnChanges {
   constructor(
     public modalController: ModalController,
     public calculator: CalculatorService,
-    private storage: Storage) { }
+    private storage: StorageService) { }
 
   ngOnInit() {
     this.styles = this.calculator.gridStyles;
