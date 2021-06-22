@@ -118,8 +118,8 @@ app-math-buttons .math-buttons {
 }
 
 // To avoid white on white and black on black
-.light.pure-white app-customize-buttons-modal,
-.dark.pure-black app-customize-buttons-modal {
+.light.pure-white,
+.dark.pure-black {
   ion-range {
     --ion-color-base: var(--ion-color-light-contrast) !important;
   }

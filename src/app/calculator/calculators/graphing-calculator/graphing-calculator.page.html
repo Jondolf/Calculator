@@ -1,14 +1,135 @@
 <div
-  (panstart)="canvasCtrl.pan($event); drawingCtrl.handleDraw()"
-  (panmove)="canvasCtrl.pan($event); drawingCtrl.handleDraw()"
-  (pinchin)="canvasCtrl.zoom(0.5); drawingCtrl.handleDraw()"
-  (pinchout)="canvasCtrl.zoom(-0.5); drawingCtrl.handleDraw()"
+  (panstart)="svgCtrl.pan($event)"
+  (panmove)="svgCtrl.pan($event)"
+  (pinchin)="svgCtrl.zoom(0.5)"
+  (pinchout)="svgCtrl.zoom(-0.5)"
   (tap)="onTap($event.tapCount)"
   [style.height]="isInputContainerOpen ? '60vh' : '95vh'"
   class="graph-container"
-  #canvascontainer
+  #svgcontainer
 >
-  <canvas width="4000" height="2000" id="canvas" #canvas></canvas>
+  <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" #svg>
+    <g class="axes" *ngIf="svgCtrl">
+      <svg class="x-axis">
+        <line
+          [attr.x1]="svgCtrl.svgSides.left"
+          [attr.x2]="svgCtrl.svgSides.right"
+          [attr.y1]="svgCtrl.svgOffset.y"
+          [attr.y2]="svgCtrl.svgOffset.y"
+          stroke="var(--ion-color-dark-shade)"
+          stroke-width="1.5"
+        />
+        <g class="axis-numbers-positive">
+          <text
+            *ngFor="let number of svgCtrl.axisNumbers.x.positive; let i = index"
+            [attr.x]="svgCtrl.svgOffset.x + svgCtrl.squareSize * (i + 1)"
+            [attr.y]="svgCtrl.svgOffset.y + 25"
+            class="axis-number"
+          >
+            {{ number }}
+          </text>
+        </g>
+        <g class="axis-number-negative">
+          <text
+            *ngFor="let number of svgCtrl.axisNumbers.x.negative; let i = index"
+            [attr.x]="svgCtrl.svgOffset.x - svgCtrl.squareSize * (i + 1)"
+            [attr.y]="svgCtrl.svgOffset.y + 25"
+            class="axis-number"
+          >
+            {{ number }}
+          </text>
+        </g>
+      </svg>
+      <svg class="y-axis">
+        <line
+          [attr.x1]="svgCtrl.svgOffset.x"
+          [attr.x2]="svgCtrl.svgOffset.x"
+          [attr.y1]="svgCtrl.svgSides.top"
+          [attr.y2]="svgCtrl.svgSides.bottom"
+          stroke="var(--ion-color-dark-shade)"
+          stroke-width="1.5"
+        />
+        <g class="axis-numbers-positive">
+          <text
+            *ngFor="let number of svgCtrl.axisNumbers.y.positive; let i = index"
+            [attr.x]="svgCtrl.svgOffset.x - 25"
+            [attr.y]="svgCtrl.svgOffset.y - svgCtrl.squareSize * (i + 1)"
+            class="axis-number"
+          >
+            {{ number }}
+          </text>
+        </g>
+        <g class="axis-numbers-negative">
+          <text
+            *ngFor="let number of svgCtrl.axisNumbers.y.negative; let i = index"
+            [attr.x]="svgCtrl.svgOffset.x - 25"
+            [attr.y]="svgCtrl.svgOffset.y + svgCtrl.squareSize * (i + 1)"
+            class="axis-number"
+          >
+            {{ number }}
+          </text>
+        </g>
+      </svg>
+    </g>
+    <g class="grids" *ngIf="svgCtrl">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern
+            id="smallGrid"
+            [attr.width]="svgCtrl.squareSize / 5"
+            [attr.height]="svgCtrl.squareSize / 5"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              [attr.d]="'M ' + svgCtrl.squareSize / 5 +' 0 L 0 0 0 '+ svgCtrl.squareSize / 5"
+              fill="none"
+              stroke="var(--ion-color-dark-tint)"
+              stroke-width="0.5"
+            />
+          </pattern>
+          <pattern
+            id="grid"
+            [attr.width]="svgCtrl.squareSize"
+            [attr.height]="svgCtrl.squareSize"
+            [attr.x]="svgCtrl.svgOffset.x"
+            [attr.y]="svgCtrl.svgOffset.y"
+            patternUnits="userSpaceOnUse"
+          >
+            <rect [attr.width]="svgCtrl.squareSize" [attr.height]="svgCtrl.squareSize" fill="url(#smallGrid)" />
+            <path
+              [attr.d]="'M ' + svgCtrl.squareSize + ' 0 L 0 0 0 ' + svgCtrl.squareSize"
+              fill="none"
+              stroke="var(--ion-color-dark-tint)"
+              stroke-width="1"
+            />
+          </pattern>
+        </defs>
+
+        <rect width="100%" height="100%" fill="url(#grid)" />
+      </svg>
+    </g>
+    <g class="graphs" *ngIf="graphs && svgCtrl">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" *ngFor="let graph of graphs">
+        <path
+          *ngIf="graph.type === 'Line'"
+          [attr.d]="graph.svgPath"
+          [attr.stroke]="graph.style.stroke"
+          [attr.stroke-width]="graph.style.strokeWidth"
+          [attr.fill]="graph.style.fill"
+          [attr.transform]="'translate(' + (svgCtrl.svgOffset.x - svgCtrl.svgMiddle.x) + ', ' + (svgCtrl.svgOffset.y - svgCtrl.svgMiddle.y) + ')'"
+        />
+        <circle
+          *ngIf="graph.type === 'Point'"
+          [attr.cx]="svgCtrl.convertCoordinatesToSvgCoordinates({ x: +graph.x, y: +graph.y }).x + (svgCtrl.svgOffset.x - svgCtrl.svgMiddle.x)"
+          [attr.cy]="svgCtrl.convertCoordinatesToSvgCoordinates({ x: +graph.x, y: +graph.y }).y + (svgCtrl.svgOffset.y - svgCtrl.svgMiddle.y)"
+          [attr.r]="graph.style.radius"
+          [attr.stroke]="graph.style.stroke"
+          [attr.stroke-width]="graph.style.strokeWidth"
+          [attr.fill]="graph.style.fill"
+        />
+      </svg>
+    </g>
+  </svg>
 </div>
 
 <div class="input-container" [style.bottom]="isInputContainerOpen ? '0' : '-40vh'">
@@ -22,35 +143,10 @@
       >expand_more</i
     >
   </div>
-  <div class="list-container">
-    <ion-list class="special-symbol-buttons-container">
-      <ion-item button (click)="addSpecialSymbolToEquation('π')">π</ion-item>
-      <ion-item button (click)="addSpecialSymbolToEquation('√')">√</ion-item>
-      <ion-item button (click)="addSpecialSymbolToEquation('^')">^</ion-item>
-    </ion-list>
-    <ion-list class="equations-container">
-      <ion-item *ngFor="let equation of equations; let i = index; trackBy: trackBy">
-        <ion-buttons slot="start">
-          <ion-button (click)="equations.splice(i, 1); drawingCtrl.handleDraw()">
-            <ion-icon slot="icon-only" name="remove"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-        <ion-input
-          type="text"
-          (input)="changeEquation(i, $event.target.value); drawingCtrl.handleDraw(); caretPosition = $event.target.selectionStart"
-          (ionFocus)="onEquationInputFocus(i, $event.target)"
-          (ionBlur)="caretPosition = $event.target.firstChild.selectionStart"
-          (keyup.enter)="$event.target.blur()"
-          [value]="equation"
-          placeholder="Type in an equation or coordinates"
-        ></ion-input>
-      </ion-item>
-      <ion-item button (click)="equations.push('')" class="add-equation-button">
-        <div class="add-icon-container">
-          <ion-icon slot="start" name="add"></ion-icon>
-        </div>
-        <ion-label>Add equation</ion-label>
-      </ion-item>
-    </ion-list>
-  </div>
+  <graphing-calculator-control-panel
+    [graphs]="graphs"
+    (addGraph)="addGraph($event)"
+    (removeGraph)="removeGraph($event)"
+    (changeStrokeWidth)="graphs[$event.index].style.strokeWidth = $event.width"
+  ></graphing-calculator-control-panel>
 </div>

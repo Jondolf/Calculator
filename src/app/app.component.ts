@@ -70,7 +70,6 @@ export class AppComponent {
   async setTheme(): Promise<void> {
     try {
       const theme: string = await this.storage.get('theme');
-      console.log(theme);
       if (theme) {
         document.body.className = theme;
         this.globals.currentTheme = theme;

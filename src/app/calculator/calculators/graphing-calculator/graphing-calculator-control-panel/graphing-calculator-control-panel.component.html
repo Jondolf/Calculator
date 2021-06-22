@@ -1,0 +1,52 @@
+<div class="control-panel">
+  <ion-item *ngFor="let graph of graphs; let i = index">
+    <div class="graph-input-container" *ngIf="graph.type === 'Line'">
+      <label [for]="'graph-equation-' + i">y=</label>
+      <input
+        type="text"
+        [id]="'graph-equation-' + i"
+        [value]="graph.equation"
+        (input)="graph.equation = $event.target.value"
+        (keyup.enter)="$event.target.blur()"
+        placeholder="Type in an equation"
+      />
+    </div>
+    <div class="graph-input-container" *ngIf="graph.type === 'Point'">
+      <label [for]="'point-coordinate' + i">(</label>
+      <input
+        type="text"
+        [id]="'point-coordinate' + i"
+        [value]="graph.equation"
+        (input)="graph.equation = $event.target.value"
+        (keyup.enter)="$event.target.blur()"
+        placeholder="Type in a coordinate"
+      />
+      <label [for]="'point-coordinate' + i">)</label>
+    </div>
+    <ion-buttons slot="end">
+      <ion-button (click)="openGraphOptions(graph, i)">
+        <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-item>
+  <ion-item button (click)="addGraph.emit('Line')" class="add-graph-button">
+    <div class="add-icon-container">
+      <ion-icon slot="start" name="add"></ion-icon>
+    </div>
+    <ion-label>Add line</ion-label>
+  </ion-item>
+  <ion-item button (click)="addGraph.emit('Point')" class="add-graph-button">
+    <div class="add-icon-container">
+      <ion-icon slot="start" name="add"></ion-icon>
+    </div>
+    <ion-label>Add point</ion-label>
+  </ion-item>
+
+  <graph-options
+    *ngIf="isGraphOptionsOpen"
+    [graph]="focusedGraph"
+    (close)="isGraphOptionsOpen = false"
+    (removeGraph)="removeGraph.emit(focusedGraphIndex)"
+    (changeGraphStyle)="changeGraphStyle.emit($event)"
+  ></graph-options>
+</div>

@@ -1,0 +1,46 @@
+:host {
+  width: 100%;
+  height: 100%;
+  padding-left: 16px;
+  background-color: var(--ion-color-light-tint);
+
+  * {
+    background-color: transparent;
+    --background: transparent;
+    color: var(--ion-color-light-contrast);
+    --color: var(--ion-color-light-contrast);
+  }
+
+  ion-item {
+    --padding-start: 0;
+  }
+
+  ion-range {
+    padding: 0;
+  }
+
+  h2,
+  h3 {
+    margin: 0;
+  }
+
+  .colors-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+
+    .color {
+      width: 24px;
+      height: 24px;
+      margin-right: 16px;
+      border-radius: 12px;
+      box-sizing: border-box;
+      transition: 0.2s;
+      &.active {
+        border: 4px solid var(--ion-color-primary);
+        border-radius: 6px;
+      }
+    }
+  }
+}

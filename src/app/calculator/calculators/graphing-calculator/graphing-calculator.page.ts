@@ -1,11 +1,10 @@
 import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { IonInput } from '@ionic/angular';
 import ResizeObserverPolyfill from 'resize-observer-polyfill'; // Normal resize observer gave errors
 import { Subscription } from 'rxjs';
-import { GlobalVarsService } from 'src/app/global-vars.service';
 import { MathEvaluatorService } from '../../math-evaluator/mathEvaluator.service';
-import { GraphingCalculatorCanvasController } from './graphing-calculator-canvas-controller';
-import { GraphingCalculatorDrawingController } from './graphing-calculator-drawing-controller';
+import { Coordinate } from './coordinate';
+import { GraphingCalculatorSvgController } from './graphing-calculator-svg-controller';
+import { Graph, GraphType, Line, Point } from './graphs';
 
 @Component({
   selector: 'app-graphing-calculator',
@@ -13,133 +12,95 @@ import { GraphingCalculatorDrawingController } from './graphing-calculator-drawi
   styleUrls: ['./graphing-calculator.page.scss'],
 })
 export class GraphingCalculatorPage implements AfterViewInit, AfterViewChecked, OnDestroy {
-  @ViewChild('canvas') canvasRef: ElementRef;
-  @ViewChild('canvascontainer') canvasContainerRef: ElementRef;
+  @ViewChild('svg') svgRef: ElementRef;
+  @ViewChild('svgcontainer') svgContainerRef: ElementRef;
+  svgElement: SVGElement;
+  svgContainerElement: HTMLDivElement;
 
-  canvasCtrl: GraphingCalculatorCanvasController;
-  drawingCtrl: GraphingCalculatorDrawingController;
-
-  canvasElement: HTMLCanvasElement;
-  canvasContainerElement: HTMLDivElement;
-  equations = ['y=x'];
+  svgCtrl: GraphingCalculatorSvgController;
+  graphs: Graph[] = [];
 
   mc: HammerManager;
 
   isFirstLoad = true; // Used in ngAfterViewChecked to make sure it gets called once
   isInputContainerOpen = true;
-  isMouseDownOnCanvas = false;
-
-  focusedEquationElement: IonInput;
-  focusedEquationIndex: number;
-  caretPosition: number;
+  isMouseDownOnSvg = false;
 
   themeSubscription: Subscription;
-
   resizeObserver: ResizeObserverPolyfill;
 
-  constructor(private mathEvaluator: MathEvaluatorService, private globals: GlobalVarsService) { }
+  constructor(private mathEvaluator: MathEvaluatorService) { }
 
-  ngAfterViewInit(): void {
-    this.canvasElement = this.canvasRef.nativeElement;
-    this.canvasContainerElement = this.canvasContainerRef.nativeElement;
+  ngAfterViewInit() {
+    this.svgElement = this.svgRef.nativeElement;
+    this.svgContainerElement = this.svgContainerRef.nativeElement;
   }
-  ngAfterViewChecked(): void {
+  ngAfterViewChecked() {
     if (this.isFirstLoad) {
-      if (this.canvasElement.offsetWidth !== 0) {
-        this.instantiateClasses();
-        this.canvasCtrl.handleSetCanvasSize();
-        this.setGraphColors();
+      this.svgCtrl = new GraphingCalculatorSvgController(this.svgElement);
+      this.svgCtrl.onResize();
+      this.graphs = [
+        new Line('x', { stroke: 'var(--ion-color-dark)', strokeWidth: 3, fill: 'none' }, this.svgCtrl, this.mathEvaluator),
+      ];
 
-        this.resizeObserver = new ResizeObserverPolyfill(() => {
-          this.canvasCtrl.handleSetCanvasSize();
-          this.drawingCtrl.handleDraw();
-        });
+      this.resizeObserver = new ResizeObserverPolyfill(() => this.svgCtrl.onResize());
 
-        this.resizeObserver.observe(this.canvasContainerElement);
+      this.resizeObserver.observe(this.svgContainerElement);
 
-        setTimeout(() => {
-          this.drawingCtrl.handleDraw();
-        }, 0);
+      this.mc = new Hammer(this.svgElement);
+      this.mc.on('pan', (e) => { this.svgCtrl.pan(e); });
 
-        this.mc = new Hammer(this.canvasElement);
-        this.mc.on('pan', (e) => { this.canvasCtrl.pan(e); this.drawingCtrl.handleDraw(); });
+      this.svgContainerElement.addEventListener('wheel',
+        (e: WheelEvent) => {
+          const targetCoord = this.getMousePosAsCoordinates(e);
+          const prevStepBetweenCoords = this.svgCtrl.stepBetweenCoordinates;
+          this.svgCtrl.zoom(e.deltaY < 0 ? -1 : 1);
+          const newMouseCoord = this.getMousePosAsCoordinates(e);
+          const newStepBetweenCoords = this.svgCtrl.stepBetweenCoordinates;
+          const mousePosDiff = new Coordinate(targetCoord.x - newMouseCoord.x, targetCoord.y - newMouseCoord.y);
+          const stepDiff = +prevStepBetweenCoords - +newStepBetweenCoords;
+          // console.log('mouse pos:', targetCoord, newMouseCoord);
+          this.svgCtrl.svgOffsetAsCoordinates.x -= mousePosDiff.x + (stepDiff === 0 ? 0 : stepDiff / stepDiff);
+          this.svgCtrl.svgOffsetAsCoordinates.y -= mousePosDiff.y + (stepDiff === 0 ? 0 : stepDiff / stepDiff);
+          // console.log('svg offset:', this.svgCtrl.svgOffsetAsCoordinates);
+          this.svgCtrl.svgOffset = this.svgCtrl.convertCoordinatesToSvgCoordinates(this.svgCtrl.svgOffsetAsCoordinates);
+          this.svgCtrl.setSvgSidesAsCoordinates();
+          this.svgCtrl.setAxisNumbers();
+          this.svgCtrl.svgTransformSubject.next();
+        }, { passive: false });
 
-        this.subscribeToThemeChanges();
-
-        this.canvasContainerElement.addEventListener('wheel',
-          (e: WheelEvent) => { this.canvasCtrl.zoom(e.deltaY < 0 ? -1 : 1); this.drawingCtrl.handleDraw(); }, { passive: false });
-
-        this.isFirstLoad = false;
-      }
+      this.isFirstLoad = false;
     }
   }
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.themeSubscription.unsubscribe();
-    this.resizeObserver.unobserve(this.canvasContainerElement);
+    this.resizeObserver.unobserve(this.svgContainerElement);
     this.mc.off('pan');
+    this.graphs.forEach(shape => shape.destroy());
   }
 
-  instantiateClasses(): void {
-    this.canvasCtrl = new GraphingCalculatorCanvasController(this.canvasElement);
-    this.drawingCtrl = new GraphingCalculatorDrawingController(
-      this.canvasElement,
-      this.canvasCtrl,
-      this.mathEvaluator,
-      this.equations,
-      { squareBorderWidth: 5, squareBorderColor: 'rgba(175, 175, 175, 0.5)', coordinateSystemColor: 'black' }
-    );
+  getMousePosAsCoordinates(e: MouseEvent): Coordinate {
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
+    return this.svgCtrl.convertSvgCoordinatesToCoordinates(new Coordinate(e.clientX - rect.left, e.clientY - rect.top));
   }
 
-  subscribeToThemeChanges(): void {
-    this.themeSubscription = this.globals.currentThemeChange.subscribe(() => {
-      this.setGraphColors();
-      this.drawingCtrl.handleDraw();
-    });
-  }
-
-  onTap(tapCount: number): void {
+  onTap(tapCount: number) {
     if (tapCount === 2) {
-      this.canvasCtrl.zoom(-2);
-      this.drawingCtrl.handleDraw();
+      this.svgCtrl.zoom(-2);
     }
   }
 
-  setGraphColors(): void {
-    if (this.globals.currentTheme.includes('light')) {
-      this.drawingCtrl.contextStyles.coordinateSystemColor = 'black';
-    } else {
-      this.drawingCtrl.contextStyles.coordinateSystemColor = 'white';
+  addGraph(graphType: GraphType) {
+    switch (graphType) {
+      case 'Line':
+        this.graphs.push(new Line('', { stroke: 'var(--ion-color-dark)', strokeWidth: 3, fill: 'none' }, this.svgCtrl, this.mathEvaluator));
+        break;
+      case 'Point':
+        this.graphs.push(new Point('', { stroke: 'var(--ion-color-dark)', strokeWidth: 3, fill: 'var(--ion-color-primary)', radius: 6 }));
     }
   }
 
-  changeEquation(index: number, newEquation: string): void {
-    this.equations[index] = newEquation;
-    this.drawingCtrl.equations = this.equations;
-    this.drawingCtrl.savedYValuesForEquation = {};
-  }
-
-  async onEquationInputFocus(equationIndex: number, eventTarget: IonInput): Promise<void> {
-    const inputElement: HTMLInputElement = await eventTarget.getInputElement();
-    this.focusedEquationElement = eventTarget;
-    this.focusedEquationIndex = equationIndex;
-    this.caretPosition = inputElement.selectionStart;
-  }
-
-  async addSpecialSymbolToEquation(symbol: string): Promise<void> {
-    if (this.focusedEquationElement && this.caretPosition) {
-      this.equations[this.focusedEquationIndex] = this.insertCharToString(
-        symbol, this.equations[this.focusedEquationIndex], this.caretPosition);
-      this.caretPosition = this.caretPosition + 1;
-      this.focusedEquationElement.setFocus();
-      this.drawingCtrl.handleDraw();
-    }
-  }
-  insertCharToString(char: string, str: string, index: number): string {
-    return [str.slice(0, index), char, str.slice(index)].join('');
-  }
-
-  // Used in a template for-loop to avoid an unfocus problem
-  trackBy(index: number): number {
-    return index;
+  removeGraph(index: number) {
+    this.graphs.splice(index, 1);
   }
 }

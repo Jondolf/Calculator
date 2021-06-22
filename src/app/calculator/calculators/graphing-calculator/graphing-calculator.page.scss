@@ -7,12 +7,25 @@
   width: 100%;
   height: 60%;
   transition: height 0.5s ease;
-  canvas {
+
+  > svg {
     width: 100%;
     height: 100%;
-    margin: auto;
-    position: relative;
-    transform: scale(1);
+
+    .axes {
+      .axis-number {
+        font: normal 14px 'Nunito Sans';
+        fill: var(--ion-color-dark-shade);
+      }
+
+      .x-axis .axis-number {
+        text-anchor: middle;
+      }
+
+      .y-axis .axis-number {
+        text-anchor: end;
+      }
+    }
   }
 }
 
@@ -35,76 +48,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
     i {
       transition: 0.5s ease;
       color: var(--ion-color-light-contrast);
-    }
-  }
-
-  .list-container {
-    background-color: rgba(var(--ion-color-light-tint-rgb), 0.85);
-    max-height: 100%;
-    overflow: auto;
-
-    ion-list.special-symbol-buttons-container {
-      padding: 0;
-      background-color: rgba(var(--ion-color-light-shade-rgb), 0.25);
-      display: flex;
-      overflow: auto;
-      --inner-border-width: 0;
-
-      ion-item {
-        height: 32px;
-        margin-left: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        --color: var(--ion-color-light-contrast);
-        --background: transparent;
-        --inner-border-width: 0;
-      }
-    }
-
-    ion-list.equations-container {
-      padding: 0;
-      background-color: rgba(var(--ion-color-light-tint-rgb), 0.5);
-      overflow: auto;
-      --inner-border-width: 0;
-
-      ion-item {
-        --color: var(--ion-color-light-contrast);
-        --background: transparent;
-        --border-color: rgba(var(--ion-color-light-contrast-rgb), 0.5);
-
-        ion-input {
-          --padding-end: 10px;
-        }
-
-        ion-icon {
-          color: var(--ion-color-light-contrast);
-        }
-      }
-
-      .add-equation-button {
-        --color: var(--ion-color-light-contrast);
-        --background: transparent;
-        --inner-border-width: 0;
-
-        .add-icon-container {
-          width: 48px;
-          height: 48px;
-          margin-right: 32px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-
-          ion-icon {
-            width: 24px;
-            height: 24px;
-            color: var(--ion-color-light-contrast);
-          }
-        }
-      }
     }
   }
 }

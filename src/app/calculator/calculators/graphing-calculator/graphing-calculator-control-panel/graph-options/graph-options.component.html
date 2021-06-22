@@ -1,0 +1,81 @@
+<ion-item lines="none">
+  <ion-label slot="start">{{
+    graph.type === 'Line' ? 'y=' + graph.equation : graph.type === 'Point' ? '(' + graph.equation + ')' : ''
+  }}</ion-label>
+  <ion-buttons slot="end">
+    <ion-button slot="start" (click)="close.emit()">
+      <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-item>
+
+<ion-item lines="none">
+  <h2>Graph options</h2>
+  <ion-buttons slot="end">
+    <ion-button slot="start" (click)="removeGraph.emit(); close.emit()">
+      <ion-icon slot="icon-only" name="trash-outline" color="danger"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-item>
+
+<ion-list class="colors">
+  <h3>Color</h3>
+  <ion-item lines="none">
+    <ion-label slot="start">Stroke color</ion-label>
+    <div class="colors-container">
+      <div
+        class="color"
+        *ngFor="let color of colors"
+        [ngClass]="color === graph.style.stroke ? 'active' : ''"
+        [ngStyle]="{ 'background-color': color }"
+        (click)="graphStyle.stroke = color; changeGraphStyle.emit(graphStyle)"
+      ></div>
+    </div>
+  </ion-item>
+  <ion-item *ngIf="graph.type !== 'Line'" lines="none">
+    <ion-label slot="start">Fill color</ion-label>
+    <div class="colors-container">
+      <div
+        class="color"
+        *ngFor="let color of colors"
+        [ngClass]="color === graph.style.fill ? 'active' : ''"
+        [ngStyle]="{ 'background-color': color }"
+        (click)="graphStyle.fill = color; changeGraphStyle.emit(graphStyle)"
+      ></div>
+    </div>
+  </ion-item>
+</ion-list>
+
+<ion-list class="size">
+  <h3>Size</h3>
+  <ion-item lines="none">
+    <ion-label>Stroke width</ion-label>
+    <ion-range
+      min="1"
+      max="10"
+      color="secondary"
+      [snaps]="true"
+      [ticks]="true"
+      [value]="graphStyle.strokeWidth"
+      (ionChange)="graphStyle.strokeWidth = $event.target.value; changeGraphStyle.emit(graphStyle)"
+    >
+      <ion-label slot="start">1</ion-label>
+      <ion-label slot="end">10</ion-label>
+    </ion-range>
+  </ion-item>
+  <ion-item lines="none" *ngIf="graph.type === 'Point'">
+    <ion-label>Point radius</ion-label>
+    <ion-range
+      min="1"
+      max="10"
+      color="secondary"
+      [snaps]="true"
+      [ticks]="true"
+      [value]="graphStyle.radius"
+      (ionChange)="graphStyle.radius = $event.target.value; changeGraphStyle.emit(graphStyle)"
+    >
+      <ion-label slot="start">1</ion-label>
+      <ion-label slot="end">10</ion-label>
+    </ion-range>
+  </ion-item>
+</ion-list>
