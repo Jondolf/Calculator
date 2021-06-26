@@ -11,9 +11,11 @@
     >
     <div class="calculation-container">
       <app-math-input
+        [commands]="mathCommands"
         [eval]="mathEvaluator.evaluateAndFormat.bind(mathEvaluator)"
         [isInversed]="currentMathButtonGrid ? currentMathButtonGrid.isInversed : false"
         [isHyperbolic]="currentMathButtonGrid ? currentMathButtonGrid.isHyperbolic : false"
+        [customOperatorSymbols]="{ multiply: 'x', divide: '÷' }"
         (exprChange)="onExprChange($event)"
         #mathInput
       ></app-math-input>

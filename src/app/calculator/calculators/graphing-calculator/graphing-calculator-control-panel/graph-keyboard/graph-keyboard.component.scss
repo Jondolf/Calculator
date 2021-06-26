@@ -1,0 +1,46 @@
+:host {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--ion-color-light-tint);
+  z-index: 3;
+
+  ion-item {
+    background-color: transparent;
+    --background: transparent;
+    color: var(--ion-color-light-contrast);
+    --color: var(--ion-color-light-contrast);
+
+    .equation-container {
+      display: flex;
+      align-items: center;
+      width: calc(100% - 96px);
+      height: 100%;
+      margin-right: 0;
+    }
+  }
+
+  app-math-input {
+    flex: 1;
+
+    input {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: transparent;
+      border: none;
+      outline: none;
+    }
+  }
+
+  app-math-buttons {
+    position: absolute;
+    top: 48px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+}

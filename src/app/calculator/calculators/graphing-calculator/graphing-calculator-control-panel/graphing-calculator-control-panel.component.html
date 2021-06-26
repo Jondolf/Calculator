@@ -1,15 +1,11 @@
 <div class="control-panel">
   <ion-item *ngFor="let graph of graphs; let i = index">
-    <div class="graph-input-container" *ngIf="graph.type === 'Line'">
-      <label [for]="'graph-equation-' + i">y=</label>
-      <input
-        type="text"
-        [id]="'graph-equation-' + i"
-        [value]="graph.equation"
-        (input)="graph.equation = $event.target.value"
-        (keyup.enter)="$event.target.blur()"
-        placeholder="Type in an equation"
-      />
+    <div
+      class="graph-input-container"
+      *ngIf="graph.type === 'Line'"
+      (click)="setFocusedGraph(graph, i); isEditingEquation = true"
+    >
+      <span>y={{ graph.equation }}</span>
     </div>
     <div class="graph-input-container" *ngIf="graph.type === 'Point'">
       <label [for]="'point-coordinate' + i">(</label>
@@ -19,13 +15,13 @@
         [value]="graph.equation"
         (input)="graph.equation = $event.target.value"
         (keyup.enter)="$event.target.blur()"
-        placeholder="Type in a coordinate"
+        placeholder="x, y"
       />
       <label [for]="'point-coordinate' + i">)</label>
     </div>
     <ion-buttons slot="end">
-      <ion-button (click)="openGraphOptions(graph, i)">
-        <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+      <ion-button (click)="isGraphOptionsOpen = true; setFocusedGraph(graph, i)">
+        <ion-icon slot="icon-only" name="settings-outline" [style.color]="graph.style.stroke"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-item>
@@ -49,4 +45,11 @@
     (removeGraph)="removeGraph.emit(focusedGraphIndex)"
     (changeGraphStyle)="changeGraphStyle.emit($event)"
   ></graph-options>
+  <graph-keyboard
+    *ngIf="isEditingEquation"
+    [graph]="focusedGraph"
+    (close)="isEditingEquation = false"
+    [evalExpr]="evalExpr"
+    (equationChange)="equationChange.emit({ graphIndex: focusedGraphIndex, value: $event })"
+  ></graph-keyboard>
 </div>

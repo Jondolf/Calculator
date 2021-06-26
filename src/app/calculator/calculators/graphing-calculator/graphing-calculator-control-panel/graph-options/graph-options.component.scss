@@ -31,8 +31,8 @@
     width: 100%;
 
     .color {
-      width: 24px;
-      height: 24px;
+      min-width: 24px;
+      min-height: 24px;
       margin-right: 16px;
       border-radius: 12px;
       box-sizing: border-box;

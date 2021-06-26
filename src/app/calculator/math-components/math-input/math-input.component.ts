@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { MathCommand } from '../math-command.type';
 
 @Component({
   selector: 'app-math-input',
@@ -9,22 +10,44 @@ export class MathInputComponent implements AfterViewInit {
   @ViewChild('mathInput') private mathInputRef: ElementRef;
   mathInput: HTMLInputElement;
 
+  @Input() commands: MathCommand[];
+  @Input() initialExpr: string;
+  @Input() placeholder: string;
   @Input() eval: (expr: string) => number | string;
   @Input() isInversed: boolean;
   @Input() isHyperbolic: boolean;
+  @Input() customOperatorSymbols: {
+    plus?: string;
+    minus?: string;
+    multiply?: string;
+    divide?: string;
+    percent?: string;
+    power?: string;
+    modulo?: string;
+  };
   @Output() exprChange = new EventEmitter<string>();
 
   private _expr = '';
-  get expr() {
+  get expr(): string {
     return this._expr;
   }
   set expr(value) {
     this._expr = value;
     this.exprChange.emit(value);
-    console.log(value, this.eval(value));
+  }
+  get exprWithCustomOperatorSymbols(): string {
+    const exprWithCustomOperators = this.customOperatorSymbols ? this._expr
+      .replace(/\+/g, this.customOperatorSymbols.plus || '+')
+      .replace(/-/g, this.customOperatorSymbols.minus || '-')
+      .replace(/\*/g, this.customOperatorSymbols.multiply || '*')
+      .replace(/\//g, this.customOperatorSymbols.divide || '/')
+      .replace(/%/g, this.customOperatorSymbols.percent || '%')
+      .replace(/\^/g, this.customOperatorSymbols.power || '^')
+      .replace(/mod/g, this.customOperatorSymbols.modulo || 'mod') : this._expr;
+    return exprWithCustomOperators;
   }
 
-  private binaryOperators = ['+', '-', 'x', '÷', '%', '^', 'mod'];
+  private binaryOperators = ['+', '-', '*', '/', '%', '^', 'mod'];
   private mathFunctions = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sinh', 'cosh', 'tanh', 'asinh', 'acosh', 'atanh', 'lb', 'ln', 'lg'];
 
   private selectionStart = this.expr.length;
@@ -34,6 +57,9 @@ export class MathInputComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.mathInput = this.mathInputRef.nativeElement;
+    if (this.initialExpr) {
+      this.expr = this.initialExpr;
+    }
   }
 
   onKeyDown(e: KeyboardEvent) {
@@ -111,37 +137,18 @@ export class MathInputComponent implements AfterViewInit {
       if (this.expr[this.selectionStart] === '=') {
         this.setSelection(this.selectionStart + 1, this.selectionEnd + 1);
       }
-      if ('0123456789'.includes(e.key)) { // Numbers
-        this.addSymbolToExpr(+e.key);
-      } else if ('+-%^!()'.includes(e.key)) { // Plus, minus, percent, power, factorial, parentheses
-        this.addSymbolToExpr(e.key);
-      } else if ('*x'.includes(e.key)) { // Multiply
-        this.addSymbolToExpr('x');
-      } else if (e.key === '/') { // Divide
-        this.addSymbolToExpr('÷');
-      } else if ('.,'.includes(e.key)) { // Decimal separator
-        this.addSymbolToExpr('.');
-      } else if (e.key.toLowerCase() === 'p') { // Pi
-        this.addSymbolToExpr('π');
-      } else if (e.key.toLowerCase() === 'e') { // Euler
-        this.addSymbolToExpr('e');
-      } else if (e.key.toLowerCase() === 'q') { // Square
-        this.addSymbolToExpr('^');
-        this.addSymbolToExpr(2);
-      } else if ('s'.includes(e.key)) { // Sin
-        this.addSymbolToExpr(`${this.isInversed ? 'a' : ''}sin${this.isHyperbolic ? 'h' : ''}`);
-      } else if ('c'.includes(e.key)) { // Cos
-        this.addSymbolToExpr(`${this.isInversed ? 'a' : ''}cos${this.isHyperbolic ? 'h' : ''}`);
-      } else if ('t'.includes(e.key)) { // Tan
-        this.addSymbolToExpr(`${this.isInversed ? 'a' : ''}tan${this.isHyperbolic ? 'h' : ''}`);
-      } else if (this.expr[0] !== '=' && (e.key === 'Enter' || e.key === '=')) { // Result
-        this.addSymbolToExpr('=');
-      } else if (e.key === 'Backspace') { // Remove previous
+      if (e.key === 'Backspace') {
         this.deletePrev();
-      } else if (e.key === 'Delete') { // Remove next
+      } else if (e.key === 'Delete') {
         this.deleteNext();
-      } else if (e.key === 'Escape') { // Reset
+      } else if (e.key === 'Escape') {
         this.resetCalculation();
+      } else {
+        const shortcut = e.key;
+        const command = this.commands.find(command => command.shortcuts.includes(shortcut));
+        if (command) {
+          command.command(command.commandArgs);
+        }
       }
       this.mathInput.focus();
     }, 0);
@@ -285,7 +292,7 @@ export class MathInputComponent implements AfterViewInit {
       const symbolAfterCaret = this.expr[this.mathInput.selectionEnd + 1] || this.expr[this.mathInput.selectionEnd];
 
       // Don't allow operator as first symbol (except plus and minus symbols)
-      if (['x', '÷', '%', '^', 'mod', '!'].includes(symbol.toString()) && this.selectionStart === 0) {
+      if (['*', '/', '%', '^', 'mod', '!'].includes(symbol.toString()) && this.selectionStart === 0) {
         this.collapseSelection(this.selectionStart);
         return;
       }
@@ -447,7 +454,7 @@ export class MathInputComponent implements AfterViewInit {
     }, 0);
   }
 
-  getPrevTermRangeForIndex(index: number): { start: number; end: number; } {
+  private getPrevTermRangeForIndex(index: number): { start: number; end: number; } {
     const sixCharTermRange = this.getSliceRangeFromString(this.expr, ['asinh(', 'acosh(', 'atanh('], index - 6, index);
     const fiveCharTermRange = this.getSliceRangeFromString(this.expr, ['asin(', 'acos(', 'atan(', 'sinh(', 'cosh(', 'tan('], index - 5, index);
     const fourCharTermRange = this.getSliceRangeFromString(this.expr, ['sin(', 'cos(', 'tan('], index - 4, index);
@@ -467,7 +474,7 @@ export class MathInputComponent implements AfterViewInit {
     return { start: NaN, end: NaN };
   }
 
-  getNextTermRangeForIndex(index: number): { start: number; end: number; } {
+  private getNextTermRangeForIndex(index: number): { start: number; end: number; } {
     const sixCharTermRange = this.getSliceRangeFromString(this.expr, ['asinh(', 'acosh(', 'atanh('], index - 5, index + 1);
     const fiveCharTermRange = this.getSliceRangeFromString(this.expr, ['asin(', 'acos(', 'atan(', 'sinh(', 'cosh(', 'tanh('], index - 4, index + 1);
     const fourCharTermRange = this.getSliceRangeFromString(this.expr, ['sin(', 'cos(', 'tan('], index - 3, index + 1);
@@ -487,7 +494,7 @@ export class MathInputComponent implements AfterViewInit {
     return { start: NaN, end: NaN };
   }
 
-  getSliceRangeFromString(str: string, targetSlices: string | string[], start: number, end: number): { start: number; end: number; } {
+  private getSliceRangeFromString(str: string, targetSlices: string | string[], start: number, end: number): { start: number; end: number; } {
     let sliceStart = start;
     let sliceEnd = end;
     while (sliceStart < end) {

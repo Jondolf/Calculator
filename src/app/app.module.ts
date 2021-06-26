@@ -16,9 +16,8 @@ import { CalculatorMenuComponent } from './calculator/calculator-menu/calculator
 // Calculator
 import { CalculatorPage } from './calculator/calculators/calculator/calculator.page';
 import { CustomizeButtonsModalComponent } from './calculator/calculators/calculator/customize-buttons-modal/customize-buttons-modal.component';
-import { MathButtonsComponent } from './calculator/calculators/calculator/math-buttons/math-buttons.component';
-import { MathInputComponent } from './calculator/calculators/calculator/math-input/math-input.component';
 import { MoreCommandsMenuComponent } from './calculator/calculators/calculator/more-commands-menu/more-commands-menu.component';
+import { MathModule } from './calculator/math-components/math.module';
 // Settings
 import { SettingsModalComponent } from './calculator/settings/settings-modal.component';
 import { ThemesModalComponent } from './calculator/settings/themes/themes-modal.component';
@@ -44,8 +43,7 @@ export class HammerConfig extends HammerGestureConfig {
   declarations: [
     AppComponent, TopBarComponent, OptionsPopoverComponent, CalculatorMenuComponent,
     CalculatorPage, CustomizeButtonsModalComponent, MoreCommandsMenuComponent,
-    SettingsModalComponent, ThemesModalComponent,
-    MathInputComponent, MathButtonsComponent
+    SettingsModalComponent, ThemesModalComponent
   ],
   entryComponents: [],
   imports: [
@@ -60,6 +58,7 @@ export class HammerConfig extends HammerGestureConfig {
     FormsModule,
     HammerModule,
     AccordionListModule,
+    MathModule
   ],
   providers: [
     Keyboard,

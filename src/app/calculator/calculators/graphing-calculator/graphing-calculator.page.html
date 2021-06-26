@@ -145,8 +145,10 @@
   </div>
   <graphing-calculator-control-panel
     [graphs]="graphs"
+    [evalExpr]="evalExpr"
     (addGraph)="addGraph($event)"
     (removeGraph)="removeGraph($event)"
+    (equationChange)="graphs[$event.graphIndex].equation = $event.value"
     (changeStrokeWidth)="graphs[$event.index].style.strokeWidth = $event.width"
   ></graphing-calculator-control-panel>
 </div>

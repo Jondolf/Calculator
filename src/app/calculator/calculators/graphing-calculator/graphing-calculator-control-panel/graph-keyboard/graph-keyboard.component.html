@@ -1,0 +1,19 @@
+<ion-item lines="none">
+  <div class="equation-container" slot="start">
+    <label *ngIf="graph.type === 'Line'">y=</label>
+    <app-math-input
+      [commands]="mathCommands"
+      [initialExpr]="graph.equation"
+      [eval]="evalExpr"
+      (exprChange)="equationChange.emit($event)"
+      #mathInput
+    ></app-math-input>
+  </div>
+  <ion-buttons slot="end">
+    <ion-button (click)="close.emit()">
+      <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-item>
+
+<app-math-buttons [grid]="grid" [gridStyles]="gridStyles"></app-math-buttons>

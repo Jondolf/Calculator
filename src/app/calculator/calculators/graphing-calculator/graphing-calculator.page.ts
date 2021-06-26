@@ -20,6 +20,8 @@ export class GraphingCalculatorPage implements AfterViewInit, AfterViewChecked, 
   svgCtrl: GraphingCalculatorSvgController;
   graphs: Graph[] = [];
 
+  evalExpr: () => number | string;
+
   mc: HammerManager;
 
   isFirstLoad = true; // Used in ngAfterViewChecked to make sure it gets called once
@@ -29,7 +31,9 @@ export class GraphingCalculatorPage implements AfterViewInit, AfterViewChecked, 
   themeSubscription: Subscription;
   resizeObserver: ResizeObserverPolyfill;
 
-  constructor(private mathEvaluator: MathEvaluatorService) { }
+  constructor(public mathEvaluator: MathEvaluatorService) {
+    this.evalExpr = mathEvaluator.evaluateAndFormat.bind(mathEvaluator);
+  }
 
   ngAfterViewInit() {
     this.svgElement = this.svgRef.nativeElement;

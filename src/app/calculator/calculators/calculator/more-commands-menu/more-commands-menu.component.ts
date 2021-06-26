@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { CalculatorCustomStyles } from 'src/app/models/calculator-custom-styles.interface';
-import { MathButtonGrid } from '../math-buttons/math-buttons.component';
+import { MathButtonGrid } from '../../../math-components/math-buttons/math-buttons.component';
 
 @Component({
   selector: 'app-more-commands-menu',
@@ -23,6 +23,8 @@ export class MoreCommandsMenuComponent implements AfterViewInit {
       'border-width': '1px'
     }
   };
+
+  constructor(private changeDetector: ChangeDetectorRef) { }
 
   ngAfterViewInit() {
     this.mediumMathBtnGrid = {
@@ -133,5 +135,6 @@ export class MoreCommandsMenuComponent implements AfterViewInit {
         ...this.mediumMathBtnGrid.buttons
       ]
     };
+    this.changeDetector.detectChanges();
   }
 }
