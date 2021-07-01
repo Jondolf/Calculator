@@ -322,7 +322,7 @@ export class MathInputComponent implements AfterViewInit {
       if (symbol === ')' && this.binaryOperators.includes(symbolBeforeCaret)) {
         this.collapseSelection(this.selectionStart);
         return;
-      } else if (this.binaryOperators.includes(symbol.toString()) && symbolBeforeCaret === '(' && symbol !== '-') {
+      } else if (['*', '/', '%', '^', 'mod', '!'].includes(symbol.toString()) && symbolBeforeCaret === '(' && symbol !== '-') {
         this.collapseSelection(this.selectionStart);
         return;
       }
