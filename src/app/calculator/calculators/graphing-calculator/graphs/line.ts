@@ -70,9 +70,10 @@ export class Line extends Graph {
         { coordinate: new SvgCoordinate(right + +this.svgCtrl.stepBetweenCoords * 3, +this.mathEvaluator.evaluate(this.formatEquation(this.equation, right + +this.svgCtrl.stepBetweenCoords * 3), false)), command: PathCommand.Line },
       ];
     } else {
+      const stepBetweenX = 0.032;
       path = [
-        ...this.getHalfOfPath(Side.Left, -this.stepBetweenX, this.equation),
-        ...this.getHalfOfPath(Side.Right, this.stepBetweenX, this.equation)
+        ...this.getHalfOfPath(Side.Left, -stepBetweenX, this.equation),
+        ...this.getHalfOfPath(Side.Right, stepBetweenX, this.equation)
       ];
     }
     this.path = path;
@@ -85,11 +86,6 @@ export class Line extends Graph {
     }).join(' ');
     this.svgPath = path;
     return;
-  }
-
-  private get stepBetweenX(): number {
-    const stepBetweenX = 0.01;
-    return stepBetweenX;
   }
 
   /**
@@ -130,7 +126,7 @@ export class Line extends Graph {
       }
       if (!isNaN(y)) {
         let shouldDraw = true;
-        if (x === 0 || (changedHalf && Math.abs(angle - prevAngle) >= 179)) {
+        if (x === 0 || (changedHalf && Math.abs(angle - prevAngle) >= 179.5 && Math.abs(angle - prevAngle) <= 180.5)) {
           shouldDraw = false;
         }
         path.push({ coordinate, command: shouldDraw ? PathCommand.Line : PathCommand.Move });
