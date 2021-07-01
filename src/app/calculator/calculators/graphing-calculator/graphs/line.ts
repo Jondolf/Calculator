@@ -2,8 +2,8 @@ import { interval, Subscription } from "rxjs";
 import { debounce } from 'rxjs/operators';
 import { MathEvaluatorService } from "src/app/calculator/math-evaluator/mathEvaluator.service";
 import { GraphStyle } from ".";
-import { Coordinate } from "../coordinate";
-import { GraphingCalculatorSvgController } from "../graphing-calculator-svg-controller";
+import { Coordinate, GraphCoordinate, SvgCoordinate } from "../coordinates";
+import { GraphController } from "../graph-controller";
 import { Graph } from "./graph";
 
 enum Side {
@@ -25,7 +25,7 @@ enum PathCommand {
   ClosePath = 'Z'
 }
 type Path = Array<{
-  coordinate: Coordinate,
+  coordinate: SvgCoordinate,
   command: PathCommand;
 }>;
 
@@ -35,21 +35,25 @@ export class Line extends Graph {
   }
   set equation(value: string) {
     this._equation = value;
+    this.savedCoords = {};
     this.setPath();
     this.setSvgPath();
-    this.savedCoords = {};
   }
   private previousY: number;
   private savedCoords: { [stepBetweenCoordinates: string]: { [x: string]: number; }; } = {};
   svgTransformSubscription: Subscription;
   path: Path = [];
-  svgPath: string;
+  svgPath = '';
 
-  constructor(protected _equation: string, public style: GraphStyle, private svgCtrl: GraphingCalculatorSvgController, private mathEvaluator: MathEvaluatorService) {
+  constructor(protected _equation: string, public style: GraphStyle, private svgCtrl: GraphController, private mathEvaluator: MathEvaluatorService) {
     super('Line', _equation, style);
     this.svgTransformSubscription = svgCtrl.svgTransformSubject
-      .pipe(debounce(() => interval(50)))
+      .pipe(debounce(() => interval(30)))
       .subscribe(() => { this.setPath(); this.setSvgPath(); });
+    mathEvaluator.isReady.then(() => {
+      this.setPath();
+      this.setSvgPath();
+    });
   }
 
   destroy() {
@@ -60,10 +64,10 @@ export class Line extends Graph {
     const isStraightLine = this.equation.match(/sin|cos|tan|log|ln|lg|sqrt|abs|pow|xx+|(x|\dx|x\d)\*(x|\dx|x\d)|^|(\d|x|\*)\(|\)(\d|x|\*)/g)[0] === '';
     let path: Path;
     if (isStraightLine) {
-      const { left, right } = this.svgCtrl.svgSidesAsCoordinates;
+      const { left, right } = this.svgCtrl.svgSidesAsGraphCoords;
       path = [
-        { coordinate: new Coordinate(left, +this.mathEvaluator.evaluate(this.formatEquation(this.equation, left), false)), command: PathCommand.Move },
-        { coordinate: new Coordinate(right, +this.mathEvaluator.evaluate(this.formatEquation(this.equation, right), false)), command: PathCommand.Line },
+        { coordinate: new SvgCoordinate(left - +this.svgCtrl.stepBetweenCoords * 3, +this.mathEvaluator.evaluate(this.formatEquation(this.equation, left - +this.svgCtrl.stepBetweenCoords * 3), false)), command: PathCommand.Move },
+        { coordinate: new SvgCoordinate(right + +this.svgCtrl.stepBetweenCoords * 3, +this.mathEvaluator.evaluate(this.formatEquation(this.equation, right + +this.svgCtrl.stepBetweenCoords * 3), false)), command: PathCommand.Line },
       ];
     } else {
       path = [
@@ -76,10 +80,11 @@ export class Line extends Graph {
 
   private setSvgPath() {
     const path = this.path.map((part) => {
-      const { x, y } = this.svgCtrl.convertCoordinatesToSvgCoordinates(new Coordinate(part.coordinate.x, part.coordinate.y));
+      const { x, y } = this.svgCtrl.graphCoordToSvgCoord(new GraphCoordinate(part.coordinate.x, part.coordinate.y));
       return `${part.command} ${x} ${y}`;
     }).join(' ');
     this.svgPath = path;
+    return;
   }
 
   private get stepBetweenX(): number {
@@ -96,37 +101,36 @@ export class Line extends Graph {
   private getHalfOfPath(side: Side, numberStep: number, equation: string): Path {
     this.previousY = 0;
     let prevAngle = NaN;
-    const pannedSide = (side === Side.Left ? this.svgCtrl.svgSidesAsCoordinates.left : this.svgCtrl.svgSidesAsCoordinates.right) * +this.svgCtrl.stepBetweenCoordinates;
-    const step = numberStep * +this.svgCtrl.stepBetweenCoordinates;
+    const pannedSide = (side === Side.Left ? this.svgCtrl.svgSidesAsGraphCoords.left : this.svgCtrl.svgSidesAsGraphCoords.right);
+    const step = numberStep;
     const xCoords: number[] = [];
     const path: Path = [];
     for (
       let x = 0;
-      side === Side.Right ? x <= pannedSide + +this.svgCtrl.stepBetweenCoordinates :
-        (side === Side.Left ? x >= pannedSide - +this.svgCtrl.stepBetweenCoordinates : true);
+      side === Side.Right ? x <= pannedSide + +this.svgCtrl.stepBetweenCoords * 3 :
+        (side === Side.Left ? x >= pannedSide - +this.svgCtrl.stepBetweenCoords * 3 : true);
       x += step
     ) {
       xCoords.push(x);
     }
     const yCoords = this.mathEvaluator.evaluateYValues(equation.slice(equation.lastIndexOf('=') + 1), xCoords);
-    for (const [i, xCoord] of xCoords.entries()) {
-      const x = xCoord / +this.svgCtrl.stepBetweenCoordinates;
+    for (const [i, x] of xCoords.entries()) {
       const changedHalf = (this.previousY < 0 && yCoords[i] > 0) || (this.previousY > 0 && yCoords[i] < 0);
-      const angle = this.getAngleDegrees(new Coordinate(x - step, this.previousY), new Coordinate(x, yCoords[i]));
-      if (this.savedCoords[this.svgCtrl.stepBetweenCoordinates.toString()] === undefined) {
-        this.savedCoords[this.svgCtrl.stepBetweenCoordinates.toString()] = {};
+      const angle = this.getAngleDegrees(new GraphCoordinate(x - step, this.previousY), new GraphCoordinate(x, yCoords[i]));
+      if (this.savedCoords[this.svgCtrl.stepBetweenCoords.toString()] === undefined) {
+        this.savedCoords[this.svgCtrl.stepBetweenCoords.toString()] = {};
       }
-      if (this.savedCoords[this.svgCtrl.stepBetweenCoordinates.toString()][x] === undefined) {
-        this.savedCoords[this.svgCtrl.stepBetweenCoordinates.toString()][x] = yCoords[i] / +this.svgCtrl.stepBetweenCoordinates;
+      if (this.savedCoords[this.svgCtrl.stepBetweenCoords.toString()][x] === undefined) {
+        this.savedCoords[this.svgCtrl.stepBetweenCoords.toString()][x] = yCoords[i];
       }
-      const y = this.savedCoords[this.svgCtrl.stepBetweenCoordinates.toString()][x];
-      const coordinate = new Coordinate(x, y);
+      const y = this.savedCoords[this.svgCtrl.stepBetweenCoords.toString()][x];
+      const coordinate = new GraphCoordinate(x, y);
       if ((isNaN(this.previousY) && !isNaN(y)) || !isNaN(this.previousY) && isNaN(y)) {
         this.getPathSectionForNumbersCloseToNaN(coordinate, step, equation);
       }
       if (!isNaN(y)) {
         let shouldDraw = true;
-        if (x === 0 || (changedHalf && Math.abs(angle - prevAngle) >= 178)) {
+        if (x === 0 || (changedHalf && Math.abs(angle - prevAngle) >= 179)) {
           shouldDraw = false;
         }
         path.push({ coordinate, command: shouldDraw ? PathCommand.Line : PathCommand.Move });
@@ -142,18 +146,18 @@ export class Line extends Graph {
    * Used when either the current or previous y value was NaN.\
    * This fixes bugs with things like y=sqrt(x+1) or y=ln(x).
    */
-  getPathSectionForNumbersCloseToNaN(coordinate: Coordinate, stepBetweenX: number, equation: string): Path {
+  getPathSectionForNumbersCloseToNaN(coordinate: GraphCoordinate, stepBetweenX: number, equation: string): Path {
     return [{ coordinate: this.findValueClosestToNaN(coordinate.x - stepBetweenX, coordinate.x, this.previousY, coordinate.y, equation), command: PathCommand.Line }];
   }
 
   /**
    * Finds the number closest to NaN by using a binary-search-like algorithm
    */
-  private findValueClosestToNaN(start: number, end: number, startValue: number, endValue: number, equation: string): Coordinate {
+  private findValueClosestToNaN(start: number, end: number, startValue: number, endValue: number, equation: string): GraphCoordinate {
     const middle = (start + end) / 2;
     const middleValue = this.getOrCalculateY(equation, middle);
     if (Math.abs(end - start) < 0.00000000000000001 || middle === start || middle === end) {
-      return new Coordinate(middle, middleValue);
+      return new GraphCoordinate(middle, middleValue);
     }
     if (isNaN(startValue) && isNaN(middleValue)) {
       return this.findValueClosestToNaN(middle, end, middleValue, endValue, equation);
@@ -177,13 +181,13 @@ export class Line extends Graph {
   }
 
   private getOrCalculateY(equation: string, x: number): number {
-    if (this.savedCoords[this.svgCtrl.stepBetweenCoordinates.toString()] === undefined) {
-      this.savedCoords[this.svgCtrl.stepBetweenCoordinates.toString()] = {};
+    if (this.savedCoords[this.svgCtrl.stepBetweenCoords.toString()] === undefined) {
+      this.savedCoords[this.svgCtrl.stepBetweenCoords.toString()] = {};
     }
-    if (this.savedCoords[this.svgCtrl.stepBetweenCoordinates.toString()][x] === undefined) {
-      this.savedCoords[this.svgCtrl.stepBetweenCoordinates.toString()][x] = +this.mathEvaluator.evaluate(this.formatEquation(equation, x), false);
+    if (this.savedCoords[this.svgCtrl.stepBetweenCoords.toString()][x] === undefined) {
+      this.savedCoords[this.svgCtrl.stepBetweenCoords.toString()][x] = +this.mathEvaluator.evaluate(this.formatEquation(equation, x), false);
     }
-    return this.savedCoords[this.svgCtrl.stepBetweenCoordinates.toString()][x];
+    return this.savedCoords[this.svgCtrl.stepBetweenCoords.toString()][x];
   }
 
   private formatEquation(equation: string, replaceWith: number): string {

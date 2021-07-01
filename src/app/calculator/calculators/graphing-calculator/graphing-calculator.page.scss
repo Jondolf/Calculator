@@ -5,8 +5,13 @@
 .graph-container {
   position: absolute;
   width: 100%;
-  height: 60%;
+  height: 100%;
   transition: height 0.5s ease;
+  touch-action: none;
+
+  * {
+    touch-action: none;
+  }
 
   > svg {
     width: 100%;
@@ -21,28 +26,21 @@
       .x-axis .axis-number {
         text-anchor: middle;
       }
-
-      .y-axis .axis-number {
-        text-anchor: end;
-      }
     }
   }
 }
 
 .input-container {
-  background-color: var(--ion-color-light-tint);
   height: 45%;
   position: absolute;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  border-top-left-radius: 5%;
-  border-top-right-radius: 5%;
+  left: 16px;
+  bottom: 16px;
+  right: 16px;
   transition: bottom 0.5s ease;
   overflow: hidden;
 
   .swipe-container {
-    background-color: rgba(var(--ion-color-light-shade-rgb), 0.25);
+    background-color: rgba(var(--ion-color-light-shade-rgb), 0.5);
     width: 100%;
     height: 32px;
     display: flex;

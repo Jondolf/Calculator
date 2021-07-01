@@ -1,13 +1,4 @@
-<div
-  (panstart)="svgCtrl.pan($event)"
-  (panmove)="svgCtrl.pan($event)"
-  (pinchin)="svgCtrl.zoom(0.5)"
-  (pinchout)="svgCtrl.zoom(-0.5)"
-  (tap)="onTap($event.tapCount)"
-  [style.height]="isInputContainerOpen ? '60vh' : '95vh'"
-  class="graph-container"
-  #svgcontainer
->
+<div (pinchout)="svgCtrl.zoom(-0.5)" (tap)="onTap($event.tapCount)" class="graph-container" #svgcontainer>
   <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" #svg>
     <g class="axes" *ngIf="svgCtrl">
       <svg class="x-axis">
@@ -23,7 +14,15 @@
           <text
             *ngFor="let number of svgCtrl.axisNumbers.x.positive; let i = index"
             [attr.x]="svgCtrl.svgOffset.x + svgCtrl.squareSize * (i + 1)"
-            [attr.y]="svgCtrl.svgOffset.y + 25"
+            [attr.y]="svgCtrl.svgOffset.y + 25 > svgCtrl.svgSides.top + 25
+              ? (svgCtrl.svgOffset.y + 25 < (isInputContainerOpen
+                ? svgCtrl.svgSides.bottom * 0.55 - 25
+                : svgCtrl.svgSides.bottom - 16 - 25)
+                  ? svgCtrl.svgOffset.y + 25
+                  : (isInputContainerOpen
+                    ? svgCtrl.svgSides.bottom * 0.55 - 25
+                    : svgCtrl.svgSides.bottom - 16 - 25))
+              : svgCtrl.svgSides.top + 25"
             class="axis-number"
           >
             {{ number }}
@@ -33,7 +32,15 @@
           <text
             *ngFor="let number of svgCtrl.axisNumbers.x.negative; let i = index"
             [attr.x]="svgCtrl.svgOffset.x - svgCtrl.squareSize * (i + 1)"
-            [attr.y]="svgCtrl.svgOffset.y + 25"
+            [attr.y]="svgCtrl.svgOffset.y + 25 > svgCtrl.svgSides.top + 25
+              ? (svgCtrl.svgOffset.y + 25 < (isInputContainerOpen
+                ? svgCtrl.svgSides.bottom * 0.55 - 25
+                : svgCtrl.svgSides.bottom - 16 - 25)
+                  ? svgCtrl.svgOffset.y + 25
+                  : (isInputContainerOpen
+                    ? svgCtrl.svgSides.bottom * 0.55 - 25
+                    : svgCtrl.svgSides.bottom - 16 - 25))
+              : svgCtrl.svgSides.top + 25"
             class="axis-number"
           >
             {{ number }}
@@ -52,8 +59,9 @@
         <g class="axis-numbers-positive">
           <text
             *ngFor="let number of svgCtrl.axisNumbers.y.positive; let i = index"
-            [attr.x]="svgCtrl.svgOffset.x - 25"
+            [attr.x]="svgCtrl.svgOffset.x - 25 > svgCtrl.svgSides.left + 25 ? (svgCtrl.svgOffset.x - 25 < svgCtrl.svgSides.right - 25 ? svgCtrl.svgOffset.x - 25 : svgCtrl.svgSides.right - 25) : svgCtrl.svgSides.left + 25"
             [attr.y]="svgCtrl.svgOffset.y - svgCtrl.squareSize * (i + 1)"
+            [style.text-anchor]="svgCtrl.svgOffset.x - 25 > svgCtrl.svgSides.left + 25 ? 'end' : 'start'"
             class="axis-number"
           >
             {{ number }}
@@ -62,8 +70,9 @@
         <g class="axis-numbers-negative">
           <text
             *ngFor="let number of svgCtrl.axisNumbers.y.negative; let i = index"
-            [attr.x]="svgCtrl.svgOffset.x - 25"
+            [attr.x]="svgCtrl.svgOffset.x - 25 > svgCtrl.svgSides.left + 25 ? (svgCtrl.svgOffset.x - 25 < svgCtrl.svgSides.right - 25 ? svgCtrl.svgOffset.x - 25 : svgCtrl.svgSides.right - 25) : svgCtrl.svgSides.left + 25"
             [attr.y]="svgCtrl.svgOffset.y + svgCtrl.squareSize * (i + 1)"
+            [style.text-anchor]="svgCtrl.svgOffset.x - 25 > svgCtrl.svgSides.left + 25 ? 'end' : 'start'"
             class="axis-number"
           >
             {{ number }}
@@ -120,8 +129,8 @@
         />
         <circle
           *ngIf="graph.type === 'Point'"
-          [attr.cx]="svgCtrl.convertCoordinatesToSvgCoordinates({ x: +graph.x, y: +graph.y }).x + (svgCtrl.svgOffset.x - svgCtrl.svgMiddle.x)"
-          [attr.cy]="svgCtrl.convertCoordinatesToSvgCoordinates({ x: +graph.x, y: +graph.y }).y + (svgCtrl.svgOffset.y - svgCtrl.svgMiddle.y)"
+          [attr.cx]="svgCtrl.graphCoordToSvgCoord({ x: +graph.x, y: +graph.y }).x + (svgCtrl.svgOffset.x - svgCtrl.svgMiddle.x)"
+          [attr.cy]="svgCtrl.graphCoordToSvgCoord({ x: +graph.x, y: +graph.y }).y + (svgCtrl.svgOffset.y - svgCtrl.svgMiddle.y)"
           [attr.r]="graph.style.radius"
           [attr.stroke]="graph.style.stroke"
           [attr.stroke-width]="graph.style.strokeWidth"
@@ -132,7 +141,11 @@
   </svg>
 </div>
 
-<div class="input-container" [style.bottom]="isInputContainerOpen ? '0' : '-40vh'">
+<app-glass-card
+  class="input-container"
+  [style.bottom]="isInputContainerOpen ? '16px' : 'calc(-45% + 32px)'"
+  [hasBoxShadow]="true"
+>
   <div
     (click)="isInputContainerOpen = !isInputContainerOpen"
     (swipeup)="isInputContainerOpen = true"
@@ -151,4 +164,4 @@
     (equationChange)="graphs[$event.graphIndex].equation = $event.value"
     (changeStrokeWidth)="graphs[$event.index].style.strokeWidth = $event.width"
   ></graphing-calculator-control-panel>
-</div>
+</app-glass-card>

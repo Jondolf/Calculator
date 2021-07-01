@@ -7,7 +7,7 @@ ion-list {
   }
 
   .toggle-collapse-button {
-    --background: var(--ion-color-light);
+    --background: transparent;
     --color: var(--ion-color-light-contrast);
 
     ion-label {
@@ -23,7 +23,7 @@ ion-list {
   .list-item-container {
     margin-left: 16px;
     transition: 0.2s ease;
-    background: var(--ion-color-light-tint);
+    background: transparent;
     border-left: 1px solid rgba(var(--ion-color-dark-rgb), 0.5);
   }
 }

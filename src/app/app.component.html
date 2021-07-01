@@ -10,6 +10,8 @@
       <app-top-bar
         (toggleCalculatorMenuVisibility)="globals.isCalculatorMenuHidden = !globals.isCalculatorMenuHidden"
       ></app-top-bar>
+      <app-settings-modal *ngIf="globals.settingsView === 'settings'"></app-settings-modal>
+      <app-themes-modal *ngIf="globals.settingsView === 'themes'"></app-themes-modal>
       <ion-router-outlet #routeroutlet></ion-router-outlet>
     </ion-content>
   </ion-split-pane>

@@ -12,5 +12,5 @@ export class GlobalVarsService {
   isCalculatorMenuHidden = false;
   isCalculatorMenuHiddenChange = new Subject<boolean>();
   isCalculatorButtonSettingsMenuOpen = false;
-  isInSettings = false;
+  settingsView: '' | 'settings' | 'themes' = '';
 }

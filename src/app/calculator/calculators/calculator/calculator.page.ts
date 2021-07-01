@@ -238,7 +238,7 @@ export class CalculatorPage implements OnInit, AfterViewInit {
         commandArgs: ['*'],
         button: {
           name: 'multiply',
-          displayName: '*',
+          displayName: 'x',
           class: 'math-button-secondary',
           onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['*']
@@ -250,7 +250,7 @@ export class CalculatorPage implements OnInit, AfterViewInit {
         commandArgs: ['/'],
         button: {
           name: 'divide',
-          displayName: '/',
+          displayName: '÷',
           class: 'math-button-secondary',
           onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           onTapArgs: ['/']

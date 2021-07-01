@@ -1,6 +1,13 @@
 :host {
-  background: var(--ion-color-light);
+  background: rgba(var(--ion-color-light-rgb), 0.7);
+  backdrop-filter: blur(6px);
   display: block;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
 }
 
 ion-header {
@@ -14,16 +21,19 @@ ion-list {
   background-color: transparent !important;
   width: 100%;
   margin: auto;
+
   ion-item-divider {
     background-color: transparent;
     color: var(--ion-color-dark);
     border: none;
   }
+
   ion-item {
     margin-bottom: 10px;
     --background: transparent;
     --color: var(--ion-color-light-contrast);
     --inner-border-width: 0;
+
     ion-icon,
     i.material-icons {
       color: var(--ion-color-light-contrast);

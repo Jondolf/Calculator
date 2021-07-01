@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { HeaderColor } from '@ionic-native/header-color/ngx';
-import { ModalController, Platform } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 import { GlobalVarsService } from 'src/app/global-vars.service';
 import { Button } from 'src/app/models/button.interface';
 import { StorageService } from 'src/app/storage.service';
@@ -11,8 +11,6 @@ import { StorageService } from 'src/app/storage.service';
   styleUrls: ['./themes-modal.component.scss']
 })
 export class ThemesModalComponent {
-  @Output() closeThemesMenu = new EventEmitter();
-
   lightThemes: Button[] = [
     {
       buttonName: 'Default light',
@@ -92,8 +90,7 @@ export class ThemesModalComponent {
     public globals: GlobalVarsService,
     private platform: Platform,
     private headerColor: HeaderColor,
-    private storage: StorageService,
-    private modalController: ModalController) { }
+    private storage: StorageService) { }
 
   changeTheme(themeClassName: string) {
     document.body.className = themeClassName;
@@ -119,9 +116,5 @@ export class ThemesModalComponent {
 
   getCSSVar(varName: string): string {
     return getComputedStyle(document.body).getPropertyValue(varName);
-  }
-
-  dismissModal(message?): void {
-    this.modalController.dismiss(message ? { message } : null);
   }
 }

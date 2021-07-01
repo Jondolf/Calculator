@@ -1,5 +1,5 @@
 <ion-button
-  (click)="presentSettingsModal(); closePopover()"
+  (click)="globals.settingsView = 'settings'; closePopover()"
   color="light"
   expand="full"
   fill="clear"
@@ -10,7 +10,7 @@
 
 <ion-button
   *ngIf="globals.currentCalculator === 'Calculator'"
-  (click)="presentCustomizeCalculatorButtonsModal(); closePopover()"
+  (click)="globals.isCalculatorButtonSettingsMenuOpen = true; closePopover()"
   color="light"
   expand="full"
   fill="clear"
@@ -19,11 +19,6 @@
   Calculator layout
 </ion-button>
 
-<ion-button
-  (click)="closePopover()"
-  color="light"
-  expand="full"
-  fill="clear"
-  class="ion-text-capitalize"
+<ion-button (click)="closePopover()" color="light" expand="full" fill="clear" class="ion-text-capitalize"
   >Close
 </ion-button>

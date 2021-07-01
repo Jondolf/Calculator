@@ -4,12 +4,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--ion-color-light-tint);
   z-index: 3;
 
   ion-item {
-    background-color: transparent;
-    --background: transparent;
+    --background: var(--ion-color-light-tint);
     color: var(--ion-color-light-contrast);
     --color: var(--ion-color-light-contrast);
 

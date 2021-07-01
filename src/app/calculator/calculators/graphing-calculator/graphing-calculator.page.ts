@@ -1,9 +1,9 @@
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Gesture, GestureController } from '@ionic/angular';
 import ResizeObserverPolyfill from 'resize-observer-polyfill'; // Normal resize observer gave errors
-import { Subscription } from 'rxjs';
 import { MathEvaluatorService } from '../../math-evaluator/mathEvaluator.service';
-import { Coordinate } from './coordinate';
-import { GraphingCalculatorSvgController } from './graphing-calculator-svg-controller';
+import { GraphCoordinate, SvgCoordinate } from './coordinates';
+import { GraphController } from './graph-controller';
 import { Graph, GraphType, Line, Point } from './graphs';
 
 @Component({
@@ -11,13 +11,13 @@ import { Graph, GraphType, Line, Point } from './graphs';
   templateUrl: './graphing-calculator.page.html',
   styleUrls: ['./graphing-calculator.page.scss'],
 })
-export class GraphingCalculatorPage implements AfterViewInit, AfterViewChecked, OnDestroy {
+export class GraphingCalculatorPage implements AfterViewInit, OnDestroy {
   @ViewChild('svg') svgRef: ElementRef;
   @ViewChild('svgcontainer') svgContainerRef: ElementRef;
   svgElement: SVGElement;
   svgContainerElement: HTMLDivElement;
 
-  svgCtrl: GraphingCalculatorSvgController;
+  svgCtrl: GraphController;
   graphs: Graph[] = [];
 
   evalExpr: () => number | string;
@@ -28,64 +28,62 @@ export class GraphingCalculatorPage implements AfterViewInit, AfterViewChecked, 
   isInputContainerOpen = true;
   isMouseDownOnSvg = false;
 
-  themeSubscription: Subscription;
+  gesture: Gesture;
+
   resizeObserver: ResizeObserverPolyfill;
 
-  constructor(public mathEvaluator: MathEvaluatorService) {
+  constructor(public mathEvaluator: MathEvaluatorService, private gestureCtrl: GestureController) {
     this.evalExpr = mathEvaluator.evaluateAndFormat.bind(mathEvaluator);
   }
 
   ngAfterViewInit() {
     this.svgElement = this.svgRef.nativeElement;
     this.svgContainerElement = this.svgContainerRef.nativeElement;
-  }
-  ngAfterViewChecked() {
-    if (this.isFirstLoad) {
-      this.svgCtrl = new GraphingCalculatorSvgController(this.svgElement);
-      this.svgCtrl.onResize();
-      this.graphs = [
-        new Line('x', { stroke: 'var(--ion-color-dark)', strokeWidth: 3, fill: 'none' }, this.svgCtrl, this.mathEvaluator),
-      ];
+    this.svgCtrl = new GraphController(this.svgElement);
+    this.svgCtrl.onResize();
 
-      this.resizeObserver = new ResizeObserverPolyfill(() => this.svgCtrl.onResize());
+    this.graphs = [
+      new Line('x', { stroke: 'var(--ion-color-dark)', strokeWidth: 3, fill: 'none' }, this.svgCtrl, this.mathEvaluator),
+    ];
 
-      this.resizeObserver.observe(this.svgContainerElement);
+    this.resizeObserver = new ResizeObserverPolyfill(() => this.svgCtrl.onResize());
+    this.resizeObserver.observe(this.svgContainerElement);
 
-      this.mc = new Hammer(this.svgElement);
-      this.mc.on('pan', (e) => { this.svgCtrl.pan(e); });
+    let prevMousePos = new SvgCoordinate(0, 0);
+    this.gesture = this.gestureCtrl.create({
+      el: this.svgElement,
+      threshold: 0,
+      gestureName: 'pan',
+      onStart: e => { prevMousePos = new SvgCoordinate(e.startX, e.startY); },
+      onMove: e => {
+        const currMousePos = new SvgCoordinate(e.currentX, e.currentY);
+        const mousePosDiff = new SvgCoordinate(currMousePos.x - prevMousePos.x, currMousePos.y - prevMousePos.y);
+        this.svgCtrl.pan(mousePosDiff);
+        prevMousePos = currMousePos;
+      }
+    }, true);
 
-      this.svgContainerElement.addEventListener('wheel',
-        (e: WheelEvent) => {
-          const targetCoord = this.getMousePosAsCoordinates(e);
-          const prevStepBetweenCoords = this.svgCtrl.stepBetweenCoordinates;
-          this.svgCtrl.zoom(e.deltaY < 0 ? -1 : 1);
-          const newMouseCoord = this.getMousePosAsCoordinates(e);
-          const newStepBetweenCoords = this.svgCtrl.stepBetweenCoordinates;
-          const mousePosDiff = new Coordinate(targetCoord.x - newMouseCoord.x, targetCoord.y - newMouseCoord.y);
-          const stepDiff = +prevStepBetweenCoords - +newStepBetweenCoords;
-          // console.log('mouse pos:', targetCoord, newMouseCoord);
-          this.svgCtrl.svgOffsetAsCoordinates.x -= mousePosDiff.x + (stepDiff === 0 ? 0 : stepDiff / stepDiff);
-          this.svgCtrl.svgOffsetAsCoordinates.y -= mousePosDiff.y + (stepDiff === 0 ? 0 : stepDiff / stepDiff);
-          // console.log('svg offset:', this.svgCtrl.svgOffsetAsCoordinates);
-          this.svgCtrl.svgOffset = this.svgCtrl.convertCoordinatesToSvgCoordinates(this.svgCtrl.svgOffsetAsCoordinates);
-          this.svgCtrl.setSvgSidesAsCoordinates();
-          this.svgCtrl.setAxisNumbers();
-          this.svgCtrl.svgTransformSubject.next();
-        }, { passive: false });
+    this.gesture.enable();
 
-      this.isFirstLoad = false;
-    }
+    this.svgContainerElement.addEventListener('wheel',
+      (e: WheelEvent) => {
+        const prevMouseCoord = this.getMousePosAsCoordinates(e);
+        this.svgCtrl.zoom(e.deltaY < 0 ? -1 : 1);
+        const newMouseCoord = this.getMousePosAsCoordinates(e);
+        const mousePosDiff = { x: prevMouseCoord.x - newMouseCoord.x, y: prevMouseCoord.y - newMouseCoord.y };
+        this.svgCtrl.panTo(new GraphCoordinate(this.svgCtrl.svgOffsetAsGraphCoords.x - mousePosDiff.x, this.svgCtrl.svgOffsetAsGraphCoords.y - mousePosDiff.y));
+        this.svgCtrl.svgTransformSubject.next();
+      }, { passive: false });
   }
   ngOnDestroy() {
-    this.themeSubscription.unsubscribe();
     this.resizeObserver.unobserve(this.svgContainerElement);
-    this.mc.off('pan');
     this.graphs.forEach(shape => shape.destroy());
+    this.gesture.destroy();
   }
 
-  getMousePosAsCoordinates(e: MouseEvent): Coordinate {
+  getMousePosAsCoordinates(e: MouseEvent): GraphCoordinate {
     const rect = (e.target as HTMLElement).getBoundingClientRect();
-    return this.svgCtrl.convertSvgCoordinatesToCoordinates(new Coordinate(e.clientX - rect.left, e.clientY - rect.top));
+    return this.svgCtrl.svgCoordToGraphCoord(new GraphCoordinate(e.clientX - rect.left, e.clientY - rect.top));
   }
 
   onTap(tapCount: number) {

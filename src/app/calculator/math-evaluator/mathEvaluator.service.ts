@@ -4,11 +4,15 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class MathEvaluatorService {
+  isReady: Promise<void>;
   private evalExpression: (expr: string) => number;
   private evalYValues: (expr: string, xValues: number[]) => Float64Array;
 
   constructor() {
-    import('./pkg/math_evaluator').then(evaluator => { this.evalExpression = evaluator.eval_expr; this.evalYValues = evaluator.eval_y_values; });
+    this.isReady = import('./pkg/math_evaluator').then(evaluator => {
+      this.evalExpression = evaluator.eval_expr;
+      this.evalYValues = evaluator.eval_y_values;
+    });
   }
 
   evaluate(expr: string, forceDeg: boolean): number {

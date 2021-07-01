@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { AccordionListModule } from 'src/app/common/accordion-list/accordion-list.module';
+import { CommonComponentsModule } from 'src/app/common/common-components.module';
 import { CurrencyConverterPageRoutingModule } from './currency-converter-routing.module';
 import { CurrencyConverterPage } from './currency-converter.page';
 
@@ -15,7 +15,7 @@ import { CurrencyConverterPage } from './currency-converter.page';
     FormsModule,
     IonicModule,
     CurrencyConverterPageRoutingModule,
-    AccordionListModule
+    CommonComponentsModule
   ],
   declarations: [
     CurrencyConverterPage

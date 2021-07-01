@@ -34,4 +34,6 @@
     [gridStyles]="calculator.gridStyles"
     [ngStyle]="{ top: calculator.gridStyles.gridSize === 'large' ? '25%' : '30%' }"
   ></app-math-buttons>
+
+  <app-customize-buttons-modal *ngIf="globals.isCalculatorButtonSettingsMenuOpen"></app-customize-buttons-modal>
 </div>

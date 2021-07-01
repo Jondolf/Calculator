@@ -1,13 +1,14 @@
 {
-  "appId": "com.gamitopia.calculator",
-  "appName": "Calculator",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www",
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 0
-    }
-  },
-  "cordova": {}
+	"appId": "com.gamitopia.calculator",
+	"appName": "Calculator",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "www",
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 3000,
+			"splashImmersive": true
+		}
+	},
+	"cordova": {}
 }

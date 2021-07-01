@@ -1,6 +1,14 @@
 :host {
-  background-color: var(--ion-color-dark-contrast);
+  background-color: var(--ion-color-light-tint);
   width: 100%;
   height: 100%;
   display: block;
+}
+
+ion-menu {
+  --background: transparent;
+
+  > ion-content {
+    --background: transparent;
+  }
 }

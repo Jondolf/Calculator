@@ -13,7 +13,6 @@ export class Point extends Graph {
     this._equation = value;
     this.x = this.equation.split(',')[0]?.replace(/[^\d.,-]/g, '') || '0';
     this.y = this.equation.split(',')[1]?.replace(/[^\d.,-]/g, '') || '0';
-    console.log(this.x, this.y);
   }
   //? String to avoid potential floating point problems
   x: string;

@@ -1,80 +1,84 @@
-<ion-toolbar>
-  <ion-buttons slot="primary">
-    <ion-button (click)="dismissModal()" slot="start">
-      <ion-icon slot="icon-only" name="close"></ion-icon>
-    </ion-button>
-  </ion-buttons>
+<div class="background" (click)="globals.isCalculatorButtonSettingsMenuOpen = false"></div>
 
-  <ion-title>Customize Calculator</ion-title>
-</ion-toolbar>
+<div class="customize-buttons-modal">
+  <ion-toolbar>
+    <ion-buttons slot="primary">
+      <ion-button (click)="globals.isCalculatorButtonSettingsMenuOpen = false" slot="start">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
 
-<div class="option-container">
-  <ion-label>Gap between buttons ({{ styles.gridGap }})</ion-label>
-  <ion-range
-    [value]="styles.gridGap"
-    (ionChange)="styles.gridGap = $event.target.value + 'px'; updateStyles()"
-    min="0"
-    max="20"
-    pin="true"
-    color="secondary"
-  >
-    <ion-label slot="start">0px</ion-label>
-    <ion-label slot="end">20px</ion-label>
-  </ion-range>
+    <ion-title>Customize Calculator</ion-title>
+  </ion-toolbar>
 
-  <ion-label>Button border radius ({{ styles.buttonStyles['border-radius'] }})</ion-label>
-  <ion-range
-    [value]="styles.buttonStyles['border-radius']"
-    (ionChange)="styles.buttonStyles['border-radius'] = $event.target.value + 'px'; updateStyles()"
-    min="0"
-    max="50"
-    pin="true"
-    color="secondary"
-  >
-    <ion-label slot="start">0px</ion-label>
-    <ion-label slot="end">50px</ion-label>
-  </ion-range>
-
-  <ion-label>Button border width ({{ styles.buttonStyles['border-width'] }})</ion-label>
-  <ion-range
-    [value]="styles.buttonStyles['border-width']"
-    (ionChange)="styles.buttonStyles['border-width'] = $event.target.value + 'px'; updateStyles()"
-    min="0"
-    max="10"
-    pin="true"
-    color="secondary"
-  >
-    <ion-label slot="start">0px</ion-label>
-    <ion-label slot="end">10px</ion-label>
-  </ion-range>
-
-  <ion-radio-group (ionChange)="styles.gridSize = $event.target.value; updateStyles()" [value]="styles.gridSize">
-    <ion-label>Grid size</ion-label>
-    <ion-text
-      >Larger grids show more commands and work better on larger screens. The rest of the commands can be accessed by
-      swiping open the more commands menu.</ion-text
+  <div class="option-container">
+    <ion-label>Gap between buttons ({{ styles.gridGap }})</ion-label>
+    <ion-range
+      [value]="styles.gridGap"
+      (ionChange)="styles.gridGap = $event.target.value + 'px'; updateStyles()"
+      min="0"
+      max="20"
+      pin="true"
+      color="secondary"
     >
+      <ion-label slot="start">0px</ion-label>
+      <ion-label slot="end">20px</ion-label>
+    </ion-range>
 
-    <ion-item>
-      <ion-label>Small (shows basic commands and numbers, good for small screens)</ion-label>
-      <ion-radio slot="start" value="small"></ion-radio>
-    </ion-item>
+    <ion-label>Button border radius ({{ styles.buttonStyles['border-radius'] }})</ion-label>
+    <ion-range
+      [value]="styles.buttonStyles['border-radius']"
+      (ionChange)="styles.buttonStyles['border-radius'] = $event.target.value + 'px'; updateStyles()"
+      min="0"
+      max="50"
+      pin="true"
+      color="secondary"
+    >
+      <ion-label slot="start">0px</ion-label>
+      <ion-label slot="end">50px</ion-label>
+    </ion-range>
 
-    <ion-item>
-      <ion-label>Medium (shows a few more commands)</ion-label>
-      <ion-radio slot="start" value="medium"></ion-radio>
-    </ion-item>
+    <ion-label>Button border width ({{ styles.buttonStyles['border-width'] }})</ion-label>
+    <ion-range
+      [value]="styles.buttonStyles['border-width']"
+      (ionChange)="styles.buttonStyles['border-width'] = $event.target.value + 'px'; updateStyles()"
+      min="0"
+      max="10"
+      pin="true"
+      color="secondary"
+    >
+      <ion-label slot="start">0px</ion-label>
+      <ion-label slot="end">10px</ion-label>
+    </ion-range>
 
-    <ion-item>
-      <ion-label>Large (shows all commands and symbols, might not work well on small screens)</ion-label>
-      <ion-radio slot="start" value="large"></ion-radio>
-    </ion-item>
-  </ion-radio-group>
+    <ion-radio-group (ionChange)="styles.gridSize = $event.target.value; updateStyles()" [value]="styles.gridSize">
+      <ion-label>Grid size</ion-label>
+      <ion-text
+        >Larger grids show more commands and work better on larger screens. The rest of the commands can be accessed by
+        swiping open the more commands menu.</ion-text
+      >
 
-  <ion-button
-    (click)="calculator.gridStyles = calculator.getDefaultStyles(); this.styles = calculator.gridStyles"
-    color="dark"
-    fill="outline"
-    >Reset styles to defaults</ion-button
-  >
+      <ion-item>
+        <ion-label>Small (shows basic commands and numbers, good for small screens)</ion-label>
+        <ion-radio slot="start" value="small"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Medium (shows a few more commands)</ion-label>
+        <ion-radio slot="start" value="medium"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Large (shows all commands and symbols, might not work well on small screens)</ion-label>
+        <ion-radio slot="start" value="large"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+
+    <ion-button
+      (click)="calculator.gridStyles = calculator.getDefaultStyles(); this.styles = calculator.gridStyles"
+      color="dark"
+      fill="outline"
+      >Reset styles to defaults</ion-button
+    >
+  </div>
 </div>

@@ -1,5 +1,5 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { GlobalVarsService } from 'src/app/global-vars.service';
 import { CalculatorCustomStyles } from 'src/app/models/calculator-custom-styles.interface';
 import { StorageService } from 'src/app/storage.service';
 import { CalculatorService } from '../calculator.service';
@@ -10,6 +10,8 @@ import { CalculatorService } from '../calculator.service';
   styleUrls: ['./customize-buttons-modal.component.scss'],
 })
 export class CustomizeButtonsModalComponent implements OnInit, OnChanges {
+  @Output() close = new EventEmitter<void>();
+
   styles: CalculatorCustomStyles = {
     gridSize: 'small',
     gridGap: '0px',
@@ -20,8 +22,8 @@ export class CustomizeButtonsModalComponent implements OnInit, OnChanges {
   };
 
   constructor(
-    public modalController: ModalController,
     public calculator: CalculatorService,
+    public globals: GlobalVarsService,
     private storage: StorageService) { }
 
   ngOnInit() {
@@ -31,10 +33,6 @@ export class CustomizeButtonsModalComponent implements OnInit, OnChanges {
     if (changes.currentStyles.previousValue !== changes.currentStyles.currentValue) {
       this.styles = changes.currentStyles.currentValue;
     }
-  }
-
-  dismissModal(message?): void {
-    this.modalController.dismiss(message ? { message } : null);
   }
 
   updateStyles(): void {

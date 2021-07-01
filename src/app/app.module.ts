@@ -23,8 +23,8 @@ import { SettingsModalComponent } from './calculator/settings/settings-modal.com
 import { ThemesModalComponent } from './calculator/settings/themes/themes-modal.component';
 import { OptionsPopoverComponent } from './calculator/top-bar/options-popover/options-popover.component';
 import { TopBarComponent } from './calculator/top-bar/top-bar.component';
+import { CommonComponentsModule } from './common/common-components.module';
 // Common
-import { AccordionListModule } from './common/accordion-list/accordion-list.module';
 import { StorageService } from './storage.service';
 
 @Injectable()
@@ -32,7 +32,7 @@ export class HammerConfig extends HammerGestureConfig {
   overrides = {
     // Override default config
     swipe: { direction: Hammer.DIRECTION_ALL },
-    pan: { enable: false, threshold: 0 },
+    pan: { enable: false, direction: Hammer.DIRECTION_ALL, threshold: 0 },
     pinch: { enable: true },
     press: { time: 1500, threshold: 100 },
     tap: { time: 4000, threshold: 100, direction: Hammer.DIRECTION_ALL }
@@ -57,7 +57,7 @@ export class HammerConfig extends HammerGestureConfig {
     AppRoutingModule,
     FormsModule,
     HammerModule,
-    AccordionListModule,
+    CommonComponentsModule,
     MathModule
   ],
   providers: [

@@ -1,7 +1,4 @@
-<ion-segment
-  (ionChange)="handleChartTypeChange($event.target.value)"
-  value="Line chart"
->
+<ion-segment (ionChange)="handleChartTypeChange($event.target.value)" value="Line chart">
   <ion-segment-button value="Line chart">
     <ion-label>Line</ion-label>
   </ion-segment-button>
@@ -34,7 +31,7 @@
   ></app-radar-chart>
 </div>
 
-<div class="input-container">
+<app-glass-card class="input-container">
   <ion-list>
     <ion-item>
       <ion-input
@@ -73,4 +70,4 @@
       <ion-label>Add series</ion-label>
     </ion-item>
   </ion-list>
-</div>
+</app-glass-card>

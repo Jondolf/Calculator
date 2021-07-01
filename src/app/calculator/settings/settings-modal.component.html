@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="primary">
-      <ion-button (click)="dismissModal()">
+      <ion-button (click)="globals.settingsView = ''">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -10,7 +10,7 @@
 </ion-header>
 
 <ion-list>
-  <ion-item button (click)="presentThemesModal()">
+  <ion-item button (click)="globals.settingsView = 'themes'">
     <i class="material-icons" slot="start">palette</i>
     <ion-label>Themes</ion-label>
   </ion-item>
