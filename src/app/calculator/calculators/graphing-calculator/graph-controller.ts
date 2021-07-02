@@ -194,6 +194,9 @@ export class GraphController {
       useTransforms ? this.svgMiddle.x + coordinate.x / +this.stepBetweenCoords * this.squareSize : this.svgMiddle.x + coordinate.x * this.squareSize,
       useTransforms ? this.svgMiddle.y - coordinate.y / +this.stepBetweenCoords * this.squareSize : this.svgMiddle.y - coordinate.y * this.squareSize
     );
+    if (Math.abs(convertedCoordinate.y) === Infinity) {
+      convertedCoordinate.y = convertedCoordinate.y < 0 ? -Number.MAX_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
+    }
     return convertedCoordinate;
   }
 
@@ -202,6 +205,9 @@ export class GraphController {
       useTransforms ? (coordinate.x - this.svgMiddle.x) / this.squareSize * +this.stepBetweenCoords : (coordinate.x - this.svgMiddle.x) / this.squareSize,
       useTransforms ? -((coordinate.y - this.svgMiddle.y) / this.squareSize * +this.stepBetweenCoords) : -((coordinate.y - this.svgMiddle.y) / this.squareSize)
     );
+    if (Math.abs(convertedCoordinate.y) === Infinity) {
+      convertedCoordinate.y = convertedCoordinate.y < 0 ? -Number.MAX_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
+    }
     return convertedCoordinate;
   }
 }

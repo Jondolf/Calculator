@@ -61,7 +61,7 @@ export class Line extends Graph {
   }
 
   private setPath() {
-    const isStraightLine = this.equation.match(/sin|cos|tan|log|ln|lg|sqrt|abs|pow|xx+|(x|\dx|x\d)\*(x|\dx|x\d)|^|(\d|x|\*)\(|\)(\d|x|\*)/g)[0] === '';
+    const isStraightLine = this.equation.match(/sin|cos|tan|lb|ln|lg|sqrt|√|abs|pow|xx+|(x|\dx|x\d)\*(x|\dx|x\d)|^|(\d|x|\*)\(|\)(\d|x|\*)/g)[0] === '';
     let path: Path;
     if (isStraightLine) {
       const { left, right } = this.svgCtrl.svgSidesAsGraphCoords;
@@ -70,9 +70,9 @@ export class Line extends Graph {
         { coordinate: new SvgCoordinate(right + +this.svgCtrl.stepBetweenCoords * 3, +this.mathEvaluator.evaluate(this.formatEquation(this.equation, right + +this.svgCtrl.stepBetweenCoords * 3), false)), command: PathCommand.Line },
       ];
     } else {
-      const stepBetweenX = 0.032;
+      const stepBetweenX = 0.01;
       path = [
-        ...this.getHalfOfPath(Side.Left, -stepBetweenX, this.equation),
+        ...this.getHalfOfPath(Side.Left, stepBetweenX, this.equation),
         ...this.getHalfOfPath(Side.Right, stepBetweenX, this.equation)
       ];
     }
@@ -95,16 +95,26 @@ export class Line extends Graph {
    * @param equation The equation that will be used for calculating the y-coord at the current x-coord
    */
   private getHalfOfPath(side: Side, numberStep: number, equation: string): Path {
+    const isOutOfBounds = side === Side.Left ? 0 <= this.svgCtrl.svgSidesAsGraphCoords.left : 0 >= this.svgCtrl.svgSidesAsGraphCoords.right;
+    if (isOutOfBounds) {
+      return [];
+    }
     this.previousY = 0;
     let prevAngle = NaN;
-    const pannedSide = (side === Side.Left ? this.svgCtrl.svgSidesAsGraphCoords.left : this.svgCtrl.svgSidesAsGraphCoords.right);
-    const step = numberStep;
+    const extraSpace = side === Side.Left ? +this.svgCtrl.stepBetweenCoords * -3 : +this.svgCtrl.stepBetweenCoords * 3;
+    const start = (0 <= this.svgCtrl.svgSidesAsGraphCoords.right && 0 * +this.svgCtrl.stepBetweenCoords >= this.svgCtrl.svgSidesAsGraphCoords.left ? 0 : (
+      side === Side.Right
+        ? this.svgCtrl.svgSidesAsGraphCoords.left - extraSpace
+        : this.svgCtrl.svgSidesAsGraphCoords.right - extraSpace
+    ));
+    const end = (side === Side.Left ? this.svgCtrl.svgSidesAsGraphCoords.left : this.svgCtrl.svgSidesAsGraphCoords.right) + extraSpace;
+    const step = side * numberStep * +this.svgCtrl.stepBetweenCoords;
     const xCoords: number[] = [];
     const path: Path = [];
     for (
-      let x = 0;
-      side === Side.Right ? x <= pannedSide + +this.svgCtrl.stepBetweenCoords * 3 :
-        (side === Side.Left ? x >= pannedSide - +this.svgCtrl.stepBetweenCoords * 3 : true);
+      let x = start;
+      side === Side.Right ? x <= end :
+        (side === Side.Left ? x >= end : false);
       x += step
     ) {
       xCoords.push(x);
@@ -122,28 +132,29 @@ export class Line extends Graph {
       const y = this.savedCoords[this.svgCtrl.stepBetweenCoords.toString()][x];
       const coordinate = new GraphCoordinate(x, y);
       if ((isNaN(this.previousY) && !isNaN(y)) || !isNaN(this.previousY) && isNaN(y)) {
-        this.getPathSectionForNumbersCloseToNaN(coordinate, step, equation);
+        // this.findCoordinateNextToNaN(coordinate, step, equation)[0];
+        path.push({ coordinate: { x, y: this.previousY }, command: PathCommand.Move });
       }
       if (!isNaN(y)) {
         let shouldDraw = true;
-        if (x === 0 || (changedHalf && Math.abs(angle - prevAngle) >= 179.5 && Math.abs(angle - prevAngle) <= 180.5)) {
+        if (i === 0 || (changedHalf && Math.abs(angle - prevAngle) >= 178 && Math.abs(angle - prevAngle) <= 182)) {
           shouldDraw = false;
         }
         path.push({ coordinate, command: shouldDraw ? PathCommand.Line : PathCommand.Move });
       }
-      this.previousY = y;
+      this.previousY = !isNaN(y) ? y : this.previousY;
       prevAngle = angle;
     }
     return path;
   }
 
   /**
-   * Goes back one step, finds the closest value that isn't NaN and draws a line to it.\
+   * Goes back one step, finds the closest value that isn't NaN and returns that coordinate.\
    * Used when either the current or previous y value was NaN.\
    * This fixes bugs with things like y=sqrt(x+1) or y=ln(x).
    */
-  getPathSectionForNumbersCloseToNaN(coordinate: GraphCoordinate, stepBetweenX: number, equation: string): Path {
-    return [{ coordinate: this.findValueClosestToNaN(coordinate.x - stepBetweenX, coordinate.x, this.previousY, coordinate.y, equation), command: PathCommand.Line }];
+  findCoordinateNextToNaN(coordinate: GraphCoordinate, stepBetweenX: number, equation: string): GraphCoordinate {
+    return this.findValueClosestToNaN(coordinate.x - stepBetweenX, coordinate.x, this.previousY, coordinate.y, equation);
   }
 
   /**
