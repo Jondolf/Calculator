@@ -6,9 +6,9 @@ export type MathButton = {
   displayName?: string;
   iconName?: string;
   class: string;
-  onTap?: (arg1?: any, arg2?: any) => any;
+  onTap?: (...args: any) => any;
   onTapArgs?: Array<number | string>;
-  onPress?: (arg1?: any, arg2?: any) => any;
+  onPress?: (...args: any) => any;
   onPressArgs?: Array<number | string>;
 };
 export type MathButtonGrid = {
