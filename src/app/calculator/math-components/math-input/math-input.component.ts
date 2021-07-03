@@ -456,7 +456,7 @@ export class MathInputComponent implements AfterViewInit {
 
   private getPrevTermRangeForIndex(index: number): { start: number; end: number; } {
     const sixCharTermRange = this.getSliceRangeFromString(this.expr, ['asinh(', 'acosh(', 'atanh('], index - 6, index);
-    const fiveCharTermRange = this.getSliceRangeFromString(this.expr, ['asin(', 'acos(', 'atan(', 'sinh(', 'cosh(', 'tan('], index - 5, index);
+    const fiveCharTermRange = this.getSliceRangeFromString(this.expr, ['asin(', 'acos(', 'atan(', 'sinh(', 'cosh(', 'tanh('], index - 5, index);
     const fourCharTermRange = this.getSliceRangeFromString(this.expr, ['sin(', 'cos(', 'tan('], index - 4, index);
     const threeCharTermRange = this.getSliceRangeFromString(this.expr, ['lb(', 'ln(', 'lg(', 'mod'], index - 3, index);
     const twoCharTermRange = this.getSliceRangeFromString(this.expr, ['√('], index - 2, index);
