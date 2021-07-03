@@ -34,8 +34,6 @@ export class GraphKeyboardComponent implements AfterViewInit {
     buttons: []
   };
   mathCommands: MathCommand[];
-  isInversed = false;
-  isHyperbolic = false;
   gridStyles: CalculatorCustomStyles = {
     gridSize: 'small',
     gridGap: '0px',
@@ -66,23 +64,24 @@ export class GraphKeyboardComponent implements AfterViewInit {
 
   private get trigonometricFunctionCommands(): MathCommand[] {
     const commands: MathCommand[] = [];
+    const that = this;
     for (const func of ['sin', 'cos', 'tan']) {
       commands.push(
         {
           shortcuts: [func[0]],
           command: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           get commandArgs() {
-            return [`${this.isInversed ? 'a' : ''}${func}${this.isHyperbolic ? 'h' : ''}`];
+            return [`${that.grid.isInversed ? 'a' : ''}${func}${that.grid.isHyperbolic ? 'h' : ''}`];
           },
           button: {
             name: func,
             get displayName() {
-              return `${this.isInversed ? 'a' : ''}${func}${this.isHyperbolic ? 'h' : ''}`;
+              return `${that.grid.isInversed ? 'a' : ''}${func}${that.grid.isHyperbolic ? 'h' : ''}`;
             },
             class: 'math-button-secondary sm-text',
             onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
             get onTapArgs() {
-              return [`${this.isInversed ? 'a' : ''}${func}${this.isHyperbolic ? 'h' : ''}`];
+              return [`${that.grid.isInversed ? 'a' : ''}${func}${that.grid.isHyperbolic ? 'h' : ''}`];
             }
           }
         }
@@ -351,12 +350,5 @@ export class GraphKeyboardComponent implements AfterViewInit {
     const mathButtons = this.mathCommands.filter(command => command.button).map(command => command.button);
     this.grid.buttons = mathButtons;
     this.changeDetector.detectChanges();
-  }
-
-  toggleIsInversed() {
-    this.grid.isInversed = !this.grid.isInversed;
-  }
-  toggleIsHyperbolic() {
-    this.grid.isHyperbolic = !this.grid.isHyperbolic;
   }
 }

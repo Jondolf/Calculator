@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { GlobalVarsService } from 'src/app/global-vars.service';
-import { MathButtonGrid } from '../../math-components/math-buttons/math-buttons.component';
+import { MathButton, MathButtonGrid } from '../../math-components/math-buttons/math-buttons.component';
 import { MathCommand } from '../../math-components/math-command.type';
 import { MathInputComponent } from '../../math-components/math-input/math-input.component';
 import { MathEvaluatorService } from '../../math-evaluator/mathEvaluator.service';
@@ -102,8 +102,7 @@ export class CalculatorPage implements OnInit, AfterViewInit {
   }
 
   private get trigonometricFunctionCommands(): MathCommand[] {
-    const isInversed = this.currentMathButtonGrid.isInversed;
-    const isHyperbolic = this.currentMathButtonGrid.isHyperbolic;
+    const that = this;
     const commands: MathCommand[] = [];
     for (const func of ['sin', 'cos', 'tan']) {
       commands.push(
@@ -111,17 +110,17 @@ export class CalculatorPage implements OnInit, AfterViewInit {
           shortcuts: [func[0]],
           command: this.mathInput.addSymbolToExpr.bind(this.mathInput),
           get commandArgs() {
-            return [`${isInversed ? 'a' : ''}${func}${isHyperbolic ? 'h' : ''}`];
+            return [`${that.currentMathButtonGrid.isInversed ? 'a' : ''}${func}${that.currentMathButtonGrid.isHyperbolic ? 'h' : ''}`];
           },
           button: {
             name: func,
             get displayName() {
-              return `${isInversed ? 'a' : ''}${func}${isHyperbolic ? 'h' : ''}`;
+              return `${that.currentMathButtonGrid.isInversed ? 'a' : ''}${func}${that.currentMathButtonGrid.isHyperbolic ? 'h' : ''}`;
             },
             class: 'math-button-secondary',
             onTap: this.mathInput.addSymbolToExpr.bind(this.mathInput),
             get onTapArgs() {
-              return [`${isInversed ? 'a' : ''}${func}${isHyperbolic ? 'h' : ''}`];
+              return [`${that.currentMathButtonGrid.isInversed ? 'a' : ''}${func}${that.currentMathButtonGrid.isHyperbolic ? 'h' : ''}`];
             }
           }
         }
@@ -390,14 +389,40 @@ export class CalculatorPage implements OnInit, AfterViewInit {
         }
       }
     ];
+    const [smallGridBtnNames, mediumMathBtnGridBtnNames, largeGridBtnNames] = this.getGridBtnNames();
     const mathButtons = this.mathCommands.filter(command => command.button).map(command => command.button);
-    this.smallMathBtnGrid.buttons = mathButtons.filter(button => this.smallMathBtnGrid.areas.replace(/["\n\s]+/g, ' ').trim().split(' ').some(buttonName => [button.name, button.iconName].includes(buttonName)));
-    this.mediumMathBtnGrid.buttons = mathButtons.filter(button => this.mediumMathBtnGrid.areas.replace(/["\n\s]+/g, ' ').trim().split(' ').some(buttonName => [button.name, button.iconName].includes(buttonName)));
-    this.largeMathBtnGrid.buttons = mathButtons.filter(button => this.largeMathBtnGrid.areas.replace(/["\n\s]+/g, ' ').trim().split(' ').some(buttonName => [button.name, button.iconName].includes(buttonName)));
-    this.smallMathBtnGrid.buttons = this.smallMathBtnGrid.buttons.map(button => { return { ...button, class: button.class + ' lg-text' }; });
-    this.mediumMathBtnGrid.buttons = this.mediumMathBtnGrid.buttons.map(button => { return { ...button, class: button.class + ' md-text' }; });
-    this.largeMathBtnGrid.buttons = this.largeMathBtnGrid.buttons.map(button => { return { ...button, class: button.class + ' sm-text' }; });
+    this.smallMathBtnGrid.buttons = this.getButtonsByNames(mathButtons, smallGridBtnNames);
+    this.mediumMathBtnGrid.buttons = this.getButtonsByNames(mathButtons, mediumMathBtnGridBtnNames);
+    this.largeMathBtnGrid.buttons = this.getButtonsByNames(mathButtons, largeGridBtnNames);
+    //? Tried to use { ...button, class: button.class + ' whatever' } but using the spread operator removed the getters used in trigonometricFunctionCommands, which didn't properly trigger a change when isInversed or isHyperbolic changed. Object.create worked.
+    this.smallMathBtnGrid.buttons = this.smallMathBtnGrid.buttons.map(button => {
+      const newButton = Object.create(button);
+      newButton.class += ' lg-text';
+      return newButton;
+    });
+    this.mediumMathBtnGrid.buttons = this.mediumMathBtnGrid.buttons.map(button => {
+      const newButton = Object.create(button);
+      newButton.class += ' md-text';
+      return newButton;
+    });
+    this.largeMathBtnGrid.buttons = this.largeMathBtnGrid.buttons.map(button => {
+      const newButton = Object.create(button);
+      newButton.class += ' sm-text';
+      return newButton;
+    });
     this.changeDetector.detectChanges();
+  }
+
+  getGridBtnNames(): string[][] {
+    return [
+      this.smallMathBtnGrid.areas.replace(/["\n\s]+/g, ' ').trim().split(' '),
+      this.mediumMathBtnGrid.areas.replace(/["\n\s]+/g, ' ').trim().split(' '),
+      this.largeMathBtnGrid.areas.replace(/["\n\s]+/g, ' ').trim().split(' ')
+    ];
+  }
+
+  getButtonsByNames(buttons: MathButton[], names: string[]): MathButton[] {
+    return buttons.filter(button => names.some(name => [button.name, button.iconName].includes(name)));
   }
 
   onExprChange(newExpr: string) {
@@ -407,7 +432,6 @@ export class CalculatorPage implements OnInit, AfterViewInit {
 
   formatNumber(num: number | string): string {
     if (num.toString().includes('NaN')) {
-      console.log(num, this.mathEvaluator.evaluateAndFormat(this.expr, this.forceDeg));
       return 'Invalid input';
     }
     const numSplitAtDot = num.toString().includes('.') ? num.toString().split('.') : [num.toString()];
