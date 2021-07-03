@@ -14,14 +14,14 @@ export class CalculatorMenuComponent {
       {
         buttonName: 'Calculator',
         icon: {
-          iconName: 'calculator',
+          iconName: 'calculator-outline',
           iconPack: 'Ionicons'
         }
       },
       {
         buttonName: 'Charts',
         icon: {
-          iconName: 'bar-chart',
+          iconName: 'bar-chart-outline',
           iconPack: 'Ionicons'
         }
       },
@@ -44,7 +44,7 @@ export class CalculatorMenuComponent {
       {
         buttonName: 'Mass converter',
         icon: {
-          iconName: 'barbell',
+          iconName: 'barbell-outline',
           iconPack: 'Ionicons'
         }
       },
