@@ -298,7 +298,7 @@ export class MathInputComponent implements AfterViewInit {
       }
 
       // Don't allow two operators in a row
-      if (this.expr !== '' && this.binaryOperators.includes(symbol.toString()) && (this.binaryOperators.includes(symbolBeforeCaret) || this.binaryOperators.includes(symbolAfterCaret))) {
+      if (this.expr !== '' && ['+', '-', '*', '/', '^', 'mod'].includes(symbol.toString()) && (['+', '-', '*', '/', '^', 'mod'].includes(symbolBeforeCaret) || ['+', '-', '*', '/', '^', 'mod'].includes(symbolAfterCaret))) {
         if (this.selectionStart === 0) {
           this.expr = symbol.toString() + this.expr.slice(1);
           this.collapseSelection(this.selectionStart + 1);
