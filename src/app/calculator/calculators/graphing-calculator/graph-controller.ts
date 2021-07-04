@@ -195,7 +195,8 @@ export class GraphController {
       useTransforms ? this.svgMiddle.y - coordinate.y / +this.stepBetweenCoords * this.squareSize : this.svgMiddle.y - coordinate.y * this.squareSize
     );
     if (Math.abs(convertedCoordinate.y) === Infinity) {
-      convertedCoordinate.y = convertedCoordinate.y < 0 ? -Number.MAX_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
+      //? Infinity and MAX_SAFE_INTEGER didn't work with SVGs on some browsers, so I'll just use a really large number
+      convertedCoordinate.y = convertedCoordinate.y < 0 ? -1_000_000_000 : 1_000_000_000;
     }
     return convertedCoordinate;
   }
@@ -206,7 +207,8 @@ export class GraphController {
       useTransforms ? -((coordinate.y - this.svgMiddle.y) / this.squareSize * +this.stepBetweenCoords) : -((coordinate.y - this.svgMiddle.y) / this.squareSize)
     );
     if (Math.abs(convertedCoordinate.y) === Infinity) {
-      convertedCoordinate.y = convertedCoordinate.y < 0 ? -Number.MAX_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
+      //? Infinity and MAX_SAFE_INTEGER didn't work with SVGs on some browsers, so I'll just use a really large number
+      convertedCoordinate.y = convertedCoordinate.y < 0 ? -1_000_000_000 : 1_000_000_000;
     }
     return convertedCoordinate;
   }

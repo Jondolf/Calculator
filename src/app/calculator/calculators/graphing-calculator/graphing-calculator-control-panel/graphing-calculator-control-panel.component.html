@@ -6,7 +6,7 @@
         *ngIf="graph.type === 'Line'"
         (click)="setFocusedGraph(graph, i); isEditingEquation = true"
       >
-        <span>y={{ graph.equation }}</span>
+        <span>f(x)={{ graph.equation }}</span>
       </div>
       <div class="graph-input-container" *ngIf="graph.type === 'Point'">
         <label [for]="'point-coordinate' + i">(</label>

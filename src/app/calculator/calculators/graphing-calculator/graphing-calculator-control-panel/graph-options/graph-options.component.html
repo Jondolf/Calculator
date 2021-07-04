@@ -1,6 +1,6 @@
 <ion-item lines="none">
   <ion-label slot="start">{{
-    graph.type === 'Line' ? 'y=' + graph.equation : graph.type === 'Point' ? '(' + graph.equation + ')' : ''
+    graph.type === 'Line' ? 'f(x)=' + graph.equation : graph.type === 'Point' ? '(' + graph.equation + ')' : ''
   }}</ion-label>
   <ion-buttons slot="end">
     <ion-button slot="start" (click)="close.emit()">

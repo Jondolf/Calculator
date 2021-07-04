@@ -61,7 +61,11 @@ export class Line extends Graph {
   }
 
   private setPath() {
-    const isStraightLine = this.equation.match(/sin|cos|tan|lb|ln|lg|sqrt|√|abs|pow|xx+|(x|\dx|x\d)\*(x|\dx|x\d)|^|(\d|x|\*)\(|\)(\d|x|\*)/g)[0] === '';
+    if (this.equation === '') {
+      this.path = [];
+      return;
+    }
+    const isStraightLine = this.equation.match(/sin|cos|tan|asin|acos|atan|asinh|acosh|atanh|lb|ln|lg|sqrt|√|abs|pow|xx+|(x|\dx|x\d)\*(x|\dx|x\d)|^|(\d|x|\*)\(|\)(\d|x|\*)/g)[0] === '';
     let path: Path;
     if (isStraightLine) {
       const { left, right } = this.svgCtrl.svgSidesAsGraphCoords;
@@ -137,7 +141,7 @@ export class Line extends Graph {
       }
       if (!isNaN(y)) {
         let shouldDraw = true;
-        if (i === 0 || (changedHalf && Math.abs(angle - prevAngle) >= 178 && Math.abs(angle - prevAngle) <= 182)) {
+        if (i === 0 || (changedHalf && Math.abs(angle - prevAngle) >= 178.5 && Math.abs(angle - prevAngle) <= 181.5)) {
           shouldDraw = false;
         }
         path.push({ coordinate, command: shouldDraw ? PathCommand.Line : PathCommand.Move });
@@ -151,7 +155,7 @@ export class Line extends Graph {
   /**
    * Goes back one step, finds the closest value that isn't NaN and returns that coordinate.\
    * Used when either the current or previous y value was NaN.\
-   * This fixes bugs with things like y=sqrt(x+1) or y=ln(x).
+   * This fixes bugs with things like f(x)=sqrt(x+1) or f(x)=ln(x).
    */
   findCoordinateNextToNaN(coordinate: GraphCoordinate, stepBetweenX: number, equation: string): GraphCoordinate {
     return this.findValueClosestToNaN(coordinate.x - stepBetweenX, coordinate.x, this.previousY, coordinate.y, equation);

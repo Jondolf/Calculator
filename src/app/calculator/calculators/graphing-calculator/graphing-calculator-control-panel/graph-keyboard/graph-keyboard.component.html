@@ -1,6 +1,6 @@
 <ion-item lines="none">
   <div class="equation-container" slot="start">
-    <label *ngIf="graph.type === 'Line'">y=</label>
+    <label *ngIf="graph.type === 'Line'">f(x)=</label>
     <app-math-input
       [commands]="mathCommands"
       [initialExpr]="graph.equation"
