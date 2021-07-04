@@ -1,6 +1,6 @@
 import { interval, Subscription } from "rxjs";
 import { debounce } from 'rxjs/operators';
-import { MathEvaluatorService } from "src/app/calculator/math-evaluator/mathEvaluator.service";
+import { MathEvaluatorService } from "src/app/calculator/math-evaluator/math-evaluator.service";
 import { GraphStyle } from ".";
 import { Coordinate, GraphCoordinate, SvgCoordinate } from "../coordinates";
 import { GraphController } from "../graph-controller";

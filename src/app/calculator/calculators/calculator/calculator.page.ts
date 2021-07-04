@@ -3,7 +3,7 @@ import { GlobalVarsService } from 'src/app/global-vars.service';
 import { MathButton, MathButtonGrid } from '../../math-components/math-buttons/math-buttons.component';
 import { MathCommand } from '../../math-components/math-command.type';
 import { MathInputComponent } from '../../math-components/math-input/math-input.component';
-import { MathEvaluatorService } from '../../math-evaluator/mathEvaluator.service';
+import { MathEvaluatorService } from '../../math-evaluator/math-evaluator.service';
 import { CalculatorService } from './calculator.service';
 
 @Component({

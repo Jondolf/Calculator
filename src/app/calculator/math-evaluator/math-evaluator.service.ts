@@ -31,9 +31,9 @@ export class MathEvaluatorService {
           this.formatExprForEvaluation(
             expr
               .replace(/÷/g, '/')
-              .replace(/(sin|cos|tan|lb|lg|ln|sqrt)(([\dπexy]|pi)+)/g, '$1($2)')
-              .replace(/([\)\dπexy]|pi)(%)/g, '($1/100)')
-              .replace(/([\)\dπexy]|pi)([\(πexy]|pi|sin|cos|tan|lb|lg|ln|√|sqrt)/g, '$1*$2')
+              .replace(/(sin|cos|tan|lb|lg|ln|sqrt|√)(([\dπexy]|pi)+)/g, '$1($2)')
+              .replace(/([\)πexy]|\d+|pi)(%)/g, '($1/100)')
+              .replace(/([\)\dπexy]|pi)([\(πexy]|pi|sin|cos|tan|lb|lg|ln|sqrt|√)/g, '$1*$2')
               .replace(/([\)πexy]|pi)([\(\dπexy]|pi)/g, '$1*$2'),
             false),
           xValues
@@ -50,14 +50,15 @@ export class MathEvaluatorService {
 
   private formatExprForEvaluation(expr: string, forceDeg: boolean): string {
     let formattedExpr = expr
+      .replace(/\s/g, '')
       .replace(/(^|\D)\./g, '$10.')
       .replace(/√/g, 'sqrt')
       .replace(/π/g, 'pi')
       .replace(/([\)\dexy]|pi)([\(exy]|pi|sin|cos|tan|lb|lg|ln|sqrt)/g, '$1*$2')
       .replace(/([\)e]|pi)([\(\de]|pi)/g, '$1*$2')
-      .replace(/([\)\de]|pi)(%)/g, '($1/100)')
+      .replace(/([\)e]|\d+|pi)(%)/g, '($1/100)')
       .replace(/mod/g, '%')
-      .replace(/(sin|cos|tan|lb|lg|ln|sqrt)(([\de]|pi)+)/g, '$1($2)')
+      .replace(/(sin|cos|tan|lb|lg|ln|sqrt)(([\de.]|pi)+)/g, '$1($2)')
       .replace(/lg/g, 'log10')
       .trim();
 

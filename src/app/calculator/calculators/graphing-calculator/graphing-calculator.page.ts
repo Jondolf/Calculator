@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { Gesture, GestureController } from '@ionic/angular';
 import ResizeObserverPolyfill from 'resize-observer-polyfill'; // Normal resize observer gave errors
-import { MathEvaluatorService } from '../../math-evaluator/mathEvaluator.service';
+import { MathEvaluatorService } from '../../math-evaluator/math-evaluator.service';
 import { GraphCoordinate, SvgCoordinate } from './coordinates';
 import { GraphController } from './graph-controller';
 import { Graph, GraphType, Line, Point } from './graphs';
